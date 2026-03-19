@@ -335,19 +335,21 @@
     font-size: 0.72rem;
     font-weight: 600;
     padding: 4px 6px;
-    border: 1.5px solid var(--color-hoja, #52B788);
-    border-radius: 4px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
     background: transparent;
     color: var(--color-piedra);
+    opacity: 0.6;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: color 0.15s, opacity 0.15s, border-color 0.15s;
     white-space: nowrap;
   }
 
   .legend-tab--active {
-    background: var(--color-bosque, #2D6A4F);
-    color: white;
-    border-color: var(--color-bosque, #2D6A4F);
+    color: var(--color-bosque, #2D6A4F);
+    opacity: 1;
+    border-bottom-color: var(--color-bosque, #2D6A4F);
   }
 
   .legend-panel--hidden {
