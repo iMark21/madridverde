@@ -343,11 +343,90 @@ async function aggregateRecycling() {
 
 // --- Main ---
 
+// --- MV-24: Aire historico ---
+
+async function aggregateAirHistory() {
+  console.log('\n[MV-24] Aire historico (monthly averages by station)');
+
+  const URLS_AIR = {
+    '2025': 'https://datos.madrid.es/dataset/201200-0-calidad-aire-horario/resource/201200-1-calidad-aire-horario-csv/download/201200-1-calidad-aire-horario-csv.csv',
+    '2026': 'https://datos.madrid.es/dataset/201200-0-calidad-aire-horario/resource/201200-28-calidad-aire-horario/download/export_20260313_104631_csv.csv',
+  };
+
+  const TARGET_MAGNITUDES = { '8': 'NO2', '9': 'PM2.5', '10': 'PM10', '14': 'O3' };
+
+  // Aggregate: station → contaminant → year-month → daily averages
+  const stationData = {};
+
+  for (const [year, url] of Object.entries(URLS_AIR)) {
+    const csvPath = await cachedDownload(`aire_${year}`, url);
+    let content = readFileSync(csvPath, 'utf-8');
+    if (content.charCodeAt(0) === 0xfeff) content = content.slice(1);
+
+    // Handle quoted CSVs (2026 uses quotes)
+    content = content.replace(/"/g, '');
+
+    const result = Papa.parse(content, { delimiter: ';', header: true, skipEmptyLines: true, dynamicTyping: true });
+    console.log(`  [parse] ${year}: ${result.data.length} rows`);
+
+    for (const row of result.data) {
+      const magnitud = String(row.MAGNITUD || '');
+      if (!(magnitud in TARGET_MAGNITUDES)) continue;
+
+      const station = String(row.ESTACION || '');
+      const contName = TARGET_MAGNITUDES[magnitud];
+      const rowYear = Number(row.ANO || 0);
+      const month = Number(row.MES || 0);
+      if (!station || !rowYear || !month) continue;
+
+      // Compute daily average from valid hourly readings
+      let sum = 0, count = 0;
+      for (let h = 1; h <= 24; h++) {
+        const hKey = `H${String(h).padStart(2, '0')}`;
+        const vKey = `V${String(h).padStart(2, '0')}`;
+        if (row[vKey] === 'V' && row[hKey] != null) {
+          const val = Number(row[hKey]);
+          if (!isNaN(val) && val >= 0) { sum += val; count++; }
+        }
+      }
+      if (count === 0) continue;
+      const dailyAvg = sum / count;
+
+      const key = `${station}_${contName}`;
+      const monthKey = `${rowYear}-${String(month).padStart(2, '0')}`;
+      if (!stationData[key]) {
+        stationData[key] = { station, contaminant: contName, months: {} };
+      }
+      if (!stationData[key].months[monthKey]) {
+        stationData[key].months[monthKey] = { sum: 0, count: 0 };
+      }
+      stationData[key].months[monthKey].sum += dailyAvg;
+      stationData[key].months[monthKey].count++;
+    }
+  }
+
+  // Build output grouped by station
+  const stations = {};
+  for (const entry of Object.values(stationData)) {
+    const { station, contaminant, months } = entry;
+    if (!stations[station]) stations[station] = { station, contaminants: {} };
+    stations[station].contaminants[contaminant] = Object.entries(months)
+      .map(([m, v]) => ({ month: m, avg: Math.round((v.sum / v.count) * 10) / 10 }))
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  const output = Object.values(stations).sort((a, b) => a.station.localeCompare(b.station));
+
+  writeJSON('air-monthly.json', output);
+  console.log(`  [done] ${output.length} stations with air data`);
+}
+
 const ALL_TASKS = {
   trees: aggregateTrees,
   noise: aggregateNoise,
   demographics: aggregateDemographics,
   recycling: aggregateRecycling,
+  air: aggregateAirHistory,
 };
 
 async function main() {
