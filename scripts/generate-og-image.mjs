@@ -20,10 +20,9 @@ const html = `<!DOCTYPE html>
   body {
     width: 1200px; height: 630px;
     background: linear-gradient(135deg, #2D6A4F 0%, #264653 100%);
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 60px 80px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
     font-family: 'Inter', sans-serif;
-    color: white; position: relative; overflow: hidden;
+    color: white; text-align: center; position: relative; overflow: hidden;
   }
   .bg-circle {
     position: absolute; border-radius: 50%;
@@ -31,83 +30,46 @@ const html = `<!DOCTYPE html>
   }
   .bg-1 { width: 500px; height: 500px; top: -150px; right: -100px; }
   .bg-2 { width: 300px; height: 300px; bottom: -80px; left: -60px; }
-  .bg-3 { width: 200px; height: 200px; top: 200px; right: 200px; }
-
+  .emoji {
+    font-size: 80px;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
   .title {
     font-family: 'DM Serif Display', serif;
-    font-size: 72px; font-weight: 400;
-    margin-bottom: 8px;
+    font-size: 64px; font-weight: 400;
+    margin-bottom: 16px;
     text-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   .subtitle {
-    font-size: 26px; font-weight: 400;
-    opacity: 0.85; margin-bottom: 12px;
+    font-size: 24px; font-weight: 400;
+    opacity: 0.9; margin-bottom: 32px;
   }
-  .stats {
-    font-size: 18px; opacity: 0.6;
-    margin-bottom: 40px;
-    letter-spacing: 0.02em;
-  }
-
-  .pills {
-    display: flex; gap: 10px;
-    margin-bottom: 40px;
-  }
-  .pill {
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-align: center;
-    min-width: 100px;
-  }
-  .pill-label {
-    font-size: 10px; text-transform: uppercase;
-    letter-spacing: 0.08em; font-weight: 600;
-    margin-bottom: 2px; opacity: 0.85;
-  }
-  .pill-value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-  }
-  .pill-aire { background: #52B788; }
-  .pill-verde { background: #40916C; }
-  .pill-ruido { background: #E9C46A; color: rgba(0,0,0,0.7); }
-  .pill-movilidad { background: #F4A261; color: rgba(0,0,0,0.7); }
-  .pill-reciclaje { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
-
   .tagline {
-    font-family: 'DM Serif Display', serif;
-    font-size: 18px; font-style: italic;
-    opacity: 0.45;
+    display: flex; gap: 16px; align-items: center;
+    font-size: 16px; font-weight: 600; letter-spacing: 0.05em;
+    text-transform: uppercase; opacity: 0.75;
   }
-  .url {
-    position: absolute; bottom: 30px; right: 80px;
-    font-size: 18px; opacity: 0.5; font-weight: 500;
-  }
-  .accent {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 6px; background: #52B788;
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.6); }
+  .brand {
+    position: absolute; bottom: 24px; right: 32px;
+    font-size: 14px; opacity: 0.5; font-weight: 500;
   }
 </style></head>
 <body>
   <div class="bg-circle bg-1"></div>
   <div class="bg-circle bg-2"></div>
-  <div class="bg-circle bg-3"></div>
-
+  <div class="emoji">🌿</div>
   <div class="title">MadridVerde</div>
   <div class="subtitle">Indice Verde de Madrid</div>
-  <div class="stats">17 datasets abiertos · 5 sub-indices · 3 APIs en tiempo real</div>
-
-  <div class="pills">
-    <div class="pill pill-aire"><div class="pill-label">Aire</div><div class="pill-value">30%</div></div>
-    <div class="pill pill-verde"><div class="pill-label">Verde</div><div class="pill-value">25%</div></div>
-    <div class="pill pill-ruido"><div class="pill-label">Ruido</div><div class="pill-value">20%</div></div>
-    <div class="pill pill-movilidad"><div class="pill-label">Movilidad</div><div class="pill-value">15%</div></div>
-    <div class="pill pill-reciclaje"><div class="pill-label">Reciclaje</div><div class="pill-value">10%</div></div>
+  <div class="tagline">
+    <span>DATOS ABIERTOS</span>
+    <div class="dot"></div>
+    <span>EN VIVO</span>
+    <div class="dot"></div>
+    <span>GRATIS</span>
   </div>
-
-  <div class="tagline">Porque respirar no deberia ser cuestion de codigo postal</div>
-  <div class="url">madrid-verde.web.app</div>
-  <div class="accent"></div>
+  <div class="brand">madrid-verde.web.app</div>
 </body></html>`;
 
 async function main() {
