@@ -128,9 +128,49 @@ function slugify(name: string): string {
       </div>
     </div>
 
-    <div class="data-flow-summary">
-      <h3>14 fuentes de datos</h3>
-      <p>Todos los datos proceden de <a href="https://datos.madrid.es" target="_blank" rel="noopener">datos.madrid.es</a> y <a href="https://ciudadesabiertas.madrid.es" target="_blank" rel="noopener">ciudadesabiertas.madrid.es</a>. Los datos en tiempo real se actualizan cada 5-20 minutos. Los datos historicos se procesan en build-time.</p>
+    <div class="datasets-list">
+      <h3>14 conjuntos de datos del Portal de Datos Abiertos</h3>
+      <div class="datasets-grid">
+        <div class="dataset-group">
+          <h4>Tiempo real</h4>
+          <ul>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f3c0f7d512273410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Calidad del aire — datos horarios</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=41e01e007c9bb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Trafico — intensidad en tiempo real</a></li>
+          </ul>
+        </div>
+        <div class="dataset-group">
+          <h4>Estaciones y sensores</h4>
+          <ul>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=9e42c176313eb410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Estaciones de control de calidad del aire</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f8f54ce8a0adb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Estaciones acusticas — contaminacion</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=b3c41f3cf6a6c410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Puntos de medida de trafico</a></li>
+          </ul>
+        </div>
+        <div class="dataset-group">
+          <h4>Medio ambiente</h4>
+          <ul>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=0201db243f3cb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Arbolado en parques — detalle especies</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=27e7eaac52bdb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Arbolado — superficie zonas verdes</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=dc758935dde13410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Parques y jardines municipales</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=8aacc5f020e07410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Contenedores de recogida de residuos</a></li>
+          </ul>
+        </div>
+        <div class="dataset-group">
+          <h4>Historico y sociodemografico</h4>
+          <ul>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=aecb88a7e2b73410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Calidad del aire — datos diarios desde 2001</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=2ec892637b99b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Contaminacion acustica — datos diarios</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e6288dc1ec7e7410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Indicadores de distritos y barrios</a></li>
+          </ul>
+        </div>
+        <div class="dataset-group">
+          <h4>Limites geograficos</h4>
+          <ul>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=541f4ef6-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener">Limites administrativos — distritos</a></li>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=422fa235-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener">Limites administrativos — barrios</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="tiers">
@@ -338,6 +378,43 @@ function slugify(name: string): string {
   .data-flow-summary h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
   .data-flow-summary p { font-size: 0.85rem; line-height: 1.6; max-width: 700px; }
   .data-flow-summary a { font-weight: 500; }
+
+  /* Datasets list */
+  .datasets-list { margin-bottom: 2rem; }
+  .datasets-list h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+  .datasets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .dataset-group {
+    background: white;
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .dataset-group h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-bosque);
+    margin-bottom: 0.5rem;
+  }
+  .dataset-group ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .dataset-group li a {
+    font-size: 0.8rem;
+    color: var(--color-tinta);
+    display: block;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .dataset-group li a:hover { color: var(--color-bosque); }
+  .dataset-group li:last-child a { border-bottom: none; }
 
   .tiers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; border-top: 4px solid var(--tier-color); font-size: 0.8rem; }
