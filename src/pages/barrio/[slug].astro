@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  // Will be populated with district data from build-time aggregation
+  // For now, return empty to allow the route to exist
+  return [];
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout title={`${slug} — MadridVerde`} description={`Indice Verde y metricas medioambientales del distrito ${slug}`}>
+  <section class="scorecard">
+    <h1>{slug}</h1>
+    <p>Scorecard del distrito (pendiente MV-02 + MV-10)</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .scorecard {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .scorecard h1 {
+    font-size: 2.5rem;
+    color: var(--color-bosque);
+    text-transform: capitalize;
+  }
+</style>

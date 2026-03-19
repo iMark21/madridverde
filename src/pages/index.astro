@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="MadridVerde — Indice Verde de Madrid">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Indice Verde de Madrid</h1>
+      <p class="hero-subtitle">14 datasets abiertos, un solo score por distrito</p>
+    </div>
+    <div class="hero-map" id="map" role="application" aria-label="Mapa de distritos de Madrid coloreados por Indice Verde">
+      <!-- Leaflet map will be mounted here -->
+      <p class="map-placeholder">Mapa interactivo (pendiente MV-02)</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-text {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .hero-text h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--color-bosque);
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-map {
+    flex: 1;
+    min-height: 500px;
+    margin: 0 2rem 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e8e4de;
+  }
+
+  .map-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-style: italic;
+    color: var(--color-piedra);
+  }
+</style>

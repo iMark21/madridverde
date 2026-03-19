@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Tendencias historicas — MadridVerde" description="Series temporales de calidad del aire y ruido en Madrid con anotaciones de politicas">
+  <section class="trends">
+    <h1>Tendencias historicas</h1>
+    <p class="trends-subtitle">Evolucion de la calidad ambiental de Madrid con anotaciones de politicas publicas</p>
+    <div class="trends-content">
+      <p class="placeholder">Graficos historicos con anotaciones (pendiente MV-11 + MV-29)</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .trends {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .trends h1 {
+    font-size: 2.5rem;
+    color: var(--color-bosque);
+  }
+
+  .trends-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .trends-content {
+    margin-top: 2rem;
+  }
+
+  .placeholder {
+    font-style: italic;
+    color: var(--color-piedra);
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+  }
+</style>
