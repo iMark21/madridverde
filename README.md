@@ -1,8 +1,8 @@
 # MadridVerde
 
-Dashboard medioambiental que transforma 14 datasets abiertos de datos.madrid.es en un **Indice Verde (0-100)** por distrito de Madrid.
+Dashboard medioambiental que transforma 17 datasets abiertos de datos.madrid.es en un **Indice Verde (0-100)** por distrito de Madrid, con datos en tiempo real.
 
-**Live:** https://madridverde-web.web.app
+**Live:** https://madrid-verde.web.app
 
 *"Porque respirar no deberia ser cuestion de codigo postal"*
 
@@ -18,23 +18,32 @@ Proyecto presentado a los **II Premios a la Reutilizacion de Datos Abiertos del 
 
 Puntuacion compuesta de 5 sub-indices, cada uno normalizado a escala 0-100:
 
-| Sub-indice | Peso | Fuente |
-|-----------|------|--------|
-| Aire | 30% | API calidad del aire real-time (24 estaciones, 4 contaminantes) |
-| Verde | 25% | 793.000 arboles censados + m2 zonas verdes por habitante |
-| Ruido | 20% | 37 estaciones acusticas SIVCA (series desde 1998) |
-| Movilidad | 15% | ~4.000 sensores de trafico en tiempo real |
-| Reciclaje | 10% | 44.251 contenedores por tipo y distrito |
+| Sub-indice | Peso | Fuente | Tipo |
+|-----------|------|--------|------|
+| Aire | 30% | 24 estaciones, 4 contaminantes (NO2, PM2.5, PM10, O3) | Tiempo real (~20 min) |
+| Verde | 25% | 793.000 arboles censados + m2 zonas verdes por habitante | Censo 2024 |
+| Ruido | 20% | 37 estaciones acusticas SIVCA (series desde 1998) | Datos hasta feb. 2026 |
+| Movilidad | 15% | ~4.000 sensores de trafico + 635 estaciones BiciMAD + 834 km carriles bici | Tiempo real (~5 min / ~14 seg) |
+| Reciclaje | 10% | 44.251 contenedores por tipo y distrito | Censo 2024 |
 
-## Paginas
+## Paginas (single-page scroll)
 
-| Ruta | Contenido |
-|------|-----------|
-| `/` | Mapa choropleth interactivo + ranking + busqueda por direccion |
-| `/barrio/[slug]` | Scorecard: Indice Verde + 5 sub-indices + datos detallados (especies, reciclaje) |
-| `/comparar` | Radar chart comparativo de 2-4 distritos |
-| `/historico` | Tendencias de ruido y NO2 con anotaciones de politicas publicas |
-| `/metodologia` | Formula, pesos, flujo de 14 datasets, tiers, fuentes |
+| Seccion | Contenido |
+|---------|-----------|
+| Mapa | Choropleth interactivo + BiciMAD live + carriles bici + busqueda por direccion |
+| BiciMAD | Dashboard en vivo — estaciones activas, bicis disponibles, top 10 |
+| Comparar | Radar chart comparativo de 2-4 distritos |
+| Tendencias | Ruido (2000-2025) + NO2 mensual, con anotaciones de politicas publicas. Estaciones seleccionables |
+| Metodologia | Formula, pesos, 17 datasets con links directos al portal, tiers |
+| `/barrio/[slug]` | Scorecard: Indice Verde + 5 sub-indices + narrativa + datos + BiciMAD + especies + reciclaje |
+
+## Datos en tiempo real
+
+| Fuente | Frecuencia | API |
+|--------|-----------|-----|
+| Calidad del aire | ~20 min | ciudadesabiertas.madrid.es |
+| Trafico | ~5 min | informo.madrid.es |
+| BiciMAD | ~14 seg | madrid.publicbikesystem.net (GBFS v2.3) |
 
 ## Stack
 
@@ -46,16 +55,17 @@ Puntuacion compuesta de 5 sub-indices, cada uno normalizado a escala 0-100:
 | Hosting | Firebase Hosting |
 | Analytics | Firebase Analytics |
 | Datos build-time | Node.js scripts (SheetJS, PapaParse) |
-| Datos real-time | APIs ciudadesabiertas.madrid.es + informo.madrid.es |
+| Datos real-time | 3 APIs publicas (aire, trafico, BiciMAD) |
 
 ## Desarrollo
 
 ```bash
-# Instalar dependencias
 npm install
 
 # Descargar geodata (una sola vez)
 node scripts/download-geodata.mjs
+node scripts/download-stations.mjs
+node scripts/download-bike-lanes.mjs
 
 # Agregar datos (una sola vez, o para refrescar)
 node scripts/aggregate-data.mjs
@@ -67,23 +77,8 @@ npm run dev
 npm run build
 
 # Deploy
-firebase deploy --only hosting --project madridverde-web
+firebase deploy --only hosting --project madrid-verde
 ```
-
-## Datos
-
-Los datos se procesan en dos momentos:
-
-**Build-time** (scripts/aggregate-data.mjs):
-- Arbolado XLSX (52MB) -> trees.json (9.5KB)
-- Ruido CSV -> noise-monthly.json (1.1MB)
-- Sociodemograficos CSV (30MB) -> demographics.json (3KB)
-- Contenedores CSV (6.6MB) -> recycling.json (7.5KB)
-- Aire historico CSVs -> air-monthly.json (65KB)
-
-**Runtime** (client-side):
-- Calidad del aire (JSON, cada 20 min)
-- Trafico (XML, cada 5 min)
 
 ## Licencia
 
