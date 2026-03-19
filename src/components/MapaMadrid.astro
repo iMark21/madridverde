@@ -59,9 +59,19 @@
 
   const geojson = topojson.feature(distritosTopoRaw as any, (distritosTopoRaw as any).objects.DISTRITOS);
 
+  // Madrid municipality bounds (with slight padding)
+  const madridBounds = L.latLngBounds(
+    [40.31, -3.89], // SW corner
+    [40.56, -3.52], // NE corner
+  );
+
   const map = L.map('map', {
     center: [40.42, -3.70],
     zoom: 11,
+    minZoom: 10,
+    maxZoom: 16,
+    maxBounds: madridBounds.pad(0.15),
+    maxBoundsViscosity: 0.9,
     zoomControl: true,
     preferCanvas: true,
     attributionControl: true,
