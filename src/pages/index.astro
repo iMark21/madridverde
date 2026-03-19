@@ -75,6 +75,20 @@ function slugify(name: string): string {
     </div>
   </section>
 
+  <!-- SECTION: BICIMAD -->
+  <section id="bicimad" class="section">
+    <div class="section-header">
+      <h2>BiciMAD en tiempo real</h2>
+      <p class="section-subtitle">635 estaciones de bicicleta publica — disponibilidad actualizada cada 14 segundos</p>
+    </div>
+    <div class="bicimad-dashboard" id="bicimad-dashboard">
+      <div class="bicimad-stats" id="bicimad-stats">
+        <p class="bicimad-loading">Cargando datos en vivo de BiciMAD...</p>
+      </div>
+      <div class="bicimad-list" id="bicimad-list"></div>
+    </div>
+  </section>
+
   <!-- SECTION: COMPARAR -->
   <section id="comparar" class="section">
     <div class="section-header">
@@ -191,6 +205,45 @@ function slugify(name: string): string {
   </section>
 
 </BaseLayout>
+
+<!-- BiciMAD dashboard script -->
+<script>
+  import { fetchBiciMAD } from '../lib/bicimad';
+
+  fetchBiciMAD().then((stations) => {
+    const statsEl = document.getElementById('bicimad-stats');
+    const listEl = document.getElementById('bicimad-list');
+    if (!statsEl || !listEl || stations.length === 0) {
+      if (statsEl) statsEl.innerHTML = '<p>No se pudieron cargar los datos de BiciMAD</p>';
+      return;
+    }
+
+    const active = stations.filter(s => s.inService);
+    const totalBikes = active.reduce((s, st) => s + st.bikesAvailable, 0);
+    const totalDocks = active.reduce((s, st) => s + st.docksAvailable, 0);
+    const totalCapacity = active.reduce((s, st) => s + st.capacity, 0);
+    const availability = totalCapacity > 0 ? Math.round((totalBikes / totalCapacity) * 100) : 0;
+
+    statsEl.innerHTML = `
+      <div class="bici-stat"><span class="bici-stat-value">${active.length}</span><span class="bici-stat-label">estaciones activas</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${totalBikes.toLocaleString('es-ES')}</span><span class="bici-stat-label">bicis disponibles ahora</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${totalDocks.toLocaleString('es-ES')}</span><span class="bici-stat-label">docks libres</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${availability}%</span><span class="bici-stat-label">disponibilidad</span></div>
+    `;
+
+    // Top 10 stations with most bikes
+    const top = [...active].sort((a, b) => b.bikesAvailable - a.bikesAvailable).slice(0, 10);
+    listEl.innerHTML = '<h3>Estaciones con mas bicis disponibles</h3>' +
+      top.map(s => {
+        const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
+        return `<div class="bici-row">
+          <span class="bici-name">${s.name}</span>
+          <div class="bici-bar-track"><div class="bici-bar-fill" style="width:${pct}%"></div></div>
+          <span class="bici-count">${s.bikesAvailable}/${s.capacity}</span>
+        </div>`;
+      }).join('');
+  });
+</script>
 
 <!-- Search geocoding script -->
 <script>
@@ -424,6 +477,9 @@ function slugify(name: string): string {
   .dataset-group li a:hover { color: var(--color-bosque); }
   .dataset-group li:last-child a { border-bottom: none; }
 
+  /* BiciMAD */
+  .bicimad-dashboard { margin-top: 1rem; }
+
   .tiers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; border-top: 4px solid var(--tier-color); font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
@@ -451,4 +507,74 @@ function slugify(name: string): string {
   .search-results li { padding: 0.6rem 1.25rem; cursor: pointer; font-size: 0.85rem; color: #264653; border-bottom: 1px solid rgba(0,0,0,0.04); transition: background 0.1s; line-height: 1.4; }
   .search-results li:hover { background: rgba(45,106,79,0.08); color: #2D6A4F; }
   .search-results li:last-child { border-bottom: none; }
+
+  /* BiciMAD global styles */
+  .bicimad-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .bici-stat {
+    background: white;
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .bici-stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #2D6A4F;
+    display: block;
+    line-height: 1;
+  }
+  .bici-stat-label {
+    font-size: 0.8rem;
+    color: #6C757D;
+    margin-top: 0.25rem;
+    display: block;
+  }
+  .bicimad-list h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: #264653;
+  }
+  .bici-row {
+    display: grid;
+    grid-template-columns: 1fr 200px 70px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .bici-name { color: #264653; font-weight: 500; }
+  .bici-bar-track {
+    height: 8px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bici-bar-fill {
+    height: 100%;
+    background: #2D6A4F;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+  .bici-count {
+    text-align: right;
+    font-weight: 600;
+    color: #2D6A4F;
+    font-size: 0.8rem;
+  }
+  .bicimad-loading {
+    text-align: center;
+    color: #6C757D;
+    font-style: italic;
+    padding: 2rem;
+  }
+  @media (max-width: 768px) {
+    .bicimad-stats { grid-template-columns: repeat(2, 1fr); }
+    .bici-row { grid-template-columns: 1fr 100px 50px; font-size: 0.8rem; }
+  }
 </style>

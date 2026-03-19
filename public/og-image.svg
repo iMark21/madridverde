@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F5F1EB"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#2D6A4F"/>
+  <text x="600" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="72" fill="#2D6A4F" font-weight="bold">MadridVerde</text>
+  <text x="600" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#6C757D">Indice Verde de Madrid — Dashboard medioambiental</text>
+  <text x="600" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#264653">17 datasets abiertos · 5 sub-indices · Datos en tiempo real</text>
+  <g transform="translate(350, 420)">
+    <rect x="0" y="0" width="100" height="60" rx="8" fill="#2D6A4F"/>
+    <text x="50" y="25" text-anchor="middle" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">AIRE</text>
+    <text x="50" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="white">30%</text>
+    <rect x="110" y="0" width="100" height="60" rx="8" fill="#52B788"/>
+    <text x="160" y="25" text-anchor="middle" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">VERDE</text>
+    <text x="160" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="white">25%</text>
+    <rect x="220" y="0" width="100" height="60" rx="8" fill="#E9C46A"/>
+    <text x="270" y="25" text-anchor="middle" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">RUIDO</text>
+    <text x="270" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="white">20%</text>
+    <rect x="330" y="0" width="100" height="60" rx="8" fill="#F4A261"/>
+    <text x="380" y="25" text-anchor="middle" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">MOVILIDAD</text>
+    <text x="380" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="white">15%</text>
+    <rect x="440" y="0" width="100" height="60" rx="8" fill="#264653"/>
+    <text x="490" y="25" text-anchor="middle" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">RECICLAJE</text>
+    <text x="490" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="white">10%</text>
+  </g>
+  <text x="600" y="550" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#40916C" font-style="italic">Porque respirar no deberia ser cuestion de codigo postal</text>
+  <text x="600" y="590" text-anchor="middle" font-family="Arial" font-size="16" fill="#6C757D">madrid-verde.web.app</text>
+</svg>
