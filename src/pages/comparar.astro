@@ -54,9 +54,7 @@ const districtOptions = allDistricts.map(d => ({
 </BaseLayout>
 
 <script>
-  import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
-
-  Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+  import { Chart } from '../lib/chart-setup';
 
   const COLORS = ['#2D6A4F', '#E76F51', '#264653', '#E9C46A'];
   const MAX_SELECTED = 4;

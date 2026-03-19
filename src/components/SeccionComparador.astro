@@ -46,9 +46,7 @@ const districtOptions = allDistricts.map(d => ({
 </div>
 
 <script>
-  import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
-
-  Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+  import { Chart } from '../lib/chart-setup';
 
   const COLORS = ['#2D6A4F', '#E76F51', '#264653', '#E9C46A'];
   const MAX_SELECTED = 4;
@@ -64,7 +62,8 @@ const districtOptions = allDistricts.map(d => ({
   const selected: DistrictData[] = [];
   let chart: Chart | null = null;
 
-  const chips = document.querySelectorAll('.selector-chip');
+  const selectorContainer = document.getElementById('district-selector')!;
+  const chips = selectorContainer.querySelectorAll('.selector-chip');
   const chartArea = document.getElementById('chart-area')!;
   const emptyState = document.getElementById('empty-state')!;
   const tableContainer = document.getElementById('comparison-table')!;
@@ -103,6 +102,11 @@ const districtOptions = allDistricts.map(d => ({
     chartArea.style.display = 'grid';
     emptyState.style.display = 'none';
 
+    // Defer chart creation to next frame to ensure container has dimensions
+    requestAnimationFrame(() => renderRadar());
+  }
+
+  function renderRadar() {
     const labels = selected[0].subIndices.map((si) => `${si.name} (${Math.round(si.weight * 100)}%)`);
     const datasets = selected.map((d, i) => ({
       label: `${d.name} (${d.score})`,

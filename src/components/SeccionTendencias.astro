@@ -58,13 +58,10 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
 </div>
 
 <script>
-  import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler } from 'chart.js';
-  import annotationPlugin from 'chartjs-plugin-annotation';
+  import { Chart } from '../lib/chart-setup';
   import noiseData from '../data/noise-monthly.json';
   import airData from '../data/air-monthly.json';
   import airStations from '../data/air-stations.json';
-
-  Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler, annotationPlugin);
 
   const CHART_COLORS = ['#2D6A4F', '#52B788', '#E9C46A', '#F4A261', '#264653', '#E76F51', '#40916C', '#6C757D'];
 
@@ -180,7 +177,8 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     });
   });
 
-  renderNoiseChart(selectedNoiseStations);
+  // Defer initial render to ensure canvas has dimensions
+  setTimeout(() => renderNoiseChart(selectedNoiseStations), 50);
 
   // --- Air chart with selectable stations ---
 
@@ -260,7 +258,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     });
   });
 
-  renderAirChart(selectedAirStations);
+  setTimeout(() => renderAirChart(selectedAirStations), 100);
 </script>
 
 <style>
