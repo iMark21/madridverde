@@ -194,13 +194,24 @@ function calcReciclaje(distCode: string, population: number, distName: string): 
   return { name: 'Reciclaje', score, weight: 0.10, detail };
 }
 
-/** Movilidad: placeholder until MV-08 (traffic data) */
-function calcMovilidad(): SubIndex {
+/** Movilidad: uses traffic score when available, neutral otherwise */
+function calcMovilidad(trafficScore?: number): SubIndex {
+  if (trafficScore != null) {
+    let detail: string;
+    if (trafficScore >= 80) {
+      detail = 'Trafico fluido en la mayoria de sensores';
+    } else if (trafficScore >= 50) {
+      detail = 'Trafico denso en algunas vias principales';
+    } else {
+      detail = 'Alta congestion — afecta la calidad ambiental';
+    }
+    return { name: 'Movilidad', score: trafficScore, weight: 0.15, detail };
+  }
   return {
     name: 'Movilidad',
     score: 50,
     weight: 0.15,
-    detail: 'Datos pendientes (estimacion neutra)',
+    detail: 'Estimacion neutra (datos de trafico se cargan en tiempo real)',
   };
 }
 
@@ -212,7 +223,8 @@ function calcMovilidad(): SubIndex {
  * If not provided, uses a neutral score.
  */
 export function computeGreenIndex(
-  airScores?: Map<string, number>
+  airScores?: Map<string, number>,
+  trafficScore?: number
 ): DistrictIndex[] {
   const districts: DistrictIndex[] = [];
 
@@ -234,7 +246,7 @@ export function computeGreenIndex(
 
     const verde = calcVerde(code, population);
     const ruido = calcRuido(code);
-    const movilidad = calcMovilidad();
+    const movilidad = calcMovilidad(trafficScore);
     const reciclaje = calcReciclaje(code, population, name);
 
     const subIndices = [aire, verde, ruido, movilidad, reciclaje];

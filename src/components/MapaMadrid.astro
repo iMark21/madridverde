@@ -34,6 +34,7 @@
   import distritosTopoRaw from '../data/distritos.topo.json';
   import { computeGreenIndex, getContextPhrase, getTier } from '../lib/green-index';
   import { fetchAirQuality, aggregateByDistrict } from '../lib/air-quality';
+  import { fetchTrafficSummary } from '../lib/traffic';
 
   function slugify(name: string): string {
     return name
@@ -123,17 +124,19 @@
 
   // --- Async: fetch real-time air quality and update map ---
 
-  fetchAirQuality().then((readings) => {
-    if (readings.length === 0) return;
-
-    const airByDistrict = aggregateByDistrict(readings);
+  Promise.all([fetchAirQuality(), fetchTrafficSummary()]).then(([readings, traffic]) => {
     const airScores = new Map<string, number>();
-    for (const [code, data] of airByDistrict) {
-      airScores.set(code, data.score);
+    if (readings.length > 0) {
+      const airByDistrict = aggregateByDistrict(readings);
+      for (const [code, data] of airByDistrict) {
+        airScores.set(code, data.score);
+      }
     }
 
-    // Recompute with real air data
-    greenIndex = computeGreenIndex(airScores);
+    const trafficScore = traffic?.score ?? undefined;
+
+    // Recompute with real air + traffic data
+    greenIndex = computeGreenIndex(airScores, trafficScore);
     greenIndex.forEach((d) => indexMap.set(d.code, d));
 
     // Update map styles and tooltips

@@ -17,6 +17,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- Screen reader alternative provided by script -->
       </p>
     </div>
+
+    <div class="chart-section">
+      <h2>Calidad del aire (NO2 µg/m³)</h2>
+      <p class="chart-description">Evolucion mensual del dioxido de nitrogeno en estaciones representativas. El limite anual de la OMS es 40 µg/m³. El NO2 es el contaminante mas relevante en Madrid por el trafico.</p>
+      <div class="chart-container">
+        <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid"></canvas>
+      </div>
+    </div>
   </section>
 </BaseLayout>
 
@@ -220,6 +228,109 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     tableHTML += '</tbody></table>';
     srDesc.innerHTML = tableHTML;
   }
+
+  // --- Air quality chart (NO2 monthly) ---
+
+  import airData from '../data/air-monthly.json';
+  import airStations from '../data/air-stations.json';
+
+  const AIR_STATIONS = ['4', '8', '49', '47', '17'];
+  const AIR_COLORS_MAP = ['#2D6A4F', '#52B788', '#264653', '#F4A261', '#E76F51'];
+
+  // Build monthly labels and datasets for NO2
+  const allMonths: string[] = [];
+  const monthLabels: string[] = [];
+
+  // Collect all months from all stations
+  for (const s of airData as any[]) {
+    const no2 = s.contaminants?.NO2 || [];
+    for (const entry of no2) {
+      if (!allMonths.includes(entry.month)) allMonths.push(entry.month);
+    }
+  }
+  allMonths.sort();
+
+  // Format labels: "2025-01" → "Ene 25"
+  const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  for (const m of allMonths) {
+    const [y, mo] = m.split('-');
+    monthLabels.push(`${MONTH_NAMES[parseInt(mo)-1]} ${y.slice(2)}`);
+  }
+
+  const airDatasets = AIR_STATIONS.map((id, i) => {
+    const s = (airData as any[]).find((x) => x.station === id);
+    if (!s) return null;
+    const no2 = s.contaminants?.NO2 || [];
+    const monthMap = new Map(no2.map((e: any) => [e.month, e.avg]));
+
+    const info = (airStations as any[]).find((x: any) => x.code === id);
+
+    return {
+      label: info?.name || `Estacion ${id}`,
+      data: allMonths.map((m) => monthMap.get(m) ?? null),
+      borderColor: AIR_COLORS_MAP[i],
+      backgroundColor: AIR_COLORS_MAP[i] + '20',
+      borderWidth: 2,
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      tension: 0.3,
+      spanGaps: true,
+    };
+  }).filter(Boolean);
+
+  // WHO limit line
+  airDatasets.push({
+    label: 'Limite OMS (40 µg/m³)',
+    data: allMonths.map(() => 40),
+    borderColor: '#E76F51',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    tension: 0,
+    spanGaps: true,
+    // @ts-ignore
+    borderDash: [6, 4],
+  });
+
+  const airCanvas = document.getElementById('air-chart') as HTMLCanvasElement;
+
+  new Chart(airCanvas, {
+    type: 'line',
+    data: { labels: monthLabels, datasets: airDatasets as any },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true, padding: 12 },
+        },
+        tooltip: {
+          backgroundColor: '#264653',
+          titleFont: { family: 'Inter', weight: 'bold' },
+          bodyFont: { family: 'Inter' },
+          callbacks: {
+            label: (item) => item.raw === null ? '' : `${item.dataset.label}: ${item.raw} µg/m³`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 80,
+          title: { display: true, text: 'NO2 (µg/m³)', font: { family: 'Inter', size: 13 } },
+          ticks: { font: { family: 'Inter', size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+        },
+        x: {
+          ticks: { font: { family: 'Inter', size: 10 }, maxRotation: 45 },
+          grid: { color: 'transparent' },
+        },
+      },
+    },
+  });
 </script>
 
 <style>
