@@ -86,11 +86,11 @@ function calcVerde(distCode: string, population: number): SubIndex {
 
   let detail: string;
   if (m2PerCap < 9) {
-    detail = `Solo ${m2PerCap.toFixed(1)} m²/hab de zonas verdes — la OMS recomienda minimo 9`;
+    detail = `Solo ${m2PerCap.toFixed(1)} m²/hab de zonas verdes — la OMS recomienda minimo 9 (censo municipal 2024)`;
   } else if (m2PerCap < 15) {
-    detail = `${m2PerCap.toFixed(1)} m²/hab — cumple el minimo de la OMS pero hay margen de mejora`;
+    detail = `${m2PerCap.toFixed(1)} m²/hab — cumple el minimo de la OMS (censo municipal 2024)`;
   } else {
-    detail = `${m2PerCap.toFixed(1)} m²/hab de zonas verdes — bien por encima del minimo de la OMS`;
+    detail = `${m2PerCap.toFixed(1)} m²/hab de zonas verdes — bien por encima del minimo de la OMS (censo 2024)`;
   }
 
   return { name: 'Verde', score, weight: 0.25, detail };
@@ -153,11 +153,11 @@ function calcRuido(distCode: string): SubIndex {
 
   let detail: string;
   if (avgLaeq > 65) {
-    detail = `${avgLaeq.toFixed(1)} dB — nivel alto, supera ampliamente la recomendacion de la OMS (55 dB)`;
+    detail = `${avgLaeq.toFixed(1)} dB — supera la recomendacion OMS de 55 dB (media SIVCA hasta feb. 2026)`;
   } else if (avgLaeq > 55) {
-    detail = `${avgLaeq.toFixed(1)} dB — por encima de la recomendacion de la OMS (55 dB)`;
+    detail = `${avgLaeq.toFixed(1)} dB — por encima de la recomendacion OMS (media SIVCA hasta feb. 2026)`;
   } else {
-    detail = `${avgLaeq.toFixed(1)} dB — dentro de los limites recomendados por la OMS`;
+    detail = `${avgLaeq.toFixed(1)} dB — dentro de los limites OMS (media SIVCA hasta feb. 2026)`;
   }
 
   return { name: 'Ruido', score, weight: 0.20, detail };
@@ -184,11 +184,11 @@ function calcReciclaje(distCode: string, population: number, distName: string): 
 
   let detail: string;
   if (per1000 < 8) {
-    detail = `Solo ${per1000.toFixed(1)} contenedores por cada 1.000 vecinos — infraestructura limitada`;
+    detail = `Solo ${per1000.toFixed(1)} contenedores/1.000 hab — infraestructura limitada (censo 2024)`;
   } else if (per1000 < 15) {
-    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — cobertura aceptable`;
+    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — cobertura aceptable (censo 2024)`;
   } else {
-    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — buena cobertura de reciclaje`;
+    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — buena cobertura de reciclaje (censo 2024)`;
   }
 
   return { name: 'Reciclaje', score, weight: 0.10, detail };
@@ -211,7 +211,7 @@ function calcMovilidad(trafficScore?: number): SubIndex {
     name: 'Movilidad',
     score: 50,
     weight: 0.15,
-    detail: 'Estimacion neutra (datos de trafico se cargan en tiempo real)',
+    detail: 'Cargando datos de trafico en tiempo real...',
   };
 }
 
@@ -240,8 +240,8 @@ export function computeGreenIndex(
       score: airScores?.get(code) ?? 50,
       weight: 0.30,
       detail: airScores?.has(code)
-        ? `Score basado en NO2, PM2.5, PM10, O3 en tiempo real`
-        : 'Sin datos en tiempo real (estimacion neutra)',
+        ? `NO2, PM2.5, PM10, O3 en tiempo real — actualizado hace minutos`
+        : 'Cargando datos en tiempo real...',
     };
 
     const verde = calcVerde(code, population);

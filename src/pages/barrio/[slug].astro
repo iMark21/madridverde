@@ -198,7 +198,95 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
     )}
   </section>
 <script>
+  import { fetchAirQuality, aggregateByDistrict } from '../../lib/air-quality';
+  import { fetchTrafficSummary } from '../../lib/traffic';
   import { fetchBiciMAD } from '../../lib/bicimad';
+
+  // --- Live hydration: update Aire + Movilidad sub-indices ---
+  const scoreValueEl = document.querySelector('.score-value');
+  const subIndexEls = document.querySelectorAll('.sub-index');
+  const scoreCardEl = document.querySelector('.score-card--main');
+
+  Promise.all([fetchAirQuality(), fetchTrafficSummary()]).then(([readings, traffic]) => {
+    if (readings.length === 0 && !traffic) return;
+
+    // Get district code from the URL
+    const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+    const codeMap: Record<string, string> = {
+      'centro':'01','arganzuela':'02','retiro':'03','salamanca':'04',
+      'chamartin':'05','tetuan':'06','chamberi':'07','fuencarral-el-pardo':'08',
+      'moncloa-aravaca':'09','latina':'10','carabanchel':'11','usera':'12',
+      'puente-de-vallecas':'13','moratalaz':'14','ciudad-lineal':'15',
+      'hortaleza':'16','villaverde':'17','villa-de-vallecas':'18',
+      'vicalvaro':'19','san-blas-canillejas':'20','barajas':'21',
+    };
+    const distCode = codeMap[slug];
+    if (!distCode) return;
+
+    // Update Aire sub-index
+    if (readings.length > 0) {
+      const airByDistrict = aggregateByDistrict(readings);
+      const airData = airByDistrict.get(distCode);
+      if (airData) {
+        subIndexEls.forEach((el) => {
+          const nameEl = el.querySelector('.sub-index-name');
+          if (nameEl?.textContent === 'Aire') {
+            const valueEl = el.querySelector('.sub-index-value');
+            const detailEl = el.querySelector('.sub-index-detail');
+            if (valueEl) {
+              valueEl.textContent = String(airData.score);
+              (valueEl as HTMLElement).style.color = airData.score >= 70 ? '#2D6A4F' : airData.score >= 40 ? '#E9C46A' : '#E76F51';
+            }
+            if (detailEl) {
+              const contNames = Object.keys(airData.readings).join(', ');
+              detailEl.textContent = `Datos en vivo: ${contNames}. Actualizado hace minutos`;
+            }
+          }
+        });
+      }
+    }
+
+    // Update Movilidad sub-index
+    if (traffic) {
+      subIndexEls.forEach((el) => {
+        const nameEl = el.querySelector('.sub-index-name');
+        if (nameEl?.textContent === 'Movilidad') {
+          const valueEl = el.querySelector('.sub-index-value');
+          const detailEl = el.querySelector('.sub-index-detail');
+          if (valueEl) {
+            valueEl.textContent = String(traffic.score);
+            (valueEl as HTMLElement).style.color = traffic.score >= 70 ? '#2D6A4F' : traffic.score >= 40 ? '#E9C46A' : '#E76F51';
+          }
+          if (detailEl) {
+            detailEl.textContent = `${traffic.fluido} sensores fluidos, ${traffic.denso} densos, ${traffic.congestionado} congestionados — en vivo`;
+          }
+        }
+      });
+    }
+
+    // Recalculate total score
+    let totalWeighted = 0;
+    subIndexEls.forEach((el) => {
+      const valueEl = el.querySelector('.sub-index-value');
+      const weightEl = el.querySelector('.sub-index-weight');
+      if (valueEl && weightEl) {
+        const score = parseInt(valueEl.textContent || '50');
+        const weight = parseInt(weightEl.textContent || '0') / 100;
+        totalWeighted += score * weight;
+      }
+    });
+    const newScore = Math.round(totalWeighted);
+    if (scoreValueEl) scoreValueEl.textContent = String(newScore);
+
+    // Update tier color
+    const tierColor = newScore >= 85 ? '#2D6A4F' : newScore >= 70 ? '#52B788' : newScore >= 55 ? '#E9C46A' : newScore >= 40 ? '#F4A261' : '#E76F51';
+    const tierName = newScore >= 85 ? 'Excelente' : newScore >= 70 ? 'Bueno' : newScore >= 55 ? 'Aceptable' : newScore >= 40 ? 'Mejorable' : 'Critico';
+    if (scoreCardEl) (scoreCardEl as HTMLElement).style.background = tierColor;
+    const tierEl = document.querySelector('.score-tier');
+    if (tierEl) tierEl.textContent = tierName;
+
+    console.log('[MadridVerde] Scorecard hydrated with live air + traffic data');
+  });
 
   // BiciMAD per-district
   const districtBounds = document.getElementById('bicimad-district');

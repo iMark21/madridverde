@@ -43,6 +43,7 @@ const districtOptions = allDistricts.map(d => ({
   </div>
 
   <p class="empty-state" id="empty-state">Selecciona al menos 2 distritos para comparar</p>
+  <p class="comparator-note">Aire y Movilidad se actualizan en tiempo real en el mapa y en la ficha de cada distrito.</p>
 </div>
 
 <script>
@@ -215,6 +216,7 @@ const districtOptions = allDistricts.map(d => ({
   .comparison-table :global(.total-row td) { border-top: 2px solid rgba(0,0,0,0.1); font-family: var(--font-display); font-size: 1.1rem; }
 
   .empty-state { text-align: center; color: var(--color-piedra); padding: 2rem; font-style: italic; }
+  .comparator-note { font-size: 0.75rem; color: var(--color-piedra); font-style: italic; margin-top: 0.75rem; }
 
   @media (max-width: 768px) {
     .chart-area { grid-template-columns: 1fr; }
