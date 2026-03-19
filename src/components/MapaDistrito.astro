@@ -18,9 +18,16 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
       aria-label={`Mapa del distrito ${districtName} con estaciones BiciMAD y carriles bici`}>
     </div>
     <div class="district-map-legend">
-      <span class="dml-item"><span class="dml-dot dml-dot--bike"></span> BiciMAD</span>
-      <span class="dml-item"><span class="dml-line dml-line--lane"></span> Carril bici</span>
-      <span class="dml-item dml-live">En vivo</span>
+      <p class="dml-section-title">Estaciones BiciMAD</p>
+      <span class="dml-item"><span class="dml-dot" style="background:#2D6A4F"></span> Alta disponibilidad (&ge;80%)</span>
+      <span class="dml-item"><span class="dml-dot" style="background:#E9C46A"></span> Media disponibilidad (20–79%)</span>
+      <span class="dml-item"><span class="dml-dot" style="background:#E76F51"></span> Baja disponibilidad (&lt;20%)</span>
+      <p class="dml-section-title">Carriles ciclistas</p>
+      <span class="dml-item"><span class="dml-lane" style="background:#1B563D;height:4px"></span> Anillo Verde</span>
+      <span class="dml-item"><span class="dml-lane" style="background:#40916C;height:3px"></span> Vía Exclusiva</span>
+      <span class="dml-item"><span class="dml-lane" style="background:#74C69D;height:2px"></span> Vía Preferente</span>
+      <span class="dml-item"><span class="dml-lane" style="background:#E9C46A;height:2px"></span> Uso Compartido</span>
+      <p class="dml-footer">Datos en vivo · actualizado cada 14s</p>
     </div>
   </div>
 </div>
@@ -95,24 +102,26 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
 
         const bounds = districtLayer.getBounds();
         const nearby = stations.filter(s =>
-          s.inService && bounds.contains(L.latLng(s.lat, s.lon))
+          s.inService && s.capacity > 0 && bounds.contains(L.latLng(s.lat, s.lon))
         );
 
-        const bikeIcon = L.divIcon({
-          className: 'dm-bike-marker',
-          html: '<div class="dm-bike-dot"></div>',
-          iconSize: [12, 12],
-          iconAnchor: [6, 6],
-        });
-
         for (const s of nearby) {
-          const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
-          const color = pct > 50 ? '#2D6A4F' : pct > 20 ? '#E9C46A' : '#E76F51';
+          const pct = Math.round((s.bikesAvailable / s.capacity) * 100);
+          const dotColor = pct >= 80 ? '#2D6A4F' : pct >= 20 ? '#E9C46A' : '#E76F51';
+          const availLabel = pct >= 80 ? 'Alta' : pct >= 20 ? 'Media' : 'Baja';
+
+          const bikeIcon = L.divIcon({
+            className: 'dm-bike-marker',
+            html: `<div class="dm-bike-dot" style="background:${dotColor}"></div>`,
+            iconSize: [12, 12],
+            iconAnchor: [6, 6],
+          });
 
           L.marker([s.lat, s.lon], { icon: bikeIcon })
             .bindTooltip(
               `<strong>${s.name}</strong><br/>` +
-              `<span style="color:${color};font-weight:600">${s.bikesAvailable}</span> bicis · ${s.docksAvailable} docks`,
+              `Disponibilidad: <span style="color:${dotColor};font-weight:600">${availLabel} (${pct}%)</span><br/>` +
+              `${s.bikesAvailable} bicis · ${s.docksAvailable} docks libres`,
               { className: 'dm-tooltip' }
             )
             .addTo(map);
@@ -124,12 +133,24 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (!data) return;
+          type LaneStyle = { color: string; weight: number; opacity: number; label: string };
+          const LANE_STYLES: Record<number, LaneStyle> = {
+            1: { color: '#1B563D', weight: 3.5, opacity: 0.85, label: 'Anillo Verde' },
+            3: { color: '#40916C', weight: 2.5, opacity: 0.80, label: 'Vía Exclusiva' },
+            4: { color: '#74C69D', weight: 2.0, opacity: 0.70, label: 'Vía Preferente' },
+            5: { color: '#E9C46A', weight: 1.5, opacity: 0.60, label: 'Uso Compartido' },
+          };
+          const DEFAULT_LANE: LaneStyle = { color: '#40916C', weight: 2, opacity: 0.65, label: 'Carril bici' };
+
           L.geoJSON(data, {
-            style: (feature) => ({
-              color: feature?.properties?.t === 3 ? '#40916C' : '#52B788',
-              weight: 2.5,
-              opacity: 0.6,
-            }),
+            style: (feature) => {
+              const s = LANE_STYLES[feature?.properties?.t] || DEFAULT_LANE;
+              return { color: s.color, weight: s.weight, opacity: s.opacity };
+            },
+            onEachFeature: (feature, layer) => {
+              const s = LANE_STYLES[feature?.properties?.t] || DEFAULT_LANE;
+              layer.bindTooltip(s.label, { className: 'dm-tooltip', sticky: true });
+            },
           }).addTo(map);
         });
     }
@@ -163,46 +184,58 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
     bottom: 12px;
     left: 12px;
     display: flex;
-    gap: 12px;
-    background: rgba(245, 241, 235, 0.92);
-    padding: 6px 12px;
-    border-radius: 6px;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(245, 241, 235, 0.95);
+    padding: 10px 14px;
+    border-radius: 8px;
     z-index: 1000;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    max-width: 200px;
+  }
+
+  .dml-section-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--color-tinta);
+    margin: 4px 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .dml-section-title:first-child {
+    margin-top: 0;
   }
 
   .dml-item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     color: var(--color-piedra);
   }
 
   .dml-dot {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
-  }
-
-  .dml-dot--bike {
-    background: var(--color-bosque);
     border: 1.5px solid white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    flex-shrink: 0;
   }
 
-  .dml-line {
-    width: 16px;
-    height: 3px;
+  .dml-lane {
+    width: 18px;
     border-radius: 2px;
+    flex-shrink: 0;
+    display: inline-block;
   }
 
-  .dml-line--lane {
-    background: var(--color-hoja);
-  }
-
-  .dml-live {
+  .dml-footer {
+    font-size: 0.65rem;
     color: var(--color-bosque);
     font-weight: 600;
-    font-size: 0.7rem;
+    margin: 6px 0 0 0;
   }
 
   :global(.dm-bike-marker) {
