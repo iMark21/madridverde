@@ -1,0 +1,338 @@
+[
+  {
+    "code": "4",
+    "name": "Plaza de España",
+    "lat": 40.4238823,
+    "lon": -3.7122567,
+    "type": "Urbana tráfico",
+    "districtCode": "01",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": false
+    }
+  },
+  {
+    "code": "8",
+    "name": "Escuelas Aguirre",
+    "lat": 40.4215533,
+    "lon": -3.6823158,
+    "type": "Urbana tráfico",
+    "districtCode": "03",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": true
+    }
+  },
+  {
+    "code": "11",
+    "name": "Ramón y Cajal",
+    "lat": 40.4514734,
+    "lon": -3.6773491,
+    "type": "Urbana tráfico",
+    "districtCode": "05",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": false
+    }
+  },
+  {
+    "code": "16",
+    "name": "Arturo Soria",
+    "lat": 40.4400457,
+    "lon": -3.6392422,
+    "type": "Urbana fondo",
+    "districtCode": "15",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "17",
+    "name": "Villaverde",
+    "lat": 40.347147,
+    "lon": -3.7133167,
+    "type": "Urbana fondo",
+    "districtCode": "17",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "18",
+    "name": "Farolillo",
+    "lat": 40.3947825,
+    "lon": -3.7318356,
+    "type": "Urbana fondo",
+    "districtCode": "12",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "24",
+    "name": "Casa de Campo",
+    "lat": 40.4193577,
+    "lon": -3.7473445,
+    "type": "Suburbana",
+    "districtCode": "09",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": true
+    }
+  },
+  {
+    "code": "27",
+    "name": "Barajas Pueblo",
+    "lat": 40.4769179,
+    "lon": -3.5800258,
+    "type": "Urbana fondo",
+    "districtCode": "21",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "35",
+    "name": "Plaza del Carmen",
+    "lat": 40.4192091,
+    "lon": -3.7031662,
+    "type": "Urbana fondo",
+    "districtCode": "01",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "36",
+    "name": "Moratalaz",
+    "lat": 40.4079517,
+    "lon": -3.6453104,
+    "type": "Urbana tráfico",
+    "districtCode": "14",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": false,
+      "O3": false
+    }
+  },
+  {
+    "code": "38",
+    "name": "Cuatro Caminos",
+    "lat": 40.4455439,
+    "lon": -3.7071303,
+    "type": "Urbana tráfico",
+    "districtCode": "06",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "39",
+    "name": "Barrio del Pilar",
+    "lat": 40.4782322,
+    "lon": -3.7115364,
+    "type": "Urbana tráfico",
+    "districtCode": "08",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "40",
+    "name": "Vallecas",
+    "lat": 40.3881478,
+    "lon": -3.6515286,
+    "type": "Urbana fondo",
+    "districtCode": "13",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": false,
+      "O3": false
+    }
+  },
+  {
+    "code": "47",
+    "name": "Méndez Álvaro",
+    "lat": 40.3980991,
+    "lon": -3.6868138,
+    "type": "Urbana fondo",
+    "districtCode": "02",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "48",
+    "name": "Castellana",
+    "lat": 40.4398904,
+    "lon": -3.6903729,
+    "type": "Urbana tráfico",
+    "districtCode": "05",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "49",
+    "name": "Parque del Retiro",
+    "lat": 40.4144444,
+    "lon": -3.6824999,
+    "type": "Urbana fondo",
+    "districtCode": "03",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "50",
+    "name": "Plaza Castilla",
+    "lat": 40.4655841,
+    "lon": -3.6887449,
+    "type": "Urbana tráfico",
+    "districtCode": "05",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "54",
+    "name": "Ensanche de Vallecas",
+    "lat": 40.3730118,
+    "lon": -3.6121394,
+    "type": "Urbana fondo",
+    "districtCode": "18",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "55",
+    "name": "Urb. Embajada",
+    "lat": 40.4623628,
+    "lon": -3.5805649,
+    "type": "Urbana fondo",
+    "districtCode": "21",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": false,
+      "O3": false
+    }
+  },
+  {
+    "code": "56",
+    "name": "Plaza Elíptica",
+    "lat": 40.3850336,
+    "lon": -3.7187679,
+    "type": "Urbana tráfico",
+    "districtCode": "12",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "57",
+    "name": "Sanchinarro",
+    "lat": 40.4942012,
+    "lon": -3.6605173,
+    "type": "Urbana fondo",
+    "districtCode": "16",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": true,
+      "O3": false
+    }
+  },
+  {
+    "code": "58",
+    "name": "El Pardo",
+    "lat": 40.5180701,
+    "lon": -3.7746101,
+    "type": "Suburbana",
+    "districtCode": "08",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "59",
+    "name": "Juan Carlos I",
+    "lat": 40.465144,
+    "lon": -3.609031,
+    "type": "Suburbana",
+    "districtCode": "21",
+    "measures": {
+      "NO2": true,
+      "PM10": false,
+      "PM2_5": false,
+      "O3": true
+    }
+  },
+  {
+    "code": "60",
+    "name": "Tres Olivos",
+    "lat": 40.5005477,
+    "lon": -3.6897308,
+    "type": "Urbana fondo",
+    "districtCode": "08",
+    "measures": {
+      "NO2": true,
+      "PM10": true,
+      "PM2_5": false,
+      "O3": true
+    }
+  }
+]
