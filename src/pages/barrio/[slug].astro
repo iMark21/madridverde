@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import districtsIndex from '../../data/districts-index.json';
+import { computeGreenIndex, getContextPhrase } from '../../lib/green-index';
 
 export function getStaticPaths() {
   return districtsIndex.map((d) => ({
@@ -17,7 +18,10 @@ interface Props {
 const { slug } = Astro.params;
 const { name, code } = Astro.props;
 
-// Title case: "PUENTE DE VALLECAS" → "Puente de Vallecas"
+// Compute index at build time (without real-time air data)
+const allDistricts = computeGreenIndex();
+const district = allDistricts.find((d) => d.code === code);
+
 function titleCase(str: string): string {
   const minorWords = new Set(['de', 'del', 'el', 'la', 'las', 'los', 'y', 'e']);
   return str
@@ -31,53 +35,46 @@ function titleCase(str: string): string {
 }
 
 const displayName = titleCase(name);
+const contextPhrase = district ? getContextPhrase(district) : '--';
 ---
 
 <BaseLayout title={`${displayName} — MadridVerde`} description={`Indice Verde y metricas medioambientales del distrito ${displayName} de Madrid`}>
   <section class="scorecard">
     <div class="scorecard-header">
-      <span class="district-code">{code}</span>
-      <h1>{displayName}</h1>
+      <a href="/" class="back-link">&larr; Volver al mapa</a>
+      <div class="district-title">
+        <span class="district-code">{code}</span>
+        <h1>{displayName}</h1>
+      </div>
+      {district && <p class="district-pop">{district.population.toLocaleString('es-ES')} habitantes</p>}
     </div>
 
-    <div class="scorecard-grid">
-      <div class="score-card score-card--main">
-        <p class="score-label">Indice Verde</p>
-        <p class="score-value">--</p>
-        <p class="score-context">Pendiente MV-10</p>
+    {district && (
+      <div class="scorecard-grid">
+        <div class="score-card score-card--main" style={`background: ${district.tierColor}`}>
+          <p class="score-label">Indice Verde</p>
+          <p class="score-value">{district.score}</p>
+          <p class="score-tier">{district.tier}</p>
+          <p class="score-context">{contextPhrase}</p>
+        </div>
       </div>
-    </div>
 
-    <div class="sub-indices">
-      <h2>Sub-indices</h2>
-      <div class="sub-indices-grid">
-        <div class="sub-index">
-          <span class="sub-index-name">Aire</span>
-          <span class="sub-index-weight">30%</span>
-          <span class="sub-index-value">--</span>
-        </div>
-        <div class="sub-index">
-          <span class="sub-index-name">Verde</span>
-          <span class="sub-index-weight">25%</span>
-          <span class="sub-index-value">--</span>
-        </div>
-        <div class="sub-index">
-          <span class="sub-index-name">Ruido</span>
-          <span class="sub-index-weight">20%</span>
-          <span class="sub-index-value">--</span>
-        </div>
-        <div class="sub-index">
-          <span class="sub-index-name">Movilidad</span>
-          <span class="sub-index-weight">15%</span>
-          <span class="sub-index-value">--</span>
-        </div>
-        <div class="sub-index">
-          <span class="sub-index-name">Reciclaje</span>
-          <span class="sub-index-weight">10%</span>
-          <span class="sub-index-value">--</span>
+      <div class="sub-indices">
+        <h2>Sub-indices</h2>
+        <div class="sub-indices-grid">
+          {district.subIndices.map((si) => (
+            <div class="sub-index">
+              <div class="sub-index-header">
+                <span class="sub-index-name">{si.name}</span>
+                <span class="sub-index-weight">{Math.round(si.weight * 100)}%</span>
+              </div>
+              <span class="sub-index-value" style={`color: ${si.score >= 70 ? '#2D6A4F' : si.score >= 40 ? '#E9C46A' : '#E76F51'}`}>{si.score}</span>
+              <span class="sub-index-detail">{si.detail}</span>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    )}
   </section>
 </BaseLayout>
 
@@ -88,7 +85,22 @@ const displayName = titleCase(name);
     margin: 0 auto;
   }
 
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--color-hoja);
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-bosque);
+  }
+
   .scorecard-header {
+    margin-bottom: 2rem;
+  }
+
+  .district-title {
     display: flex;
     align-items: baseline;
     gap: 1rem;
@@ -101,20 +113,25 @@ const displayName = titleCase(name);
     opacity: 0.6;
   }
 
-  .scorecard-header h1 {
-    font-size: 2.5rem;
+  .district-title h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
     color: var(--color-bosque);
   }
 
+  .district-pop {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--color-piedra);
+  }
+
   .scorecard-grid {
-    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 
   .score-card--main {
-    background: var(--color-bosque);
     color: white;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 2.5rem;
     text-align: center;
   }
 
@@ -127,18 +144,25 @@ const displayName = titleCase(name);
 
   .score-value {
     font-family: var(--font-display);
-    font-size: 5rem;
+    font-size: 6rem;
     line-height: 1;
     margin: 0.25rem 0;
   }
 
+  .score-tier {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
   .score-context {
+    font-size: 0.9rem;
+    opacity: 0.8;
     font-style: italic;
-    opacity: 0.7;
   }
 
   .sub-indices {
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 
   .sub-indices h2 {
@@ -148,7 +172,7 @@ const displayName = titleCase(name);
 
   .sub-indices-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 1rem;
   }
 
@@ -161,19 +185,46 @@ const displayName = titleCase(name);
     gap: 0.25rem;
   }
 
+  .sub-index-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .sub-index-name {
     font-weight: 600;
     color: var(--color-tinta);
   }
 
   .sub-index-weight {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-piedra);
+    background: rgba(0,0,0,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
   }
 
   .sub-index-value {
     font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--color-bosque);
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .sub-index-detail {
+    font-size: 0.8rem;
+    color: var(--color-piedra);
+    line-height: 1.3;
+  }
+
+  @media (max-width: 768px) {
+    .scorecard {
+      padding: 1.5rem 1rem;
+    }
+    .score-value {
+      font-size: 4rem;
+    }
+    .sub-indices-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 </style>

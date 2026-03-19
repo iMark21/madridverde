@@ -32,56 +32,8 @@
   import L from 'leaflet';
   import * as topojson from 'topojson-client';
   import distritosTopoRaw from '../data/distritos.topo.json';
-  import districtsIndex from '../data/districts-index.json';
-  import treesData from '../data/trees.json';
-  import demographicsData from '../data/demographics.json';
-  import recyclingData from '../data/recycling.json';
-
-  // --- Placeholder scores (until MV-10 implements real Index Verde) ---
-  // Use green area m2 per capita as a proxy score (0-100)
-  function computePlaceholderScores() {
-    const scores: Record<string, { score: number; label: string; trees: number; greenM2: number; population: number }> = {};
-
-    for (const tree of treesData) {
-      const demo = demographicsData.find((d: any) => d.code === tree.code);
-      const recycling = recyclingData.find((d: any) => {
-        // Match by name similarity
-        const treeName = (tree.name as string).toUpperCase();
-        const recName = (d.name as string).toUpperCase();
-        return treeName === recName || treeName.includes(recName) || recName.includes(treeName);
-      });
-
-      const population = demo?.population || 100000;
-      const greenM2PerCapita = tree.greenM2 / population;
-      const treesPerCapita = tree.totalTrees / population;
-      const containersPerCapita = (recycling?.total || 0) / population;
-
-      // Normalize to 0-100 (rough: 30 m2/capita = 100)
-      const greenScore = Math.min(100, (greenM2PerCapita / 30) * 100);
-      const treeScore = Math.min(100, (treesPerCapita / 0.05) * 100);
-      const recycleScore = Math.min(100, (containersPerCapita / 0.02) * 100);
-
-      // Weighted average (simplified placeholder)
-      const score = Math.round(greenScore * 0.4 + treeScore * 0.35 + recycleScore * 0.25);
-
-      scores[tree.code] = {
-        score,
-        label: score >= 85 ? 'Excelente' : score >= 70 ? 'Bueno' : score >= 55 ? 'Aceptable' : score >= 40 ? 'Mejorable' : 'Critico',
-        trees: tree.totalTrees,
-        greenM2: tree.greenM2,
-        population,
-      };
-    }
-    return scores;
-  }
-
-  function getColor(score: number): string {
-    if (score >= 85) return '#2D6A4F';
-    if (score >= 70) return '#52B788';
-    if (score >= 55) return '#E9C46A';
-    if (score >= 40) return '#F4A261';
-    return '#E76F51';
-  }
+  import { computeGreenIndex, getContextPhrase, getTier } from '../lib/green-index';
+  import { fetchAirQuality, aggregateByDistrict } from '../lib/air-quality';
 
   function slugify(name: string): string {
     return name
@@ -99,13 +51,11 @@
       .join(' ');
   }
 
-  function formatNumber(n: number): string {
-    return n.toLocaleString('es-ES');
-  }
+  // --- Compute Green Index (initially without air data, then update) ---
 
-  // --- Init map ---
+  let greenIndex = computeGreenIndex();
+  const indexMap = new Map(greenIndex.map((d) => [d.code, d]));
 
-  const scores = computePlaceholderScores();
   const geojson = topojson.feature(distritosTopoRaw as any, (distritosTopoRaw as any).objects.DISTRITOS);
 
   const map = L.map('map', {
@@ -122,14 +72,12 @@
     maxZoom: 18,
   }).addTo(map);
 
-  let hoveredLayer: L.Layer | null = null;
-
   const districtLayer = L.geoJSON(geojson as any, {
     style: (feature) => {
       const code = feature?.properties?.COD_DIS_TX || '00';
-      const data = scores[code];
+      const d = indexMap.get(code);
       return {
-        fillColor: data ? getColor(data.score) : '#ccc',
+        fillColor: d ? d.tierColor : '#ccc',
         weight: 1.5,
         opacity: 1,
         color: 'white',
@@ -138,41 +86,75 @@
     },
     onEachFeature: (feature, layer) => {
       const code = feature.properties.COD_DIS_TX;
-      const name = feature.properties.NOMBRE || feature.properties.DISTRI_MT || '';
+      const name = feature.properties.NOMBRE || '';
       const displayName = titleCase(name);
-      const data = scores[code];
+      const d = indexMap.get(code);
 
-      if (data) {
-        const greenPerCap = (data.greenM2 / data.population).toFixed(1);
+      if (d) {
+        const context = getContextPhrase(d);
+        const subText = d.subIndices
+          .map((si) => `${si.name}: ${si.score}`)
+          .join(' · ');
+
         layer.bindTooltip(
           `<strong>${displayName}</strong><br/>` +
-          `Indice Verde: <strong>${data.score}</strong> (${data.label})<br/>` +
-          `${formatNumber(data.trees)} arboles · ${greenPerCap} m²/hab`,
+          `Indice Verde: <strong>${context}</strong><br/>` +
+          `<span style="font-size:0.8em">${subText}</span>`,
           { sticky: true, className: 'mv-tooltip' }
         );
       }
 
       layer.on({
         mouseover: (e) => {
-          const target = e.target;
-          target.setStyle({ weight: 3, color: '#264653', fillOpacity: 0.85 });
-          target.bringToFront();
-          hoveredLayer = target;
+          e.target.setStyle({ weight: 3, color: '#264653', fillOpacity: 0.85 });
+          e.target.bringToFront();
         },
         mouseout: (e) => {
           districtLayer.resetStyle(e.target);
-          hoveredLayer = null;
         },
         click: () => {
-          const slug = slugify(name);
-          window.location.href = `/barrio/${slug}`;
+          window.location.href = `/barrio/${slugify(name)}`;
         },
       });
     },
   }).addTo(map);
 
-  // Fit map to districts bounds
   map.fitBounds(districtLayer.getBounds(), { padding: [20, 20] });
+
+  // --- Async: fetch real-time air quality and update map ---
+
+  fetchAirQuality().then((readings) => {
+    if (readings.length === 0) return;
+
+    const airByDistrict = aggregateByDistrict(readings);
+    const airScores = new Map<string, number>();
+    for (const [code, data] of airByDistrict) {
+      airScores.set(code, data.score);
+    }
+
+    // Recompute with real air data
+    greenIndex = computeGreenIndex(airScores);
+    greenIndex.forEach((d) => indexMap.set(d.code, d));
+
+    // Update map styles and tooltips
+    districtLayer.eachLayer((layer: any) => {
+      const code = layer.feature?.properties?.COD_DIS_TX;
+      const d = indexMap.get(code);
+      if (d) {
+        layer.setStyle({ fillColor: d.tierColor });
+        const displayName = titleCase(layer.feature.properties.NOMBRE || '');
+        const context = getContextPhrase(d);
+        const subText = d.subIndices.map((si) => `${si.name}: ${si.score}`).join(' · ');
+        layer.setTooltipContent(
+          `<strong>${displayName}</strong><br/>` +
+          `Indice Verde: <strong>${context}</strong><br/>` +
+          `<span style="font-size:0.8em">${subText}</span>`
+        );
+      }
+    });
+
+    console.log('[MadridVerde] Air quality data loaded, map updated');
+  });
 </script>
 
 <style>
