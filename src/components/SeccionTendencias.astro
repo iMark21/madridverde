@@ -20,7 +20,6 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     <div class="station-selector" id="noise-station-selector">
       {stationsWithData.map(s => (
         <button
-          class="station-chip"
           data-id={s.id}
           data-name={s.name}
           class:list={['station-chip', { selected: defaultStations.includes(s.id) }]}
@@ -43,7 +42,6 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     <div class="station-selector" id="air-station-selector">
       {(airStationsData as any[]).map(s => (
         <button
-          class="station-chip"
           data-id={s.code}
           data-name={s.name}
           class:list={['station-chip', { selected: ['4', '8', '49', '47', '17'].includes(s.code) }]}
@@ -164,7 +162,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
 
   // Noise station selector
   const noiseSelector = document.getElementById('noise-station-selector')!;
-  const noiseChips = noiseSelector.querySelectorAll('.station-chip');
+  const noiseChips = noiseSelector?.querySelectorAll('.station-chip') || [];
   let selectedNoiseStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
 
   noiseChips.forEach((chip) => {
@@ -244,7 +242,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   }
 
   const airSelector = document.getElementById('air-station-selector')!;
-  const airChips = airSelector.querySelectorAll('.station-chip');
+  const airChips = airSelector?.querySelectorAll('.station-chip') || [];
   let selectedAirStations = ['4', '8', '49', '47', '17'];
 
   airChips.forEach((chip) => {
