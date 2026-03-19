@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "centro",
+    "name": "CENTRO",
+    "code": "01"
+  },
+  {
+    "slug": "arganzuela",
+    "name": "ARGANZUELA",
+    "code": "02"
+  },
+  {
+    "slug": "retiro",
+    "name": "RETIRO",
+    "code": "03"
+  },
+  {
+    "slug": "salamanca",
+    "name": "SALAMANCA",
+    "code": "04"
+  },
+  {
+    "slug": "chamartin",
+    "name": "CHAMARTÍN",
+    "code": "05"
+  },
+  {
+    "slug": "tetuan",
+    "name": "TETUÁN",
+    "code": "06"
+  },
+  {
+    "slug": "chamberi",
+    "name": "CHAMBERÍ",
+    "code": "07"
+  },
+  {
+    "slug": "fuencarral-el-pardo",
+    "name": "FUENCARRAL - EL PARDO",
+    "code": "08"
+  },
+  {
+    "slug": "moncloa-aravaca",
+    "name": "MONCLOA - ARAVACA",
+    "code": "09"
+  },
+  {
+    "slug": "latina",
+    "name": "LATINA",
+    "code": "10"
+  },
+  {
+    "slug": "carabanchel",
+    "name": "CARABANCHEL",
+    "code": "11"
+  },
+  {
+    "slug": "usera",
+    "name": "USERA",
+    "code": "12"
+  },
+  {
+    "slug": "puente-de-vallecas",
+    "name": "PUENTE DE VALLECAS",
+    "code": "13"
+  },
+  {
+    "slug": "moratalaz",
+    "name": "MORATALAZ",
+    "code": "14"
+  },
+  {
+    "slug": "ciudad-lineal",
+    "name": "CIUDAD LINEAL",
+    "code": "15"
+  },
+  {
+    "slug": "hortaleza",
+    "name": "HORTALEZA",
+    "code": "16"
+  },
+  {
+    "slug": "villaverde",
+    "name": "VILLAVERDE",
+    "code": "17"
+  },
+  {
+    "slug": "villa-de-vallecas",
+    "name": "VILLA DE VALLECAS",
+    "code": "18"
+  },
+  {
+    "slug": "vicalvaro",
+    "name": "VICÁLVARO",
+    "code": "19"
+  },
+  {
+    "slug": "san-blas-canillejas",
+    "name": "SAN BLAS - CANILLEJAS",
+    "code": "20"
+  },
+  {
+    "slug": "barajas",
+    "name": "BARAJAS",
+    "code": "21"
+  }
+]
