@@ -1,0 +1,170 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Dashboard medioambiental de Madrid — Indice Verde por distrito' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Saltar al contenido</a>
+
+    <nav class="nav" aria-label="Navegacion principal">
+      <a href="/" class="nav-logo">MadridVerde</a>
+      <ul class="nav-links">
+        <li><a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Mapa</a></li>
+        <li><a href="/comparar" aria-current={Astro.url.pathname === '/comparar' ? 'page' : undefined}>Comparar</a></li>
+        <li><a href="/historico" aria-current={Astro.url.pathname === '/historico' ? 'page' : undefined}>Tendencias</a></li>
+        <li><a href="/metodologia" aria-current={Astro.url.pathname === '/metodologia' ? 'page' : undefined}>Metodologia</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <p>&copy; {new Date().getFullYear()} MadridVerde — Datos abiertos del Ayuntamiento de Madrid</p>
+      <p class="footer-tagline">Porque respirar no deberia ser cuestion de codigo postal</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --color-bosque: #2D6A4F;
+    --color-hoja: #40916C;
+    --color-salvia: #52B788;
+    --color-arena: #F5F1EB;
+    --color-piedra: #6C757D;
+    --color-arcilla: #E76F51;
+    --color-ambar: #E9C46A;
+    --color-tinta: #264653;
+
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  html {
+    font-family: var(--font-body);
+    color: var(--color-piedra);
+    background-color: var(--color-arena);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    color: var(--color-tinta);
+    line-height: 1.2;
+  }
+
+  a {
+    color: var(--color-hoja);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-bosque);
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--color-bosque);
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+</style>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-bosque);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .nav-links a {
+    color: var(--color-piedra);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current='page'] {
+    color: var(--color-bosque);
+  }
+
+  .footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin-top: 4rem;
+    font-size: 0.85rem;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-hoja);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .nav {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .nav-links {
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Metodologia — MadridVerde" description="Formula del Indice Verde, pesos, fuentes de datos y diagrama de procedencia">
+  <section class="methodology">
+    <h1>Metodologia</h1>
+    <p class="methodology-subtitle">Transparencia total: como se calcula el Indice Verde</p>
+
+    <div class="methodology-content">
+      <h2>Indice Verde (0-100)</h2>
+      <p>Puntuacion compuesta de 5 sub-indices, cada uno normalizado a escala 0-100:</p>
+
+      <table class="weights-table">
+        <thead>
+          <tr>
+            <th>Sub-indice</th>
+            <th>Peso</th>
+            <th>Fuentes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Aire</td>
+            <td>30%</td>
+            <td>Calidad aire real-time + historico (NO2, PM2.5, PM10, O3)</td>
+          </tr>
+          <tr>
+            <td>Verde</td>
+            <td>25%</td>
+            <td>Arbolado (densidad) + superficie zonas verdes (m2/hab)</td>
+          </tr>
+          <tr>
+            <td>Ruido</td>
+            <td>20%</td>
+            <td>Estaciones acusticas SIVCA (LAeq, Ld, Ln)</td>
+          </tr>
+          <tr>
+            <td>Movilidad</td>
+            <td>15%</td>
+            <td>Carriles bici + BiciMAD + intensidad trafico (inversa)</td>
+          </tr>
+          <tr>
+            <td>Reciclaje</td>
+            <td>10%</td>
+            <td>Contenedores per capita por tipo</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>14 fuentes de datos</h2>
+      <p class="placeholder">Diagrama de procedencia de datasets (pendiente MV-27)</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .methodology {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .methodology h1 {
+    font-size: 2.5rem;
+    color: var(--color-bosque);
+  }
+
+  .methodology-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .methodology-content {
+    margin-top: 2rem;
+  }
+
+  .methodology-content h2 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .weights-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  .weights-table th,
+  .weights-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .weights-table th {
+    font-weight: 600;
+    color: var(--color-tinta);
+  }
+
+  .weights-table td:nth-child(2) {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-bosque);
+  }
+
+  .placeholder {
+    font-style: italic;
+    color: var(--color-piedra);
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+    margin-top: 1rem;
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Comparar distritos — MadridVerde" description="Compara el Indice Verde de hasta 4 distritos de Madrid">
+  <section class="comparator">
+    <h1>Comparar distritos</h1>
+    <p class="comparator-subtitle">Selecciona 2 a 4 distritos para comparar su Indice Verde</p>
+    <div class="comparator-content">
+      <p class="placeholder">Comparador con radar chart (pendiente MV-12)</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .comparator {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .comparator h1 {
+    font-size: 2.5rem;
+    color: var(--color-bosque);
+  }
+
+  .comparator-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .comparator-content {
+    margin-top: 2rem;
+  }
+
+  .placeholder {
+    font-style: italic;
+    color: var(--color-piedra);
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+  }
+</style>
