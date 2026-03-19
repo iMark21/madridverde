@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://madridverde-web.web.app',
+  site: 'https://madrid-verde.web.app',
   build: {
     format: 'directory',
   },
