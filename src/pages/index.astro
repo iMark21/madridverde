@@ -261,60 +261,31 @@ function titleCase(str: string): string {
   /* Search */
   .search-box {
     position: relative;
-    max-width: 400px;
-    margin: 1rem auto 0;
+    max-width: 420px;
+    margin: 1.25rem auto 0;
   }
 
   #address-search {
     width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1.5px solid rgba(0, 0, 0, 0.12);
-    border-radius: 24px;
+    padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 28px;
     font-family: var(--font-body);
-    font-size: 0.9rem;
-    background: white;
+    font-size: 0.95rem;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236C757D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 0.9rem center;
     outline: none;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    color: var(--color-tinta);
+  }
+
+  #address-search::placeholder {
+    color: var(--color-piedra);
+    opacity: 0.7;
   }
 
   #address-search:focus {
     border-color: var(--color-bosque);
-  }
-
-  .search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    list-style: none;
-    padding: 0;
-    margin: 4px 0 0;
-    z-index: 1000;
-    display: none;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-
-  .search-results.visible {
-    display: block;
-  }
-
-  .search-results li {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 0.85rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-  }
-
-  .search-results li:hover {
-    background: rgba(45, 106, 79, 0.06);
-  }
-
-  .search-results li:last-child {
-    border-bottom: none;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
   }
 
   @media (max-width: 768px) {
@@ -324,6 +295,9 @@ function titleCase(str: string): string {
     .hero-text {
       padding: 1.5rem 1rem 0.75rem;
     }
+    .search-box {
+      max-width: 100%;
+    }
     .stats {
       grid-template-columns: repeat(2, 1fr);
       padding: 0 1rem;
@@ -331,5 +305,55 @@ function titleCase(str: string): string {
     .ranking {
       padding: 2rem 1rem 0;
     }
+  }
+</style>
+
+<style is:global>
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    padding: 0.25rem 0;
+    margin: 6px 0 0;
+    z-index: 1000;
+    display: none;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .search-results.visible {
+    display: block;
+  }
+
+  .search-results li {
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #264653;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: background 0.1s;
+    line-height: 1.4;
+  }
+
+  .search-results li:hover {
+    background: rgba(45, 106, 79, 0.08);
+    color: #2D6A4F;
+  }
+
+  .search-results li:last-child {
+    border-bottom: none;
+  }
+
+  .search-results li:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+
+  .search-results li:last-child {
+    border-radius: 0 0 12px 12px;
   }
 </style>
