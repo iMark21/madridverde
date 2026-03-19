@@ -190,9 +190,97 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
           </div>
         )}
       </div>
+
+      <div class="bicimad-district" id="bicimad-district">
+        <h2>BiciMAD en {displayName}</h2>
+        <p class="bicimad-loading-d">Cargando estaciones de BiciMAD...</p>
+      </div>
     )}
   </section>
 <script>
+  import { fetchBiciMAD } from '../../lib/bicimad';
+
+  // BiciMAD per-district
+  const districtBounds = document.getElementById('bicimad-district');
+  if (districtBounds) {
+    fetchBiciMAD().then((stations) => {
+      if (stations.length === 0) {
+        districtBounds.innerHTML = '';
+        return;
+      }
+
+      // Get district name from the h1
+      const h1 = document.querySelector('.district-title h1');
+      const distName = h1?.textContent || '';
+
+      // Use TopoJSON to find stations in this district via bounding box
+      // Simpler: filter by proximity to district center using the map bounds
+      // For now, use a name-based approach with the station addresses
+      // Or just show the nearest 10 stations
+      const mapEl = document.getElementById('map');
+
+      // Get approximate district center from the page URL
+      const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+
+      // Fetch district bounds from the districts index
+      const lat0 = 40.42, lon0 = -3.70; // Madrid center fallback
+      const DISTRICT_CENTERS: Record<string, [number, number]> = {
+        'centro': [40.415, -3.704], 'arganzuela': [40.393, -3.695],
+        'retiro': [40.409, -3.678], 'salamanca': [40.429, -3.681],
+        'chamartin': [40.457, -3.677], 'tetuan': [40.461, -3.699],
+        'chamberi': [40.434, -3.705], 'fuencarral-el-pardo': [40.512, -3.726],
+        'moncloa-aravaca': [40.438, -3.752], 'latina': [40.385, -3.746],
+        'carabanchel': [40.378, -3.732], 'usera': [40.381, -3.705],
+        'puente-de-vallecas': [40.392, -3.660], 'moratalaz': [40.408, -3.642],
+        'ciudad-lineal': [40.441, -3.650], 'hortaleza': [40.474, -3.639],
+        'villaverde': [40.348, -3.697], 'villa-de-vallecas': [40.371, -3.619],
+        'vicalvaro': [40.405, -3.608], 'san-blas-canillejas': [40.437, -3.613],
+        'barajas': [40.465, -3.580],
+      };
+
+      const center = DISTRICT_CENTERS[slug] || [lat0, lon0];
+      const R = 0.025; // ~2.5km radius
+
+      const nearby = stations
+        .filter(s => s.inService && Math.abs(s.lat - center[0]) < R && Math.abs(s.lon - center[1]) < R)
+        .sort((a, b) => {
+          const da = Math.abs(a.lat - center[0]) + Math.abs(a.lon - center[1]);
+          const db = Math.abs(b.lat - center[0]) + Math.abs(b.lon - center[1]);
+          return da - db;
+        })
+        .slice(0, 8);
+
+      if (nearby.length === 0) {
+        districtBounds.innerHTML = '<h2>BiciMAD</h2><p style="color:#6C757D;font-style:italic">No hay estaciones de BiciMAD en este distrito</p>';
+        return;
+      }
+
+      const totalBikes = nearby.reduce((s, st) => s + st.bikesAvailable, 0);
+      const totalDocks = nearby.reduce((s, st) => s + st.docksAvailable, 0);
+
+      districtBounds.innerHTML = `
+        <h2>BiciMAD en ${distName}</h2>
+        <div class="bici-district-summary">
+          <span class="bds-item"><strong>${nearby.length}</strong> estaciones cercanas</span>
+          <span class="bds-item"><strong>${totalBikes}</strong> bicis disponibles</span>
+          <span class="bds-item"><strong>${totalDocks}</strong> docks libres</span>
+        </div>
+        <div class="bici-district-list">
+          ${nearby.map(s => {
+            const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
+            const color = pct > 50 ? '#2D6A4F' : pct > 20 ? '#E9C46A' : '#E76F51';
+            return `<div class="bdi-row">
+              <span class="bdi-name">${s.name}</span>
+              <div class="bdi-bar"><div class="bdi-fill" style="width:${pct}%;background:${color}"></div></div>
+              <span class="bdi-count" style="color:${color}">${s.bikesAvailable}/${s.capacity}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <p class="bici-live-note">Datos en vivo — GBFS actualizado cada 14 segundos</p>
+      `;
+    });
+  }
+
   const btn = document.getElementById('share-btn');
   if (btn) {
     btn.addEventListener('click', async () => {
@@ -394,6 +482,77 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 
   .narrative p:last-child {
     margin-bottom: 0;
+  }
+
+  /* BiciMAD district */
+  .bicimad-district {
+    margin-top: 3rem;
+  }
+
+  .bicimad-district h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .bicimad-loading-d {
+    color: var(--color-piedra);
+    font-style: italic;
+  }
+
+  :global(.bici-district-summary) {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  :global(.bds-item) {
+    font-size: 0.9rem;
+    color: #264653;
+  }
+
+  :global(.bds-item strong) {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: #2D6A4F;
+    margin-right: 0.25rem;
+  }
+
+  :global(.bdi-row) {
+    display: grid;
+    grid-template-columns: 1fr 150px 60px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  :global(.bdi-name) { color: #264653; font-weight: 500; }
+
+  :global(.bdi-bar) {
+    height: 8px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  :global(.bdi-fill) {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  :global(.bdi-count) {
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  :global(.bici-live-note) {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #6C757D;
+    font-style: italic;
   }
 
   /* Data details */
