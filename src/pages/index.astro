@@ -1,16 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import MapaMadrid from '../components/MapaMadrid.astro';
 ---
 
-<BaseLayout title="MadridVerde — Indice Verde de Madrid">
+<BaseLayout title="MadridVerde — Indice Verde de Madrid" description="Dashboard medioambiental que transforma 14 datasets abiertos en un Indice Verde por distrito de Madrid">
   <section class="hero">
     <div class="hero-text">
       <h1>Indice Verde de Madrid</h1>
       <p class="hero-subtitle">14 datasets abiertos, un solo score por distrito</p>
+      <p class="hero-cta">Haz clic en un distrito para ver su scorecard</p>
     </div>
-    <div class="hero-map" id="map" role="application" aria-label="Mapa de distritos de Madrid coloreados por Indice Verde">
-      <!-- Leaflet map will be mounted here -->
-      <p class="map-placeholder">Mapa interactivo (pendiente MV-02)</p>
+    <div class="hero-map">
+      <MapaMadrid />
     </div>
   </section>
 </BaseLayout>
@@ -23,7 +24,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .hero-text {
-    padding: 2rem;
+    padding: 2rem 2rem 1rem;
     text-align: center;
   }
 
@@ -37,21 +38,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-top: 0.5rem;
   }
 
-  .hero-map {
-    flex: 1;
-    min-height: 500px;
-    margin: 0 2rem 2rem;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #e8e4de;
+  .hero-cta {
+    font-size: 0.85rem;
+    color: var(--color-hoja);
+    margin-top: 0.25rem;
+    font-style: italic;
   }
 
-  .map-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    font-style: italic;
-    color: var(--color-piedra);
+  .hero-map {
+    flex: 1;
+    margin: 0 2rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-map {
+      margin: 0;
+    }
+    .hero-text {
+      padding: 1.5rem 1rem 0.75rem;
+    }
   }
 </style>
