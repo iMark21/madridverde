@@ -1,0 +1,231 @@
+---
+interface Props {
+  districtCode: string;
+  districtName: string;
+}
+
+const { districtCode, districtName } = Astro.props;
+---
+
+<div class="district-map-section">
+  <h2>Mapa de {districtName}</h2>
+  <div class="district-map-container">
+    <div id="district-map"
+      data-code={districtCode}
+      role="application"
+      aria-label={`Mapa del distrito ${districtName} con estaciones BiciMAD y carriles bici`}>
+    </div>
+    <div class="district-map-legend">
+      <span class="dml-item"><span class="dml-dot dml-dot--bike"></span> BiciMAD</span>
+      <span class="dml-item"><span class="dml-line dml-line--lane"></span> Carril bici</span>
+      <span class="dml-item dml-live">En vivo</span>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin="" />
+
+<script>
+  import L from 'leaflet';
+  import * as topojson from 'topojson-client';
+  import distritosTopoRaw from '../data/distritos.topo.json';
+  import { fetchBiciMAD } from '../lib/bicimad';
+
+  const mapEl = document.getElementById('district-map');
+  if (mapEl) {
+    const code = mapEl.getAttribute('data-code') || '';
+
+    // Extract this district's geometry
+    const geojson = topojson.feature(
+      distritosTopoRaw as any,
+      (distritosTopoRaw as any).objects.DISTRITOS
+    );
+    const districtFeature = (geojson as any).features.find(
+      (f: any) => f.properties.COD_DIS_TX === code
+    );
+
+    if (districtFeature) {
+      const map = L.map('district-map', {
+        zoomControl: true,
+        preferCanvas: true,
+        attributionControl: false,
+        scrollWheelZoom: false,
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 18,
+      }).addTo(map);
+
+      // District boundary (highlighted)
+      const districtLayer = L.geoJSON(districtFeature, {
+        style: {
+          fillColor: '#2D6A4F',
+          fillOpacity: 0.08,
+          color: '#2D6A4F',
+          weight: 3,
+          opacity: 0.8,
+        },
+      }).addTo(map);
+
+      // Other districts (faded)
+      const otherFeatures = (geojson as any).features.filter(
+        (f: any) => f.properties.COD_DIS_TX !== code
+      );
+      L.geoJSON({ type: 'FeatureCollection', features: otherFeatures } as any, {
+        style: {
+          fillColor: '#000',
+          fillOpacity: 0.03,
+          color: '#ccc',
+          weight: 1,
+        },
+      }).addTo(map);
+
+      // Fit to district bounds
+      map.fitBounds(districtLayer.getBounds(), { padding: [30, 30] });
+
+      // BiciMAD live markers
+      fetchBiciMAD().then((stations) => {
+        if (stations.length === 0) return;
+
+        const bounds = districtLayer.getBounds();
+        const nearby = stations.filter(s =>
+          s.inService && bounds.contains(L.latLng(s.lat, s.lon))
+        );
+
+        const bikeIcon = L.divIcon({
+          className: 'dm-bike-marker',
+          html: '<div class="dm-bike-dot"></div>',
+          iconSize: [12, 12],
+          iconAnchor: [6, 6],
+        });
+
+        for (const s of nearby) {
+          const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
+          const color = pct > 50 ? '#2D6A4F' : pct > 20 ? '#E9C46A' : '#E76F51';
+
+          L.marker([s.lat, s.lon], { icon: bikeIcon })
+            .bindTooltip(
+              `<strong>${s.name}</strong><br/>` +
+              `<span style="color:${color};font-weight:600">${s.bikesAvailable}</span> bicis · ${s.docksAvailable} docks`,
+              { className: 'dm-tooltip' }
+            )
+            .addTo(map);
+        }
+      });
+
+      // Bike lanes layer
+      fetch('/data/bike-lanes.json')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (!data) return;
+          L.geoJSON(data, {
+            style: (feature) => ({
+              color: feature?.properties?.t === 3 ? '#40916C' : '#52B788',
+              weight: 2.5,
+              opacity: 0.6,
+            }),
+          }).addTo(map);
+        });
+    }
+  }
+</script>
+
+<style>
+  .district-map-section {
+    margin-top: 3rem;
+  }
+
+  .district-map-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .district-map-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e8e4de;
+  }
+
+  #district-map {
+    width: 100%;
+    height: 400px;
+  }
+
+  .district-map-legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 12px;
+    background: rgba(245, 241, 235, 0.92);
+    padding: 6px 12px;
+    border-radius: 6px;
+    z-index: 1000;
+    font-size: 0.75rem;
+  }
+
+  .dml-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-piedra);
+  }
+
+  .dml-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dml-dot--bike {
+    background: var(--color-bosque);
+    border: 1.5px solid white;
+  }
+
+  .dml-line {
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .dml-line--lane {
+    background: var(--color-hoja);
+  }
+
+  .dml-live {
+    color: var(--color-bosque);
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+
+  :global(.dm-bike-marker) {
+    background: none !important;
+    border: none !important;
+  }
+
+  :global(.dm-bike-dot) {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-bosque);
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  :global(.dm-tooltip) {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+
+  @media (max-width: 768px) {
+    #district-map {
+      height: 300px;
+    }
+  }
+</style>
