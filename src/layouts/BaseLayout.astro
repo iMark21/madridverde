@@ -39,10 +39,13 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
       import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js';
 
       const app = initializeApp({
-        projectId: 'madridverde-web',
-        appId: '1:976568577781:web:01efe389acaf3edd315fbc',
-        apiKey: 'AIzaSyCJG-kAakKe_5nIV-INsOHGLOdj845Epck',
-        measurementId: 'G-PENDING',
+        apiKey: 'FIREBASE_API_KEY',
+        authDomain: 'madrid-verde.firebaseapp.com',
+        projectId: 'madrid-verde',
+        storageBucket: 'madrid-verde.firebasestorage.app',
+        messagingSenderId: 'FIREBASE_SENDER_ID',
+        appId: 'FIREBASE_APP_ID',
+        measurementId: 'FIREBASE_MEASUREMENT_ID',
       });
 
       try {
