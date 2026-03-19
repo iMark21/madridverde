@@ -7,23 +7,23 @@
     "greenHa": 30.45,
     "topSpecies": [
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 2677
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 1850
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 1634
       },
       {
-        "name": "AHI",
+        "name": "Aligustre",
         "count": 603
       },
       {
-        "name": "PAR",
+        "name": "Palmera",
         "count": 523
       }
     ]
@@ -36,23 +36,23 @@
     "greenHa": 90.3,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 3931
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 2444
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 2062
       },
       {
-        "name": "MEA",
+        "name": "Morera",
         "count": 1677
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 1492
       }
     ]
@@ -65,23 +65,23 @@
     "greenHa": 36.71,
     "topSpecies": [
       {
-        "name": "AHI",
+        "name": "Aligustre",
         "count": 5970
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 3555
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 2715
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 2121
       },
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 1298
       }
     ]
@@ -94,23 +94,23 @@
     "greenHa": 35.72,
     "topSpecies": [
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 5820
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 2449
       },
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 1751
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 832
       },
       {
-        "name": "AHI",
+        "name": "Aligustre",
         "count": 720
       }
     ]
@@ -123,23 +123,23 @@
     "greenHa": 56.09,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 5991
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 3615
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 2401
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 1292
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 1077
       }
     ]
@@ -152,23 +152,23 @@
     "greenHa": 63.1,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 4774
       },
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 890
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 729
       },
       {
-        "name": "PCP",
+        "name": "Ciruelo",
         "count": 575
       },
       {
-        "name": "MEA",
+        "name": "Morera",
         "count": 566
       }
     ]
@@ -181,23 +181,23 @@
     "greenHa": 9.99,
     "topSpecies": [
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 5689
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 1754
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 817
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 759
       },
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 605
       }
     ]
@@ -210,23 +210,23 @@
     "greenHa": 374.5,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 9529
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 4780
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 4649
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 3454
       },
       {
-        "name": "MEA",
+        "name": "Morera",
         "count": 2467
       }
     ]
@@ -239,23 +239,23 @@
     "greenHa": 189.1,
     "topSpecies": [
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 8304
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 6180
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 3559
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 2578
       },
       {
-        "name": "ANE",
+        "name": "Acacia negra",
         "count": 1886
       }
     ]
@@ -268,23 +268,23 @@
     "greenHa": 260.89,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 5530
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 3727
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 2718
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 2076
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 1806
       }
     ]
@@ -297,23 +297,23 @@
     "greenHa": 255.76,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 7499
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 5057
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 2714
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 2571
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 2352
       }
     ]
@@ -326,23 +326,23 @@
     "greenHa": 167.8,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 5442
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 3703
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 3495
       },
       {
-        "name": "RPS",
+        "name": "Robinia",
         "count": 1950
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 1803
       }
     ]
@@ -355,23 +355,23 @@
     "greenHa": 280.68,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 4643
       },
       {
-        "name": "POR",
+        "name": "Populus",
         "count": 4255
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 3542
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 3539
       },
       {
-        "name": "RPS",
+        "name": "Robinia",
         "count": 3239
       }
     ]
@@ -384,23 +384,23 @@
     "greenHa": 117.59,
     "topSpecies": [
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 6207
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 4510
       },
       {
-        "name": "PHA",
+        "name": "Pino carrasco",
         "count": 3165
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 3030
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 2162
       }
     ]
@@ -413,23 +413,23 @@
     "greenHa": 134.96,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 4517
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 4084
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 3462
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 1600
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 1578
       }
     ]
@@ -442,23 +442,23 @@
     "greenHa": 324.82,
     "topSpecies": [
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 5721
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 5219
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 4554
       },
       {
-        "name": "SJA",
+        "name": "Sophora japonica",
         "count": 2916
       },
       {
-        "name": "QIL",
+        "name": "Encina",
         "count": 2513
       }
     ]
@@ -471,23 +471,23 @@
     "greenHa": 216.58,
     "topSpecies": [
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 5531
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 5230
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 3091
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 2735
       },
       {
-        "name": "PNI",
+        "name": "Pino nigra",
         "count": 2283
       }
     ]
@@ -500,23 +500,23 @@
     "greenHa": 300.84,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 5014
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 3312
       },
       {
-        "name": "PHA",
+        "name": "Pino carrasco",
         "count": 2720
       },
       {
-        "name": "ANE",
+        "name": "Acacia negra",
         "count": 1966
       },
       {
-        "name": "UPU",
+        "name": "Olmo",
         "count": 1954
       }
     ]
@@ -529,23 +529,23 @@
     "greenHa": 197.41,
     "topSpecies": [
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 2482
       },
       {
-        "name": "PCY",
+        "name": "Prunus cerezo",
         "count": 2111
       },
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 1900
       },
       {
-        "name": "LJA",
+        "name": "Ligustro japones",
         "count": 1818
       },
       {
-        "name": "POR",
+        "name": "Populus",
         "count": 1733
       }
     ]
@@ -558,23 +558,23 @@
     "greenHa": 180.45,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 8193
       },
       {
-        "name": "PHA",
+        "name": "Pino carrasco",
         "count": 5734
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 4314
       },
       {
-        "name": "CAU",
+        "name": "Cedro",
         "count": 3268
       },
       {
-        "name": "ANE",
+        "name": "Acacia negra",
         "count": 1712
       }
     ]
@@ -587,23 +587,23 @@
     "greenHa": 106.36,
     "topSpecies": [
       {
-        "name": "PDA",
+        "name": "Platano de sombra",
         "count": 3956
       },
       {
-        "name": "OEU",
+        "name": "Olivo",
         "count": 2584
       },
       {
-        "name": "PPI",
+        "name": "Pino pinonero",
         "count": 1817
       },
       {
-        "name": "CBI",
+        "name": "Catalpa",
         "count": 1560
       },
       {
-        "name": "CSE",
+        "name": "Castano de Indias",
         "count": 1466
       }
     ]
