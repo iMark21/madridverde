@@ -2,9 +2,10 @@
 interface Props {
   districtCode: string;
   districtName: string;
+  tierColor?: string;
 }
 
-const { districtCode, districtName } = Astro.props;
+const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
 ---
 
 <div class="district-map-section">
@@ -12,6 +13,7 @@ const { districtCode, districtName } = Astro.props;
   <div class="district-map-container">
     <div id="district-map"
       data-code={districtCode}
+      data-color={tierColor}
       role="application"
       aria-label={`Mapa del distrito ${districtName} con estaciones BiciMAD y carriles bici`}>
     </div>
@@ -36,6 +38,7 @@ const { districtCode, districtName } = Astro.props;
   const mapEl = document.getElementById('district-map');
   if (mapEl) {
     const code = mapEl.getAttribute('data-code') || '';
+    const tierColor = mapEl.getAttribute('data-color') || '#2D6A4F';
 
     // Extract this district's geometry
     const geojson = topojson.feature(
@@ -62,11 +65,11 @@ const { districtCode, districtName } = Astro.props;
       // District boundary (highlighted)
       const districtLayer = L.geoJSON(districtFeature, {
         style: {
-          fillColor: '#2D6A4F',
-          fillOpacity: 0.08,
-          color: '#2D6A4F',
+          fillColor: tierColor,
+          fillOpacity: 0.12,
+          color: tierColor,
           weight: 3,
-          opacity: 0.8,
+          opacity: 0.9,
         },
       }).addTo(map);
 
