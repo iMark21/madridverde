@@ -2,55 +2,145 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Metodologia — MadridVerde" description="Formula del Indice Verde, pesos, fuentes de datos y diagrama de procedencia">
+<BaseLayout title="Metodologia — MadridVerde" description="Formula del Indice Verde: 14 datasets, 5 sub-indices, pesos, normalizacion y fuentes de datos">
   <section class="methodology">
     <h1>Metodologia</h1>
     <p class="methodology-subtitle">Transparencia total: como se calcula el Indice Verde</p>
 
-    <div class="methodology-content">
+    <!-- Formula -->
+    <div class="formula-card">
       <h2>Indice Verde (0-100)</h2>
-      <p>Puntuacion compuesta de 5 sub-indices, cada uno normalizado a escala 0-100:</p>
-
-      <table class="weights-table">
-        <thead>
-          <tr>
-            <th>Sub-indice</th>
-            <th>Peso</th>
-            <th>Fuentes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Aire</td>
-            <td>30%</td>
-            <td>Calidad aire real-time + historico (NO2, PM2.5, PM10, O3)</td>
-          </tr>
-          <tr>
-            <td>Verde</td>
-            <td>25%</td>
-            <td>Arbolado (densidad) + superficie zonas verdes (m2/hab)</td>
-          </tr>
-          <tr>
-            <td>Ruido</td>
-            <td>20%</td>
-            <td>Estaciones acusticas SIVCA (LAeq, Ld, Ln)</td>
-          </tr>
-          <tr>
-            <td>Movilidad</td>
-            <td>15%</td>
-            <td>Carriles bici + BiciMAD + intensidad trafico (inversa)</td>
-          </tr>
-          <tr>
-            <td>Reciclaje</td>
-            <td>10%</td>
-            <td>Contenedores per capita por tipo</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>14 fuentes de datos</h2>
-      <p class="placeholder">Diagrama de procedencia de datasets (pendiente MV-27)</p>
+      <p class="formula">IV = Aire × 0.30 + Verde × 0.25 + Ruido × 0.20 + Movilidad × 0.15 + Reciclaje × 0.10</p>
+      <p class="formula-note">Cada sub-indice esta normalizado a escala 0-100. Mayor puntuacion = mejor calidad ambiental.</p>
     </div>
+
+    <!-- Sub-indices detail -->
+    <div class="subindex-grid">
+      <div class="subindex-card">
+        <div class="subindex-header" style="border-color: #2D6A4F">
+          <h3>Aire</h3>
+          <span class="subindex-weight">30%</span>
+        </div>
+        <p class="subindex-method">Media inversa de ratios contaminante/limite para NO2, PM2.5, PM10 y O3. Datos en tiempo real cada 20 minutos.</p>
+        <div class="subindex-sources">
+          <span class="source-badge">API ciudadesabiertas</span>
+          <span class="source-badge">24 estaciones</span>
+          <span class="source-badge">4 contaminantes</span>
+        </div>
+        <p class="subindex-limits">Limites OMS: NO2 40 µg/m³, PM2.5 25 µg/m³, PM10 40 µg/m³, O3 120 µg/m³</p>
+      </div>
+
+      <div class="subindex-card">
+        <div class="subindex-header" style="border-color: #52B788">
+          <h3>Verde</h3>
+          <span class="subindex-weight">25%</span>
+        </div>
+        <p class="subindex-method">Combinacion de m² de zonas verdes por habitante (70%) y arboles por 1.000 habitantes (30%). OMS recomienda minimo 9 m²/hab.</p>
+        <div class="subindex-sources">
+          <span class="source-badge">Arbolado XLSX (793K arboles)</span>
+          <span class="source-badge">Zonas verdes por distrito</span>
+          <span class="source-badge">Padron 2025</span>
+        </div>
+      </div>
+
+      <div class="subindex-card">
+        <div class="subindex-header" style="border-color: #E9C46A">
+          <h3>Ruido</h3>
+          <span class="subindex-weight">20%</span>
+        </div>
+        <p class="subindex-method">Escala inversa del nivel LAeq medio de las estaciones acusticas SIVCA del distrito. OMS recomienda no superar 55 dB en zonas residenciales.</p>
+        <div class="subindex-sources">
+          <span class="source-badge">37 estaciones SIVCA</span>
+          <span class="source-badge">Serie historica 1998-2025</span>
+          <span class="source-badge">LAeq, Ld, Ln</span>
+        </div>
+      </div>
+
+      <div class="subindex-card">
+        <div class="subindex-header" style="border-color: #F4A261">
+          <h3>Movilidad</h3>
+          <span class="subindex-weight">15%</span>
+        </div>
+        <p class="subindex-method">Estimacion neutra (50/100) pendiente de integrar datos de carriles bici, BiciMAD e intensidad de trafico en tiempo real.</p>
+        <div class="subindex-sources">
+          <span class="source-badge source-badge--pending">Trafico XML (pendiente)</span>
+          <span class="source-badge source-badge--pending">BiciMAD (pendiente)</span>
+        </div>
+      </div>
+
+      <div class="subindex-card">
+        <div class="subindex-header" style="border-color: #264653">
+          <h3>Reciclaje</h3>
+          <span class="subindex-weight">10%</span>
+        </div>
+        <p class="subindex-method">Contenedores de reciclaje por cada 1.000 habitantes del distrito, normalizado sobre el rango observado (4-25/1.000 hab).</p>
+        <div class="subindex-sources">
+          <span class="source-badge">44.251 contenedores</span>
+          <span class="source-badge">4 tipos (papel, vidrio, organica, envases)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data flow diagram -->
+    <h2>Flujo de datos</h2>
+    <div class="data-flow">
+      <div class="flow-column">
+        <h3>14 fuentes de datos</h3>
+        <ul class="source-list">
+          <li class="source-item source-item--rt">Calidad aire real-time (JSON)</li>
+          <li class="source-item source-item--rt">Calidad aire 30 dias (JSON)</li>
+          <li class="source-item">Estaciones calidad aire (CSV)</li>
+          <li class="source-item source-item--rt">Trafico real-time (XML)</li>
+          <li class="source-item">Puntos medida trafico (CSV)</li>
+          <li class="source-item">Parques y jardines (JSON-LD)</li>
+          <li class="source-item">Estaciones acusticas (CSV)</li>
+          <li class="source-item">Contenedores reciclaje (CSV)</li>
+          <li class="source-item">Limites distritos (TopoJSON)</li>
+          <li class="source-item">Limites barrios (TopoJSON)</li>
+          <li class="source-item source-item--build">Arbolado 793K arboles (XLSX)</li>
+          <li class="source-item source-item--build">Arbolado superficie (CSV)</li>
+          <li class="source-item source-item--build">Ruido historico 1998+ (CSV)</li>
+          <li class="source-item source-item--build">Indicadores sociodemograficos (CSV)</li>
+        </ul>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-column">
+        <h3>Procesamiento</h3>
+        <ul class="process-list">
+          <li><strong>Build-time:</strong> XLSX/CSV pesados → JSON pequeños</li>
+          <li><strong>Runtime:</strong> APIs real-time → cache 20 min</li>
+          <li><strong>Normalizacion:</strong> Escala lineal 0-100</li>
+          <li><strong>Ponderacion:</strong> 5 sub-indices × pesos</li>
+          <li><strong>Tiers:</strong> Excelente → Critico</li>
+        </ul>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-column">
+        <h3>Resultado</h3>
+        <ul class="result-list">
+          <li>Indice Verde por distrito (0-100)</li>
+          <li>Mapa choropleth interactivo</li>
+          <li>Scorecard con 5 sub-indices</li>
+          <li>Comparador radar chart</li>
+          <li>Tendencias historicas</li>
+          <li>Frases contextuales</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tiers -->
+    <h2>Clasificacion</h2>
+    <div class="tiers">
+      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span><span class="tier-name">Excelente</span><span class="tier-desc">Pulmones de la ciudad</span></div>
+      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span><span class="tier-name">Bueno</span><span class="tier-desc">Respira bien</span></div>
+      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span><span class="tier-name">Aceptable</span><span class="tier-desc">Margen de mejora</span></div>
+      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span><span class="tier-name">Mejorable</span><span class="tier-desc">Necesita atencion</span></div>
+      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span><span class="tier-name">Critico</span><span class="tier-desc">Zona critica</span></div>
+    </div>
+
+    <!-- Sources -->
+    <h2>Fuentes</h2>
+    <p class="sources-note">Todos los datos proceden de <a href="https://datos.madrid.es" target="_blank" rel="noopener">datos.madrid.es</a> y <a href="https://ciudadesabiertas.madrid.es" target="_blank" rel="noopener">ciudadesabiertas.madrid.es</a>, portales oficiales del Ayuntamiento de Madrid. Los datos se actualizan automaticamente segun la frecuencia de cada fuente.</p>
   </section>
 </BaseLayout>
 
@@ -62,55 +152,234 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .methodology h1 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     color: var(--color-bosque);
   }
 
   .methodology-subtitle {
     margin-top: 0.5rem;
     font-size: 1.1rem;
+    margin-bottom: 2rem;
   }
 
-  .methodology-content {
-    margin-top: 2rem;
-  }
-
-  .methodology-content h2 {
-    margin-top: 2rem;
+  .methodology h2 {
     font-size: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
   }
 
-  .weights-table {
-    width: 100%;
-    border-collapse: collapse;
+  /* Formula */
+  .formula-card {
+    background: var(--color-bosque);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .formula-card h2 {
+    color: white;
+    margin-top: 0;
+    font-size: 1.3rem;
+  }
+
+  .formula {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
     margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    text-align: center;
   }
 
-  .weights-table th,
-  .weights-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  .formula-note {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 0.75rem;
+    text-align: center;
   }
 
-  .weights-table th {
-    font-weight: 600;
-    color: var(--color-tinta);
+  /* Sub-index cards */
+  .subindex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
   }
 
-  .weights-table td:nth-child(2) {
+  .subindex-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .subindex-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid;
+    padding-left: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .subindex-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .subindex-weight {
     font-family: var(--font-display);
     font-size: 1.2rem;
     color: var(--color-bosque);
   }
 
-  .placeholder {
-    font-style: italic;
-    color: var(--color-piedra);
-    padding: 4rem 2rem;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.03);
+  .subindex-method {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  .subindex-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .source-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(45, 106, 79, 0.08);
+    color: var(--color-bosque);
     border-radius: 12px;
-    margin-top: 1rem;
+  }
+
+  .source-badge--pending {
+    background: rgba(244, 162, 97, 0.15);
+    color: var(--color-arcilla);
+  }
+
+  .subindex-limits {
+    font-size: 0.75rem;
+    color: var(--color-piedra);
+    font-style: italic;
+  }
+
+  /* Data flow */
+  .data-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin-bottom: 2rem;
+  }
+
+  .flow-column {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+
+  .flow-column h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .flow-arrow {
+    font-size: 2rem;
+    color: var(--color-hoja);
+    align-self: center;
+    font-weight: 300;
+  }
+
+  .source-list, .process-list, .result-list {
+    list-style: none;
+    padding: 0;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .source-item {
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.03);
+  }
+
+  .source-item--rt::before { content: '⚡ '; }
+  .source-item--build::before { content: '🔧 '; }
+
+  .process-list li, .result-list li {
+    padding: 3px 0;
+  }
+
+  /* Tiers */
+  .tiers {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tier {
+    flex: 1;
+    min-width: 150px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    border-top: 4px solid var(--tier-color);
+  }
+
+  .tier-range {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--tier-color);
+    display: block;
+  }
+
+  .tier-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .tier-desc {
+    font-size: 0.75rem;
+    color: var(--color-piedra);
+    font-style: italic;
+    display: block;
+    margin-top: 0.15rem;
+  }
+
+  /* Sources */
+  .sources-note {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 700px;
+  }
+
+  .sources-note a {
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .methodology {
+      padding: 1.5rem 1rem;
+    }
+    .data-flow {
+      grid-template-columns: 1fr;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+      text-align: center;
+    }
+    .tiers {
+      flex-direction: column;
+    }
+    .formula {
+      font-size: 0.85rem;
+    }
   }
 </style>
