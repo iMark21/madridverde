@@ -22,9 +22,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <script>
   import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler } from 'chart.js';
+  import annotationPlugin from 'chartjs-plugin-annotation';
   import noiseData from '../data/noise-monthly.json';
 
-  Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler);
+  Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler, annotationPlugin);
 
   // Policy annotations as vertical reference points
   const POLICIES = [
@@ -140,6 +141,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             },
           },
         },
+        annotation: {
+          annotations: Object.fromEntries(POLICIES.map((p, i) => [
+            `policy${i}`,
+            {
+              type: 'line' as const,
+              xMin: String(p.year),
+              xMax: String(p.year),
+              borderColor: p.color + '80',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: p.label,
+                position: 'start' as const,
+                backgroundColor: p.color,
+                color: 'white',
+                font: { family: 'Inter', size: 10, weight: 'bold' as const },
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                borderRadius: 4,
+              },
+            },
+          ])),
+        },
       },
       scales: {
         y: {
@@ -163,15 +187,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             maxRotation: 0,
           },
           grid: {
-            color: (ctx) => {
-              const year = allYears[ctx.index];
-              const policy = POLICIES.find((p) => p.year === year);
-              return policy ? policy.color + '40' : 'transparent';
-            },
-            lineWidth: (ctx) => {
-              const year = allYears[ctx.index];
-              return POLICIES.some((p) => p.year === year) ? 2 : 0;
-            },
+            color: 'transparent',
           },
         },
       },

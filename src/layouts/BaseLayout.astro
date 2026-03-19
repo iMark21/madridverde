@@ -26,6 +26,26 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <title>{title}</title>
+
+    <!-- Firebase Analytics (lightweight, pageview only) -->
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+      import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js';
+
+      const app = initializeApp({
+        projectId: 'madridverde-web',
+        appId: '1:976568577781:web:01efe389acaf3edd315fbc',
+        apiKey: 'AIzaSyCJG-kAakKe_5nIV-INsOHGLOdj845Epck',
+        measurementId: 'G-PENDING',
+      });
+
+      try {
+        const analytics = getAnalytics(app);
+        logEvent(analytics, 'page_view');
+      } catch (e) {
+        // Analytics may be blocked by ad blockers
+      }
+    </script>
   </head>
   <body>
     <a href="#main" class="skip-link">Saltar al contenido</a>
@@ -95,6 +115,18 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     color: var(--color-bosque);
   }
 
+  /* Focus visible for keyboard navigation */
+  :focus-visible {
+    outline: 3px solid var(--color-bosque);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove outline for mouse clicks */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
   .skip-link {
     position: absolute;
     top: -100%;
@@ -103,10 +135,25 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     color: white;
     padding: 0.5rem 1rem;
     z-index: 1000;
+    border-radius: 0 0 8px 0;
+    font-weight: 600;
   }
 
   .skip-link:focus {
     top: 0;
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>
 
