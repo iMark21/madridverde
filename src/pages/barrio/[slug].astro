@@ -89,29 +89,33 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 <BaseLayout title={`${displayName} — MadridVerde`} description={`Indice Verde y metricas medioambientales del distrito ${displayName} de Madrid`}>
   <section class="scorecard">
     <div class="scorecard-header">
-      <a href="/" class="back-link">&larr; Volver al mapa</a>
+      <a href="/" class="back-link">&larr; <span data-i18n="scorecard.backLink">Volver al mapa</span></a>
       <div class="district-title">
         <span class="district-code">{code}</span>
         <h1>{displayName}</h1>
       </div>
-      {district && <p class="district-pop">{district.population.toLocaleString('es-ES')} habitantes</p>}
+      {district && <p class="district-pop">{district.population.toLocaleString('es-ES')} <span data-i18n="scorecard.inhabitants">habitantes</span></p>}
     </div>
 
     {district && (
       <div class="scorecard-grid">
         <div class="score-card score-card--main" style={`background: ${district.tierColor}`}>
-          <p class="score-label">Indice Verde</p>
+          <p class="score-label" data-i18n="scorecard.greenIndex">Indice Verde</p>
           <p class="score-value">{district.score}</p>
           <p class="score-tier">{district.tier}</p>
           <p class="score-context">{contextPhrase}</p>
         </div>
         <div class="score-actions">
-          <button class="share-btn" id="share-btn" data-text={shareText} data-url={shareUrl}>Compartir resultado</button>
+          <button class="share-btn" id="share-btn" data-text={shareText} data-url={shareUrl} data-i18n="scorecard.shareButton">Compartir resultado</button>
+          <button class="export-district-btn" id="export-district-csv" data-district-code={code}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+            <span data-i18n="export.district_button">Descargar datos del distrito</span>
+          </button>
         </div>
       </div>
 
       <div class="narrative" style={narrative.length === 0 ? 'display:none' : ''}>
-        <h2>La historia de {displayName}</h2>
+        <h2><span data-i18n="scorecard.narrativeTitle">La historia de</span> {displayName}</h2>
         {narrative.map((line) => (
           <p>{line}</p>
         ))}
@@ -120,7 +124,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       <MapaDistrito districtCode={code} districtName={displayName} tierColor={district.tierColor} />
 
       <div class="sub-indices">
-        <h2>Sub-indices</h2>
+        <h2 data-i18n="scorecard.subIndicesTitle">Sub-indices</h2>
         <div class="sub-indices-grid">
           {district.subIndices.map((si) => (
             <div class="sub-index">
@@ -136,35 +140,35 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       </div>
 
       <div class="data-details">
-        <h2>Datos del distrito</h2>
+        <h2 data-i18n="scorecard.dataTitle">Datos del distrito</h2>
         <div class="details-grid">
           {treeInfo && (
             <div class="detail-card">
               <span class="detail-icon">🌳</span>
               <span class="detail-value">{treeInfo.totalTrees.toLocaleString('es-ES')}</span>
-              <span class="detail-label">arboles censados</span>
+              <span class="detail-label" data-i18n="scorecard.treesCounted">arboles censados</span>
             </div>
           )}
           <div class="detail-card">
             <span class="detail-icon">🌿</span>
             <span class="detail-value">{greenM2PerCap}</span>
-            <span class="detail-label">m² de zonas verdes por habitante</span>
+            <span class="detail-label" data-i18n="scorecard.greenM2PerHab">m2 de zonas verdes por habitante</span>
           </div>
           <div class="detail-card">
             <span class="detail-icon">🗑️</span>
             <span class="detail-value">{containersPer1000}</span>
-            <span class="detail-label">contenedores por 1.000 hab</span>
+            <span class="detail-label" data-i18n="scorecard.containersPerHab">contenedores por 1.000 hab</span>
           </div>
           <div class="detail-card">
             <span class="detail-icon">👥</span>
             <span class="detail-value">{population.toLocaleString('es-ES')}</span>
-            <span class="detail-label">habitantes (padron 2025)</span>
+            <span class="detail-label" data-i18n="scorecard.populationLabel">habitantes (padron 2025)</span>
           </div>
         </div>
 
         {treeInfo?.topSpecies && treeInfo.topSpecies.length > 0 && (
           <div class="species-section">
-            <h3>Especies mas frecuentes</h3>
+            <h3 data-i18n="scorecard.topSpecies">Especies mas frecuentes</h3>
             <div class="species-list">
               {(treeInfo.topSpecies as any[]).map((sp: any) => (
                 <div class="species-item">
@@ -178,7 +182,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 
         {recyclingInfo?.types && (
           <div class="recycling-section">
-            <h3>Contenedores por tipo</h3>
+            <h3 data-i18n="scorecard.containersByType">Contenedores por tipo</h3>
             <div class="recycling-bars">
               {(recyclingInfo.types as any[]).slice(0, 5).map((t: any) => (
                 <div class="recycling-bar-item">
@@ -195,8 +199,8 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       </div>
 
       <div class="bicimad-district" id="bicimad-district">
-        <h2>BiciMAD en {displayName}</h2>
-        <p class="bicimad-loading-d">Cargando estaciones de BiciMAD...</p>
+        <h2><span data-i18n="scorecard.bicimadTitle">BiciMAD en</span> {displayName}</h2>
+        <p class="bicimad-loading-d" data-i18n="scorecard.bicimadLoading">Cargando estaciones de BiciMAD...</p>
       </div>
     )}
   </section>
@@ -204,6 +208,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
   import { fetchAirQuality, aggregateByDistrict } from '../../lib/air-quality';
   import { fetchTrafficSummary } from '../../lib/traffic';
   import { fetchBiciMAD } from '../../lib/bicimad';
+  import { t as tCard } from '../../i18n/i18n.js';
 
   // --- Live hydration: update Aire + Movilidad sub-indices ---
   const scoreValueEl = document.querySelector('.score-value');
@@ -242,7 +247,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
             }
             if (detailEl) {
               const contNames = Object.keys(airData.readings).join(', ');
-              detailEl.textContent = `Datos en vivo: ${contNames}. Actualizado hace minutos`;
+              detailEl.textContent = tCard('gi.aireLiveDetail', { contaminants: contNames });
             }
           }
         });
@@ -261,7 +266,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
             (valueEl as HTMLElement).style.color = traffic.score >= 70 ? '#2D6A4F' : traffic.score >= 40 ? '#E9C46A' : '#E76F51';
           }
           if (detailEl) {
-            detailEl.textContent = `${traffic.fluido} sensores fluidos, ${traffic.denso} densos, ${traffic.congestionado} congestionados — en vivo`;
+            detailEl.textContent = tCard('gi.trafficLiveDetail', { fluido: String(traffic.fluido), denso: String(traffic.denso), congestionado: String(traffic.congestionado) });
           }
         }
       });
@@ -283,7 +288,8 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 
     // Update tier color
     const tierColor = newScore >= 85 ? '#2D6A4F' : newScore >= 70 ? '#52B788' : newScore >= 55 ? '#E9C46A' : newScore >= 40 ? '#F4A261' : '#E76F51';
-    const tierName = newScore >= 85 ? 'Excelente' : newScore >= 70 ? 'Bueno' : newScore >= 55 ? 'Aceptable' : newScore >= 40 ? 'Mejorable' : 'Critico';
+    const tierKey = newScore >= 85 ? 'tier.excellent' : newScore >= 70 ? 'tier.good' : newScore >= 55 ? 'tier.acceptable' : newScore >= 40 ? 'tier.improvable' : 'tier.critical';
+    const tierName = tCard(tierKey);
     if (scoreCardEl) (scoreCardEl as HTMLElement).style.background = tierColor;
     const tierEl = document.querySelector('.score-tier');
     if (tierEl) tierEl.textContent = tierName;
@@ -342,7 +348,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
         .slice(0, 8);
 
       if (nearby.length === 0) {
-        districtBounds.innerHTML = '<h2>BiciMAD</h2><p style="color:#6C757D;font-style:italic">No hay estaciones de BiciMAD en este distrito</p>';
+        districtBounds.innerHTML = `<h2>BiciMAD</h2><p style="color:#6C757D;font-style:italic">${tCard('scorecard.bicimadNone')}</p>`;
         return;
       }
 
@@ -350,11 +356,11 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       const totalDocks = nearby.reduce((s, st) => s + st.docksAvailable, 0);
 
       districtBounds.innerHTML = `
-        <h2>BiciMAD en ${distName}</h2>
+        <h2>${tCard('scorecard.bicimadTitle')} ${distName}</h2>
         <div class="bici-district-summary">
-          <span class="bds-item"><strong>${nearby.length}</strong> estaciones cercanas</span>
-          <span class="bds-item"><strong>${totalBikes}</strong> bicis disponibles</span>
-          <span class="bds-item"><strong>${totalDocks}</strong> docks libres</span>
+          <span class="bds-item"><strong>${nearby.length}</strong> ${tCard('scorecard.bicimadNearby')}</span>
+          <span class="bds-item"><strong>${totalBikes}</strong> ${tCard('scorecard.bicimadBikes')}</span>
+          <span class="bds-item"><strong>${totalDocks}</strong> ${tCard('scorecard.bicimadDocks')}</span>
         </div>
         <div class="bici-district-list">
           ${nearby.map(s => {
@@ -367,9 +373,19 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
             </div>`;
           }).join('')}
         </div>
-        <p class="bici-live-note">Datos en vivo — GBFS actualizado cada 14 segundos</p>
+        <p class="bici-live-note">${tCard('scorecard.bicimadLiveNote')}</p>
       `;
     });
+  }
+
+  // --- district_viewed (direct access) + page_viewed ---
+  {
+    const h1El = document.querySelector('.district-title h1');
+    const districtName = h1El?.textContent || '';
+    if (window.__mvAnalytics) {
+      window.__mvAnalytics('district_viewed', { district_name: districtName, source: 'direct' });
+      window.__mvAnalytics('page_viewed', { page_type: 'district', district_name: districtName });
+    }
   }
 
   const btn = document.getElementById('share-btn');
@@ -377,12 +393,42 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
     btn.addEventListener('click', async () => {
       const text = btn.getAttribute('data-text') || '';
       const url = btn.getAttribute('data-url') || '';
+      const h1El = document.querySelector('.district-title h1');
+      const districtName = h1El?.textContent || '';
+      let shareMethod = 'clipboard';
       if (navigator.share) {
-        try { await navigator.share({ text, url }); } catch {}
+        try {
+          await navigator.share({ text, url });
+          shareMethod = 'webshare';
+        } catch {}
       } else {
         await navigator.clipboard.writeText(`${text}\n${url}`);
-        btn.textContent = 'Copiado al portapapeles';
-        setTimeout(() => { btn.textContent = 'Compartir resultado'; }, 2000);
+        btn.textContent = tCard('scorecard.shareCopied');
+        setTimeout(() => { btn.textContent = tCard('scorecard.shareButton'); }, 2000);
+      }
+      if (window.__mvAnalytics) {
+        window.__mvAnalytics('district_shared', { district_name: districtName, method: shareMethod });
+      }
+    });
+  }
+
+  // CSV export for single district
+  const csvBtn = document.getElementById('export-district-csv');
+  if (csvBtn) {
+    csvBtn.addEventListener('click', async () => {
+      const { computeGreenIndex } = await import('../../lib/green-index');
+      const { exportSingleDistrictCSV } = await import('../../lib/export-csv');
+
+      const districtCode = csvBtn.getAttribute('data-district-code') || '';
+      const allDistricts = computeGreenIndex();
+      const district = allDistricts.find((d) => d.code === districtCode);
+      if (district) {
+        exportSingleDistrictCSV(district);
+        const h1El = document.querySelector('.district-title h1');
+        const dName = h1El?.textContent || '';
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('csv_exported', { type: 'district', district_name: dName });
+        }
       }
     });
   }
@@ -530,10 +576,14 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
   /* Share + Narrative */
   .score-actions {
     margin-top: 1rem;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
-  .share-btn {
+  .share-btn,
+  .export-district-btn {
     padding: 0.5rem 1.5rem;
     background: rgba(255,255,255,0.2);
     color: white;
@@ -545,8 +595,20 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
     transition: all 0.15s;
   }
 
-  .share-btn:hover {
+  .share-btn:hover,
+  .export-district-btn:hover {
     background: rgba(255,255,255,0.3);
+  }
+
+  .export-district-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+  }
+
+  .export-district-btn svg {
+    flex-shrink: 0;
   }
 
   .narrative {

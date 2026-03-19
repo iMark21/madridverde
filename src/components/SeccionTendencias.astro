@@ -14,8 +14,8 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
 <div class="trends-content">
   <!-- Noise chart -->
   <div class="chart-block">
-    <h3>Ruido ambiental (LAeq dB)</h3>
-    <p class="chart-description">Selecciona estaciones para comparar su evolucion. OMS recomienda no superar 55 dB. <em>Datos SIVCA, ultima actualizacion: febrero 2026.</em></p>
+    <h3 data-i18n="trends.noiseTitle">Ruido ambiental (LAeq dB)</h3>
+    <p class="chart-description"><span data-i18n="trends.noiseDesc">Selecciona estaciones para comparar su evolucion. OMS recomienda no superar 55 dB.</span> <em data-i18n="trends.noiseDataNote">Datos SIVCA, ultima actualizacion: febrero 2026.</em></p>
 
     <div class="station-selector" id="noise-station-selector">
       {stationsWithData.map(s => (
@@ -30,14 +30,14 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     </div>
 
     <div class="chart-container">
-      <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid"></canvas>
+      <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
     </div>
   </div>
 
   <!-- Air chart -->
   <div class="chart-block">
-    <h3>Calidad del aire (NO2 µg/m³)</h3>
-    <p class="chart-description">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 µg/m³. <em>Datos horarios agregados, hasta febrero 2026.</em></p>
+    <h3 data-i18n="trends.airTitle">Calidad del aire (NO2 ug/m3)</h3>
+    <p class="chart-description"><span data-i18n="trends.airDesc">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 ug/m3.</span> <em data-i18n="trends.airDataNote">Datos horarios agregados, hasta febrero 2026.</em></p>
 
     <div class="station-selector" id="air-station-selector">
       {(airStationsData as any[]).map(s => (
@@ -52,7 +52,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     </div>
 
     <div class="chart-container">
-      <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid"></canvas>
+      <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
     </div>
   </div>
 </div>
@@ -62,15 +62,16 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   import noiseData from '../data/noise-monthly.json';
   import airData from '../data/air-monthly.json';
   import airStations from '../data/air-stations.json';
+  import { t as tTrend } from '../i18n/i18n.js';
 
   const CHART_COLORS = ['#2D6A4F', '#52B788', '#E9C46A', '#F4A261', '#264653', '#E76F51', '#40916C', '#6C757D'];
 
   const POLICIES = [
-    { year: 2005, label: 'Ley del Ruido', color: '#264653' },
-    { year: 2014, label: 'APR Centro', color: '#40916C' },
-    { year: 2018, label: 'Madrid Central', color: '#2D6A4F' },
-    { year: 2020, label: 'COVID-19', color: '#E76F51' },
-    { year: 2022, label: 'ZBE Madrid', color: '#2D6A4F' },
+    { year: 2005, label: tTrend('trends.policyNoiseLaw'), color: '#264653' },
+    { year: 2014, label: tTrend('trends.policyAPR'), color: '#40916C' },
+    { year: 2018, label: tTrend('trends.policyMadridCentral'), color: '#2D6A4F' },
+    { year: 2020, label: tTrend('trends.policyCovid'), color: '#E76F51' },
+    { year: 2022, label: tTrend('trends.policyZBE'), color: '#2D6A4F' },
   ];
 
   // --- Noise chart with selectable stations ---
@@ -110,7 +111,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     });
 
     datasets.push({
-      label: 'Limite OMS (55 dB)',
+      label: tTrend('trends.whoNoiseLimit'),
       data: allYears.map(() => 55),
       borderColor: '#E76F51', backgroundColor: 'transparent',
       borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0, tension: 0, spanGaps: true,
@@ -165,6 +166,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   noiseChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       const id = chip.getAttribute('data-id')!;
+      const stationName = chip.getAttribute('data-name') || id;
       const idx = selectedNoiseStations.indexOf(id);
       if (idx >= 0) {
         selectedNoiseStations.splice(idx, 1);
@@ -172,6 +174,9 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
       } else if (selectedNoiseStations.length < 8) {
         selectedNoiseStations.push(id);
         chip.classList.add('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('trend_station_selected', { station_name: stationName, chart_type: 'noise' });
+        }
       }
       if (selectedNoiseStations.length > 0) renderNoiseChart(selectedNoiseStations);
     });
@@ -211,7 +216,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     }).filter(Boolean);
 
     datasets.push({
-      label: 'Limite OMS (40 µg/m³)',
+      label: tTrend('trends.whoAirLimit'),
       data: allMonths.map(() => 40),
       borderColor: '#E76F51', backgroundColor: 'transparent',
       borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0, tension: 0, spanGaps: true,
@@ -246,6 +251,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   airChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       const id = chip.getAttribute('data-id')!;
+      const stationName = chip.getAttribute('data-name') || id;
       const idx = selectedAirStations.indexOf(id);
       if (idx >= 0) {
         selectedAirStations.splice(idx, 1);
@@ -253,12 +259,39 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
       } else if (selectedAirStations.length < 8) {
         selectedAirStations.push(id);
         chip.classList.add('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('trend_station_selected', { station_name: stationName, chart_type: 'air' });
+        }
       }
       if (selectedAirStations.length > 0) renderAirChart(selectedAirStations);
     });
   });
 
   setTimeout(() => renderAirChart(selectedAirStations), 100);
+
+  // Track when trend charts enter viewport (fire once each)
+  if ('IntersectionObserver' in window) {
+    const chartViewed: Record<string, boolean> = {};
+    const chartObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const chartId = entry.target.id;
+          const chartType = chartId === 'noise-chart' ? 'noise' : chartId === 'air-chart' ? 'air' : null;
+          if (chartType && !chartViewed[chartType]) {
+            chartViewed[chartType] = true;
+            if (window.__mvAnalytics) {
+              window.__mvAnalytics('trend_chart_viewed', { chart_type: chartType });
+            }
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const noiseCanvas = document.getElementById('noise-chart');
+    const airCanvas = document.getElementById('air-chart');
+    if (noiseCanvas) chartObserver.observe(noiseCanvas);
+    if (airCanvas) chartObserver.observe(airCanvas);
+  }
 </script>
 
 <style>

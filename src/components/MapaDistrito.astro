@@ -9,7 +9,7 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
 ---
 
 <div class="district-map-section">
-  <h2>Mapa de {districtName}</h2>
+  <h2><span data-i18n="scorecard.mapTitle">Mapa de</span> {districtName}</h2>
   <div class="district-map-container">
     <div id="district-map"
       data-code={districtCode}
@@ -18,16 +18,16 @@ const { districtCode, districtName, tierColor = '#2D6A4F' } = Astro.props;
       aria-label={`Mapa del distrito ${districtName} con estaciones BiciMAD y carriles bici`}>
     </div>
     <div class="district-map-legend">
-      <p class="dml-section-title">Estaciones BiciMAD</p>
-      <span class="dml-item"><span class="dml-dot" style="background:#2D6A4F"></span> Alta disponibilidad (&ge;80%)</span>
-      <span class="dml-item"><span class="dml-dot" style="background:#E9C46A"></span> Media disponibilidad (20–79%)</span>
-      <span class="dml-item"><span class="dml-dot" style="background:#E76F51"></span> Baja disponibilidad (&lt;20%)</span>
-      <p class="dml-section-title">Carriles ciclistas</p>
-      <span class="dml-item"><span class="dml-lane" style="background:#1B563D;height:4px"></span> Anillo Verde</span>
-      <span class="dml-item"><span class="dml-lane" style="background:#40916C;height:3px"></span> Vía Exclusiva</span>
-      <span class="dml-item"><span class="dml-lane" style="background:#74C69D;height:2px"></span> Vía Preferente</span>
-      <span class="dml-item"><span class="dml-lane" style="background:#E9C46A;height:2px"></span> Uso Compartido</span>
-      <p class="dml-footer">Datos en vivo · actualizado cada 14s</p>
+      <p class="dml-section-title" data-i18n="map.legendBicimadStations">Estaciones BiciMAD</p>
+      <span class="dml-item"><span class="dml-dot" style="background:#2D6A4F"></span> <span data-i18n="map.legendHighAvail">Alta disponibilidad</span> (&ge;80%)</span>
+      <span class="dml-item"><span class="dml-dot" style="background:#E9C46A"></span> <span data-i18n="map.legendMedAvail">Media disponibilidad</span> (20-79%)</span>
+      <span class="dml-item"><span class="dml-dot" style="background:#E76F51"></span> <span data-i18n="map.legendLowAvail">Baja disponibilidad</span> (&lt;20%)</span>
+      <p class="dml-section-title" data-i18n="map.legendBikeLanes">Carriles ciclistas</p>
+      <span class="dml-item"><span class="dml-lane" style="background:#1B563D;height:4px"></span> <span data-i18n="map.legendAnilloVerde">Anillo Verde</span></span>
+      <span class="dml-item"><span class="dml-lane" style="background:#40916C;height:3px"></span> <span data-i18n="map.legendExclusive">Via Exclusiva</span></span>
+      <span class="dml-item"><span class="dml-lane" style="background:#74C69D;height:2px"></span> <span data-i18n="map.legendPreferred">Via Preferente</span></span>
+      <span class="dml-item"><span class="dml-lane" style="background:#E9C46A;height:2px"></span> <span data-i18n="map.legendShared">Uso Compartido</span></span>
+      <p class="dml-footer" data-i18n="map.legendLiveFooter">Datos en vivo · actualizado cada 14s</p>
     </div>
   </div>
 </div>

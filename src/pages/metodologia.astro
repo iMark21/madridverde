@@ -4,145 +4,151 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Metodologia — MadridVerde" description="Formula del Indice Verde: 14 datasets, 5 sub-indices, pesos, normalizacion y fuentes de datos">
   <section class="methodology">
-    <h1>Metodologia</h1>
-    <p class="methodology-subtitle">Transparencia total: como se calcula el Indice Verde</p>
+    <h1 data-i18n="methodology.title">Metodologia</h1>
+    <p class="methodology-subtitle" data-i18n="methodology.subtitle">Transparencia total: como se calcula el Indice Verde</p>
 
     <!-- Formula -->
     <div class="formula-card">
-      <h2>Indice Verde (0-100)</h2>
-      <p class="formula">IV = Aire × 0.30 + Verde × 0.25 + Ruido × 0.20 + Movilidad × 0.15 + Reciclaje × 0.10</p>
-      <p class="formula-note">Cada sub-indice esta normalizado a escala 0-100. Mayor puntuacion = mejor calidad ambiental.</p>
+      <h2 data-i18n="methodology.formulaTitle">Indice Verde (0-100)</h2>
+      <p class="formula" data-i18n="methodology.formula">IV = Aire x 0.30 + Verde x 0.25 + Ruido x 0.20 + Movilidad x 0.15 + Reciclaje x 0.10</p>
+      <p class="formula-note" data-i18n="methodology.formulaNote">Cada sub-indice esta normalizado a escala 0-100. Mayor puntuacion = mejor calidad ambiental.</p>
     </div>
 
     <!-- Sub-indices detail -->
     <div class="subindex-grid">
       <div class="subindex-card">
         <div class="subindex-header">
-          <h3>Aire</h3>
+          <h3 data-i18n="methodology.aireTitle">Aire</h3>
           <span class="subindex-weight">30%</span>
         </div>
-        <p class="subindex-method">Media inversa de ratios contaminante/limite para NO2, PM2.5, PM10 y O3. Datos en tiempo real cada 20 minutos.</p>
+        <p class="subindex-method" data-i18n="methodology.aireMethod">Media inversa de ratios contaminante/limite para NO2, PM2.5, PM10 y O3. Datos en tiempo real cada 20 minutos.</p>
         <div class="subindex-sources">
-          <span class="source-badge">API ciudadesabiertas</span>
-          <span class="source-badge">24 estaciones</span>
-          <span class="source-badge">4 contaminantes</span>
+          <span class="source-badge" data-i18n="methodology.aireBadge1">API ciudadesabiertas</span>
+          <span class="source-badge" data-i18n="methodology.aireBadge2">24 estaciones</span>
+          <span class="source-badge" data-i18n="methodology.aireBadge3">4 contaminantes</span>
         </div>
-        <p class="subindex-limits">Limites OMS: NO2 40 µg/m³, PM2.5 25 µg/m³, PM10 40 µg/m³, O3 120 µg/m³</p>
+        <p class="subindex-limits" data-i18n="methodology.aireLimits">Limites OMS: NO2 40 ug/m3, PM2.5 25 ug/m3, PM10 40 ug/m3, O3 120 ug/m3</p>
       </div>
 
       <div class="subindex-card">
         <div class="subindex-header">
-          <h3>Verde</h3>
+          <h3 data-i18n="methodology.verdeTitle">Verde</h3>
           <span class="subindex-weight">25%</span>
         </div>
-        <p class="subindex-method">Combinacion de m² de zonas verdes por habitante (70%) y arboles por 1.000 habitantes (30%). OMS recomienda minimo 9 m²/hab.</p>
+        <p class="subindex-method" data-i18n="methodology.verdeMethod">Combinacion de m2 de zonas verdes por habitante (70%) y arboles por 1.000 habitantes (30%). OMS recomienda minimo 9 m2/hab.</p>
         <div class="subindex-sources">
-          <span class="source-badge">Arbolado XLSX (793K arboles)</span>
-          <span class="source-badge">Zonas verdes por distrito</span>
-          <span class="source-badge">Padron 2025</span>
+          <span class="source-badge" data-i18n="methodology.verdeBadge1">Arbolado XLSX (793K arboles)</span>
+          <span class="source-badge" data-i18n="methodology.verdeBadge2">Zonas verdes por distrito</span>
+          <span class="source-badge" data-i18n="methodology.verdeBadge3">Padron 2025</span>
         </div>
       </div>
 
       <div class="subindex-card">
         <div class="subindex-header">
-          <h3>Ruido</h3>
+          <h3 data-i18n="methodology.ruidoTitle">Ruido</h3>
           <span class="subindex-weight">20%</span>
         </div>
-        <p class="subindex-method">Escala inversa del nivel LAeq medio de las estaciones acusticas SIVCA del distrito. OMS recomienda no superar 55 dB en zonas residenciales.</p>
+        <p class="subindex-method" data-i18n="methodology.ruidoMethod">Escala inversa del nivel LAeq medio de las estaciones acusticas SIVCA del distrito. OMS recomienda no superar 55 dB en zonas residenciales.</p>
         <div class="subindex-sources">
-          <span class="source-badge">37 estaciones SIVCA</span>
-          <span class="source-badge">Serie historica 1998-2025</span>
-          <span class="source-badge">LAeq, Ld, Ln</span>
+          <span class="source-badge" data-i18n="methodology.ruidoBadge1">37 estaciones SIVCA</span>
+          <span class="source-badge" data-i18n="methodology.ruidoBadge2">Serie historica 1998-2025</span>
+          <span class="source-badge" data-i18n="methodology.ruidoBadge3">LAeq, Ld, Ln</span>
         </div>
       </div>
 
       <div class="subindex-card">
         <div class="subindex-header">
-          <h3>Movilidad</h3>
+          <h3 data-i18n="methodology.movilidadTitle">Movilidad</h3>
           <span class="subindex-weight">15%</span>
         </div>
-        <p class="subindex-method">Estimacion neutra (50/100) pendiente de integrar datos de carriles bici, BiciMAD e intensidad de trafico en tiempo real.</p>
+        <p class="subindex-method" data-i18n="methodology.movilidadMethod">Estimacion neutra (50/100) pendiente de integrar datos de carriles bici, BiciMAD e intensidad de trafico en tiempo real.</p>
         <div class="subindex-sources">
-          <span class="source-badge source-badge--pending">Trafico XML (pendiente)</span>
-          <span class="source-badge source-badge--pending">BiciMAD (pendiente)</span>
+          <span class="source-badge source-badge--pending" data-i18n="methodology.movilidadBadge1">Trafico XML (pendiente)</span>
+          <span class="source-badge source-badge--pending" data-i18n="methodology.movilidadBadge2">BiciMAD (pendiente)</span>
         </div>
       </div>
 
       <div class="subindex-card">
         <div class="subindex-header">
-          <h3>Reciclaje</h3>
+          <h3 data-i18n="methodology.reciclajeTitle">Reciclaje</h3>
           <span class="subindex-weight">10%</span>
         </div>
-        <p class="subindex-method">Contenedores de reciclaje por cada 1.000 habitantes del distrito, normalizado sobre el rango observado (4-25/1.000 hab).</p>
+        <p class="subindex-method" data-i18n="methodology.reciclajeMethod">Contenedores de reciclaje por cada 1.000 habitantes del distrito, normalizado sobre el rango observado (4-25/1.000 hab).</p>
         <div class="subindex-sources">
-          <span class="source-badge">44.251 contenedores</span>
-          <span class="source-badge">4 tipos (papel, vidrio, organica, envases)</span>
+          <span class="source-badge" data-i18n="methodology.reciclajeBadge1">44.251 contenedores</span>
+          <span class="source-badge" data-i18n="methodology.reciclajeBadge2">4 tipos (papel, vidrio, organica, envases)</span>
         </div>
       </div>
     </div>
 
     <!-- Data flow diagram -->
-    <h2>Flujo de datos</h2>
+    <h2 data-i18n="methodology.dataFlowTitle">Flujo de datos</h2>
     <div class="data-flow">
       <div class="flow-column">
-        <h3>14 fuentes de datos</h3>
+        <h3 data-i18n="methodology.dataFlow14Sources">14 fuentes de datos</h3>
         <ul class="source-list">
-          <li class="source-item source-item--rt">Calidad aire real-time (JSON)</li>
-          <li class="source-item source-item--rt">Calidad aire 30 dias (JSON)</li>
-          <li class="source-item">Estaciones calidad aire (CSV)</li>
-          <li class="source-item source-item--rt">Trafico real-time (XML)</li>
-          <li class="source-item">Puntos medida trafico (CSV)</li>
-          <li class="source-item">Parques y jardines (JSON-LD)</li>
-          <li class="source-item">Estaciones acusticas (CSV)</li>
-          <li class="source-item">Contenedores reciclaje (CSV)</li>
-          <li class="source-item">Limites distritos (TopoJSON)</li>
-          <li class="source-item">Limites barrios (TopoJSON)</li>
-          <li class="source-item source-item--build">Arbolado 793K arboles (XLSX)</li>
-          <li class="source-item source-item--build">Arbolado superficie (CSV)</li>
-          <li class="source-item source-item--build">Ruido historico 1998+ (CSV)</li>
-          <li class="source-item source-item--build">Indicadores sociodemograficos (CSV)</li>
+          <li class="source-item source-item--rt" data-i18n="methodology.dfAirRealtime">Calidad aire real-time (JSON)</li>
+          <li class="source-item source-item--rt" data-i18n="methodology.dfAir30Days">Calidad aire 30 dias (JSON)</li>
+          <li class="source-item" data-i18n="methodology.dfAirStationsCSV">Estaciones calidad aire (CSV)</li>
+          <li class="source-item source-item--rt" data-i18n="methodology.dfTrafficRealtime">Trafico real-time (XML)</li>
+          <li class="source-item" data-i18n="methodology.dfTrafficSensors">Puntos medida trafico (CSV)</li>
+          <li class="source-item" data-i18n="methodology.dfParksJSONLD">Parques y jardines (JSON-LD)</li>
+          <li class="source-item" data-i18n="methodology.dfNoiseStationsCSV">Estaciones acusticas (CSV)</li>
+          <li class="source-item" data-i18n="methodology.dfRecyclingCSV">Contenedores reciclaje (CSV)</li>
+          <li class="source-item" data-i18n="methodology.dfDistrictsTopo">Limites distritos (TopoJSON)</li>
+          <li class="source-item" data-i18n="methodology.dfNeighborhoodsTopo">Limites barrios (TopoJSON)</li>
+          <li class="source-item source-item--build" data-i18n="methodology.dfTreesXLSX">Arbolado 793K arboles (XLSX)</li>
+          <li class="source-item source-item--build" data-i18n="methodology.dfTreesAreaCSV">Arbolado superficie (CSV)</li>
+          <li class="source-item source-item--build" data-i18n="methodology.dfNoiseHistorical">Ruido historico 1998+ (CSV)</li>
+          <li class="source-item source-item--build" data-i18n="methodology.dfDemographicsCSV">Indicadores sociodemograficos (CSV)</li>
         </ul>
       </div>
-      <div class="flow-arrow">→</div>
+      <div class="flow-arrow">-></div>
       <div class="flow-column">
-        <h3>Procesamiento</h3>
+        <h3 data-i18n="methodology.dataFlowProcessing">Procesamiento</h3>
         <ul class="process-list">
-          <li><strong>Build-time:</strong> XLSX/CSV pesados → JSON pequeños</li>
-          <li><strong>Runtime:</strong> APIs real-time → cache 20 min</li>
-          <li><strong>Normalizacion:</strong> Escala lineal 0-100</li>
-          <li><strong>Ponderacion:</strong> 5 sub-indices × pesos</li>
-          <li><strong>Tiers:</strong> Excelente → Critico</li>
+          <li><strong data-i18n="methodology.dfBuildTime">Build-time:</strong> <span data-i18n="methodology.dfBuildTimeDesc">XLSX/CSV pesados -> JSON pequenos</span></li>
+          <li><strong data-i18n="methodology.dfRuntime">Runtime:</strong> <span data-i18n="methodology.dfRuntimeDesc">APIs real-time -> cache 20 min</span></li>
+          <li><strong data-i18n="methodology.dfNormalization">Normalizacion:</strong> <span data-i18n="methodology.dfNormalizationDesc">Escala lineal 0-100</span></li>
+          <li><strong data-i18n="methodology.dfWeighting">Ponderacion:</strong> <span data-i18n="methodology.dfWeightingDesc">5 sub-indices x pesos</span></li>
+          <li><strong data-i18n="methodology.dfTiers">Tiers:</strong> <span data-i18n="methodology.dfTiersDesc">Excelente -> Critico</span></li>
         </ul>
       </div>
-      <div class="flow-arrow">→</div>
+      <div class="flow-arrow">-></div>
       <div class="flow-column">
-        <h3>Resultado</h3>
+        <h3 data-i18n="methodology.dataFlowResult">Resultado</h3>
         <ul class="result-list">
-          <li>Indice Verde por distrito (0-100)</li>
-          <li>Mapa choropleth interactivo</li>
-          <li>Scorecard con 5 sub-indices</li>
-          <li>Comparador radar chart</li>
-          <li>Tendencias historicas</li>
-          <li>Frases contextuales</li>
+          <li data-i18n="methodology.dfResultIndex">Indice Verde por distrito (0-100)</li>
+          <li data-i18n="methodology.dfResultMap">Mapa choropleth interactivo</li>
+          <li data-i18n="methodology.dfResultScorecard">Scorecard con 5 sub-indices</li>
+          <li data-i18n="methodology.dfResultRadar">Comparador radar chart</li>
+          <li data-i18n="methodology.dfResultTrends">Tendencias historicas</li>
+          <li data-i18n="methodology.dfResultPhrases">Frases contextuales</li>
         </ul>
       </div>
     </div>
 
     <!-- Tiers -->
-    <h2>Clasificacion</h2>
+    <h2 data-i18n="methodology.classificationTitle">Clasificacion</h2>
     <div class="tiers">
-      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span><span class="tier-name">Excelente</span><span class="tier-desc">Pulmones de la ciudad</span></div>
-      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span><span class="tier-name">Bueno</span><span class="tier-desc">Respira bien</span></div>
-      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span><span class="tier-name">Aceptable</span><span class="tier-desc">Margen de mejora</span></div>
-      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span><span class="tier-name">Mejorable</span><span class="tier-desc">Necesita atencion</span></div>
-      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span><span class="tier-name">Critico</span><span class="tier-desc">Zona critica</span></div>
+      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span><span class="tier-name" data-i18n="tier.excellent">Excelente</span><span class="tier-desc" data-i18n="methodology.tierExcellentDesc">Pulmones de la ciudad</span></div>
+      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span><span class="tier-name" data-i18n="tier.good">Bueno</span><span class="tier-desc" data-i18n="methodology.tierGoodDesc">Respira bien</span></div>
+      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span><span class="tier-name" data-i18n="tier.acceptable">Aceptable</span><span class="tier-desc" data-i18n="methodology.tierAcceptableDesc">Margen de mejora</span></div>
+      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span><span class="tier-name" data-i18n="tier.improvable">Mejorable</span><span class="tier-desc" data-i18n="methodology.tierImprovableDesc">Necesita atencion</span></div>
+      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span><span class="tier-name" data-i18n="tier.critical">Critico</span><span class="tier-desc" data-i18n="methodology.tierCriticalDesc">Zona critica</span></div>
     </div>
 
     <!-- Sources -->
-    <h2>Fuentes</h2>
-    <p class="sources-note">Todos los datos proceden de <a href="https://datos.madrid.es" target="_blank" rel="noopener">datos.madrid.es</a> y <a href="https://ciudadesabiertas.madrid.es" target="_blank" rel="noopener">ciudadesabiertas.madrid.es</a>, portales oficiales del Ayuntamiento de Madrid. Los datos se actualizan automaticamente segun la frecuencia de cada fuente.</p>
+    <h2 data-i18n="methodology.sourcesTitle">Fuentes</h2>
+    <p class="sources-note"><span data-i18n="methodology.sourcesNote">Todos los datos proceden de</span> <a href="https://datos.madrid.es" target="_blank" rel="noopener">datos.madrid.es</a> <span data-i18n="methodology.sourcesAnd">y</span> <a href="https://ciudadesabiertas.madrid.es" target="_blank" rel="noopener">ciudadesabiertas.madrid.es</a><span data-i18n="methodology.sourcesEnd">, portales oficiales del Ayuntamiento de Madrid. Los datos se actualizan automaticamente segun la frecuencia de cada fuente.</span></p>
   </section>
 </BaseLayout>
+
+<script>
+  if (window.__mvAnalytics) {
+    window.__mvAnalytics('page_viewed', { page_type: 'methodology' });
+  }
+</script>
 
 <style>
   .methodology {

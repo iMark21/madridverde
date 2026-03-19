@@ -33,7 +33,7 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
 
     <title>{title}</title>
 
-    <!-- Firebase Analytics (lightweight, pageview only) -->
+    <!-- Firebase Analytics -->
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
       import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js';
@@ -48,23 +48,52 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
       try {
         const analytics = getAnalytics(app);
         logEvent(analytics, 'page_view');
+
+        // Expose a global helper so components can fire events without
+        // re-importing Firebase. Accepts an event name + optional params.
+        window.__mvAnalytics = function (eventName, params) {
+          try { logEvent(analytics, eventName, params); } catch (_) {}
+        };
+
+        // Auto-track any element that carries data-analytics="event_name".
+        // Picks up data-analytics-* attributes as event parameters.
+        document.addEventListener('click', function (e) {
+          var target = e.target.closest('[data-analytics]');
+          if (!target) return;
+          var name = target.getAttribute('data-analytics');
+          if (!name) return;
+          var params = {};
+          Array.from(target.attributes).forEach(function (attr) {
+            if (attr.name.startsWith('data-analytics-') && attr.name !== 'data-analytics') {
+              params[attr.name.replace('data-analytics-', '')] = attr.value;
+            }
+          });
+          logEvent(analytics, name, params);
+        });
       } catch (e) {
-        // Analytics may be blocked by ad blockers
+        // Analytics may be blocked by ad blockers — provide a no-op fallback
+        window.__mvAnalytics = function () {};
       }
     </script>
   </head>
   <body>
-    <a href="#main" class="skip-link">Saltar al contenido</a>
+    <a href="#main" class="skip-link" data-i18n="nav.skipToContent">Saltar al contenido</a>
 
-    <nav class="nav" aria-label="Navegacion principal">
+    <nav class="nav" aria-label="Navegacion principal" data-i18n-aria="nav.ariaLabel">
       <a href="/" class="nav-logo">MadridVerde</a>
-      <ul class="nav-links">
-        <li><a href="/#mapa">Mapa</a></li>
-        <li><a href="/#bicimad">BiciMAD</a></li>
-        <li><a href="/#comparar">Comparar</a></li>
-        <li><a href="/#tendencias">Tendencias</a></li>
-        <li><a href="/#metodologia">Metodologia</a></li>
-      </ul>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="/#mapa" data-i18n="nav.map">Mapa</a></li>
+          <li><a href="/#bicimad" data-i18n="nav.bicimad">BiciMAD</a></li>
+          <li><a href="/#comparar" data-i18n="nav.compare">Comparar</a></li>
+          <li><a href="/#tendencias" data-i18n="nav.trends">Tendencias</a></li>
+          <li><a href="/#metodologia" data-i18n="nav.methodology">Metodologia</a></li>
+        </ul>
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle-btn lang-toggle-btn--active" data-lang="es" type="button">ES</button>
+          <button class="lang-toggle-btn" data-lang="en" type="button">EN</button>
+        </div>
+      </div>
     </nav>
 
     <main id="main">
@@ -97,10 +126,127 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
       }
     </script>
 
+    <script>
+      import { initI18n, setLang, getLang } from '../i18n/i18n.js';
+
+      // Initialize i18n on page load
+      initI18n();
+
+      // Language toggle buttons
+      document.querySelectorAll('.lang-toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          if (!lang) return;
+          const previous = getLang();
+          if (lang !== previous && window.__mvAnalytics) {
+            window.__mvAnalytics('language_changed', { language: lang, previous });
+          }
+          setLang(lang);
+        });
+      });
+    </script>
+
     <footer class="footer">
-      <p>&copy; {new Date().getFullYear()} MadridVerde — Datos abiertos del Ayuntamiento de Madrid</p>
-      <p class="footer-tagline">Porque respirar no deberia ser cuestion de codigo postal</p>
+      <p>&copy; {new Date().getFullYear()} <span data-i18n="footer.copyright">MadridVerde — Datos abiertos del Ayuntamiento de Madrid</span></p>
+      <p class="footer-tagline" data-i18n="footer.tagline">Porque respirar no deberia ser cuestion de codigo postal</p>
     </footer>
+
+    <!-- Cookie consent banner -->
+    <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Aviso de cookies" hidden>
+      <p class="cookie-text" data-i18n="cookies.text">Este sitio usa cookies analiticas para medir el uso.</p>
+      <div class="cookie-actions">
+        <a href="/#metodologia" class="cookie-link" data-i18n="cookies.info">Mas info</a>
+        <button class="cookie-accept" id="cookie-accept" data-i18n="cookies.accept">Aceptar</button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        if (localStorage.getItem('cookieConsent') === 'true') return;
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        banner.removeAttribute('hidden');
+        // Trigger slide-up after a frame so the transition plays
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            banner.classList.add('cookie-banner--visible');
+          });
+        });
+        document.getElementById('cookie-accept').addEventListener('click', function () {
+          localStorage.setItem('cookieConsent', 'true');
+          if (window.__mvAnalytics) {
+            window.__mvAnalytics('cookie_accepted');
+          }
+          banner.classList.remove('cookie-banner--visible');
+          banner.addEventListener('transitionend', function () {
+            banner.setAttribute('hidden', '');
+          }, { once: true });
+        });
+      })();
+    </script>
+    <!-- Engagement analytics: scroll depth, time on page, section viewed -->
+    <script>
+      (function () {
+        // --- scroll_depth: fire at 25%, 50%, 75%, 100% ---
+        var scrollFired = {};
+        var scrollThresholds = [25, 50, 75, 100];
+
+        function checkScroll() {
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          if (docHeight <= 0) return;
+          var pct = Math.round((scrollTop / docHeight) * 100);
+          for (var i = 0; i < scrollThresholds.length; i++) {
+            var t = scrollThresholds[i];
+            if (pct >= t && !scrollFired[t]) {
+              scrollFired[t] = true;
+              if (window.__mvAnalytics) {
+                window.__mvAnalytics('scroll_depth', { depth: String(t) });
+              }
+            }
+          }
+        }
+
+        window.addEventListener('scroll', checkScroll, { passive: true });
+
+        // --- time_on_page: fire at 30s, 60s, 180s, 300s ---
+        var timeThresholds = [30, 60, 180, 300];
+        for (var j = 0; j < timeThresholds.length; j++) {
+          (function (seconds) {
+            setTimeout(function () {
+              if (window.__mvAnalytics) {
+                window.__mvAnalytics('time_on_page', { seconds: String(seconds) });
+              }
+            }, seconds * 1000);
+          })(timeThresholds[j]);
+        }
+
+        // --- section_viewed: fire once per section when it enters viewport ---
+        var sectionIds = ['mapa', 'bicimad', 'comparar', 'tendencias', 'metodologia'];
+        var sectionSeen = {};
+
+        if ('IntersectionObserver' in window) {
+          var sectionObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                var id = entry.target.id;
+                if (id && !sectionSeen[id]) {
+                  sectionSeen[id] = true;
+                  if (window.__mvAnalytics) {
+                    window.__mvAnalytics('section_viewed', { section_name: id });
+                  }
+                }
+              }
+            });
+          }, { threshold: 0.3 });
+
+          sectionIds.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) sectionObserver.observe(el);
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
 
@@ -212,6 +358,12 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
     color: var(--color-bosque);
   }
 
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
   .nav-links {
     display: flex;
     gap: 1.5rem;
@@ -235,6 +387,40 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
     padding-bottom: 2px;
   }
 
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .lang-toggle-btn {
+    padding: 0.2rem 0.5rem;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-piedra);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+
+  .lang-toggle-btn:hover {
+    color: var(--color-bosque);
+  }
+
+  .lang-toggle-btn--active {
+    background: var(--color-bosque);
+    color: white;
+  }
+
+  .lang-toggle-btn--active:hover {
+    color: white;
+  }
+
   .footer {
     padding: 2rem;
     text-align: center;
@@ -250,13 +436,87 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
     margin-top: 0.5rem;
   }
 
+  /* Cookie consent banner */
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.7rem 2rem;
+    background: var(--color-piedra);
+    color: var(--color-arena);
+    font-size: 0.82rem;
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+  }
+
+  .cookie-banner--visible {
+    transform: translateY(0);
+  }
+
+  .cookie-text {
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .cookie-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .cookie-link {
+    color: var(--color-arena);
+    opacity: 0.8;
+    text-decoration: underline;
+    font-size: 0.8rem;
+  }
+
+  .cookie-link:hover {
+    opacity: 1;
+    color: var(--color-arena);
+  }
+
+  .cookie-accept {
+    padding: 0.35rem 1rem;
+    background: var(--color-bosque);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .cookie-accept:hover {
+    background: var(--color-hoja);
+  }
+
   @media (max-width: 768px) {
     .nav {
       flex-direction: column;
       gap: 0.75rem;
     }
+    .nav-right {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
     .nav-links {
       gap: 1rem;
+    }
+    .cookie-banner {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      text-align: center;
     }
   }
 </style>

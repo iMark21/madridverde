@@ -4,14 +4,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Tendencias historicas — MadridVerde" description="Evolucion de la calidad ambiental de Madrid: ruido, aire, y el impacto de las politicas publicas">
   <section class="trends">
-    <h1>Tendencias historicas</h1>
-    <p class="trends-subtitle">Como ha cambiado la calidad ambiental de Madrid en las ultimas dos decadas</p>
+    <h1 data-i18n="historico.title">Tendencias historicas</h1>
+    <p class="trends-subtitle" data-i18n="historico.subtitle">Como ha cambiado la calidad ambiental de Madrid en las ultimas dos decadas</p>
 
     <div class="chart-section">
-      <h2>Ruido ambiental (LAeq dB)</h2>
-      <p class="chart-description">Nivel medio de ruido equivalente en estaciones representativas de Madrid. La OMS recomienda no superar los 55 dB en zonas residenciales.</p>
+      <h2 data-i18n="historico.noiseTitle">Ruido ambiental (LAeq dB)</h2>
+      <p class="chart-description" data-i18n="historico.noiseDesc">Nivel medio de ruido equivalente en estaciones representativas de Madrid. La OMS recomienda no superar los 55 dB en zonas residenciales.</p>
       <div class="chart-container">
-        <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid"></canvas>
+        <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
       </div>
       <p class="chart-sr-only" id="noise-chart-desc">
         <!-- Screen reader alternative provided by script -->
@@ -19,26 +19,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
 
     <div class="chart-section">
-      <h2>Calidad del aire (NO2 µg/m³)</h2>
-      <p class="chart-description">Evolucion mensual del dioxido de nitrogeno en estaciones representativas. El limite anual de la OMS es 40 µg/m³. El NO2 es el contaminante mas relevante en Madrid por el trafico.</p>
+      <h2 data-i18n="historico.airTitle">Calidad del aire (NO2 ug/m3)</h2>
+      <p class="chart-description" data-i18n="historico.airDesc">Evolucion mensual del dioxido de nitrogeno en estaciones representativas. El limite anual de la OMS es 40 ug/m3. El NO2 es el contaminante mas relevante en Madrid por el trafico.</p>
       <div class="chart-container">
-        <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid"></canvas>
+        <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <script>
+  if (window.__mvAnalytics) {
+    window.__mvAnalytics('page_viewed', { page_type: 'historical' });
+  }
+</script>
+
+<script>
   import { Chart } from '../lib/chart-setup';
   import noiseData from '../data/noise-monthly.json';
+  import { t as tHist } from '../i18n/i18n.js';
 
   // Policy annotations as vertical reference points
   const POLICIES = [
-    { year: 2005, label: 'Ley del Ruido', color: '#264653' },
-    { year: 2014, label: 'APR Centro', color: '#40916C' },
-    { year: 2018, label: 'Madrid Central', color: '#2D6A4F' },
-    { year: 2020, label: 'COVID-19', color: '#E76F51' },
-    { year: 2022, label: 'ZBE Madrid', color: '#2D6A4F' },
+    { year: 2005, label: tHist('trends.policyNoiseLaw'), color: '#264653' },
+    { year: 2014, label: tHist('trends.policyAPR'), color: '#40916C' },
+    { year: 2018, label: tHist('trends.policyMadridCentral'), color: '#2D6A4F' },
+    { year: 2020, label: tHist('trends.policyCovid'), color: '#E76F51' },
+    { year: 2022, label: tHist('trends.policyZBE'), color: '#2D6A4F' },
   ];
 
   // Select representative stations with good data coverage
@@ -93,7 +100,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   // WHO guideline reference line
   datasets.push({
-    label: 'Limite OMS (55 dB)',
+    label: tHist('trends.whoNoiseLimit'),
     data: allYears.map(() => 55),
     borderColor: '#E76F51',
     backgroundColor: 'transparent',
@@ -277,7 +284,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   // WHO limit line
   airDatasets.push({
-    label: 'Limite OMS (40 µg/m³)',
+    label: tHist('trends.whoAirLimit'),
     data: allMonths.map(() => 40),
     borderColor: '#E76F51',
     backgroundColor: 'transparent',

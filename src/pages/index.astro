@@ -27,10 +27,10 @@ function slugify(name: string): string {
   <!-- SECTION: MAPA -->
   <section id="mapa" class="section">
     <div class="section-header section-header--hero">
-      <h1>Indice Verde de Madrid</h1>
-      <p class="section-subtitle">17 datasets abiertos, un solo score por distrito</p>
+      <h1 data-i18n="index.title">Indice Verde de Madrid</h1>
+      <p class="section-subtitle" data-i18n="index.subtitle">17 datasets abiertos, un solo score por distrito</p>
       <div class="search-box">
-        <input type="text" id="address-search" placeholder="Busca tu direccion en Madrid..." aria-label="Buscar direccion" autocomplete="off" />
+        <input type="text" id="address-search" placeholder="Busca tu direccion en Madrid..." aria-label="Buscar direccion" data-i18n-placeholder="index.searchPlaceholder" data-i18n-aria="index.searchAriaLabel" autocomplete="off" />
         <ul id="search-results" class="search-results" role="listbox" aria-label="Resultados de busqueda"></ul>
       </div>
     </div>
@@ -42,29 +42,36 @@ function slugify(name: string): string {
     <div class="stats">
       <div class="stat-card">
         <span class="stat-value">{avgScore}</span>
-        <span class="stat-label">Media de Madrid</span>
+        <span class="stat-label" data-i18n="index.statAvgLabel">Media de Madrid</span>
       </div>
       <div class="stat-card stat-card--best">
         <span class="stat-value">{best.score}</span>
         <span class="stat-label">{titleCase(best.name)}</span>
-        <span class="stat-badge">Mejor distrito</span>
+        <span class="stat-badge" data-i18n="index.statBestBadge">Mejor distrito</span>
       </div>
       <div class="stat-card stat-card--worst">
         <span class="stat-value">{worst.score}</span>
         <span class="stat-label">{titleCase(worst.name)}</span>
-        <span class="stat-badge">Necesita atencion</span>
+        <span class="stat-badge" data-i18n="index.statWorstBadge">Necesita atencion</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">14</span>
-        <span class="stat-label">Datasets abiertos</span>
+        <span class="stat-label" data-i18n="index.statDatasetsLabel">Datasets abiertos</span>
       </div>
     </div>
 
+    <div class="export-row">
+      <button class="export-btn" id="export-csv-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+        <span data-i18n="export.button">Descargar datos (CSV)</span>
+      </button>
+    </div>
+
     <div class="ranking">
-      <h2>Ranking de distritos</h2>
+      <h2 data-i18n="index.rankingTitle">Ranking de distritos</h2>
       <div class="ranking-list">
         {districts.sort((a, b) => b.score - a.score).map((d, i) => (
-          <a href={`/barrio/${slugify(d.name)}`} class="ranking-item">
+          <a href={`/barrio/${slugify(d.name)}`} class="ranking-item" data-analytics="district_viewed" data-analytics-district_name={titleCase(d.name)} data-analytics-source="ranking">
             <span class="ranking-pos">#{i + 1}</span>
             <span class="ranking-bar" style={`width: ${d.score}%; background: ${d.tierColor}`}></span>
             <span class="ranking-name">{titleCase(d.name)}</span>
@@ -78,12 +85,12 @@ function slugify(name: string): string {
   <!-- SECTION: BICIMAD -->
   <section id="bicimad" class="section">
     <div class="section-header">
-      <h2>BiciMAD en tiempo real</h2>
-      <p class="section-subtitle">635 estaciones de bicicleta publica — disponibilidad actualizada cada 14 segundos</p>
+      <h2 data-i18n="index.bicimadTitle">BiciMAD en tiempo real</h2>
+      <p class="section-subtitle" data-i18n="index.bicimadSubtitle">635 estaciones de bicicleta publica — disponibilidad actualizada cada 14 segundos</p>
     </div>
     <div class="bicimad-dashboard" id="bicimad-dashboard">
       <div class="bicimad-stats" id="bicimad-stats">
-        <p class="bicimad-loading">Cargando datos en vivo de BiciMAD...</p>
+        <p class="bicimad-loading" data-i18n="index.bicimadLoading">Cargando datos en vivo de BiciMAD...</p>
       </div>
       <div class="bicimad-list" id="bicimad-list"></div>
     </div>
@@ -92,8 +99,8 @@ function slugify(name: string): string {
   <!-- SECTION: COMPARAR -->
   <section id="comparar" class="section">
     <div class="section-header">
-      <h2>Comparar distritos</h2>
-      <p class="section-subtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
+      <h2 data-i18n="index.compareTitle">Comparar distritos</h2>
+      <p class="section-subtitle" data-i18n="index.compareSubtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
     </div>
     <SeccionComparador />
   </section>
@@ -101,8 +108,8 @@ function slugify(name: string): string {
   <!-- SECTION: TENDENCIAS -->
   <section id="tendencias" class="section">
     <div class="section-header">
-      <h2>Tendencias historicas</h2>
-      <p class="section-subtitle">Como ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
+      <h2 data-i18n="index.trendsTitle">Tendencias historicas</h2>
+      <p class="section-subtitle" data-i18n="index.trendsSubtitle">Como ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
     </div>
     <SeccionTendencias />
   </section>
@@ -110,111 +117,119 @@ function slugify(name: string): string {
   <!-- SECTION: METODOLOGIA -->
   <section id="metodologia" class="section">
     <div class="section-header">
-      <h2>Metodologia</h2>
-      <p class="section-subtitle">Transparencia total: como se calcula el Indice Verde</p>
+      <h2 data-i18n="index.methodologyTitle">Metodologia</h2>
+      <p class="section-subtitle" data-i18n="index.methodologySubtitle">Transparencia total: como se calcula el Indice Verde</p>
     </div>
 
     <div class="formula-card">
-      <p class="formula-title">Indice Verde (0-100)</p>
-      <p class="formula">IV = Aire x 0.30 + Verde x 0.25 + Ruido x 0.20 + Movilidad x 0.15 + Reciclaje x 0.10</p>
+      <p class="formula-title" data-i18n="index.formulaTitle">Indice Verde (0-100)</p>
+      <p class="formula" data-i18n="index.formula">IV = Aire x 0.30 + Verde x 0.25 + Ruido x 0.20 + Movilidad x 0.15 + Reciclaje x 0.10</p>
     </div>
 
     <div class="subindex-grid">
       <div class="subindex-card">
-        <h3>Aire <span class="sw">30%</span></h3>
-        <p>NO2, PM2.5, PM10, O3 en tiempo real. 24 estaciones, 4 contaminantes. Limites OMS.</p>
+        <h3><span data-i18n="index.subAire">Aire</span> <span class="sw">30%</span></h3>
+        <p data-i18n="index.subAireDesc">NO2, PM2.5, PM10, O3 en tiempo real. 24 estaciones, 4 contaminantes. Limites OMS.</p>
       </div>
       <div class="subindex-card">
-        <h3>Verde <span class="sw">25%</span></h3>
-        <p>793.000 arboles censados + m2 zonas verdes por habitante. OMS recomienda minimo 9 m2/hab.</p>
+        <h3><span data-i18n="index.subVerde">Verde</span> <span class="sw">25%</span></h3>
+        <p data-i18n="index.subVerdeDesc">793.000 arboles censados + m2 zonas verdes por habitante. OMS recomienda minimo 9 m2/hab.</p>
       </div>
       <div class="subindex-card">
-        <h3>Ruido <span class="sw">20%</span></h3>
-        <p>37 estaciones acusticas SIVCA. Series desde 1998. OMS recomienda maximo 55 dB.</p>
+        <h3><span data-i18n="index.subRuido">Ruido</span> <span class="sw">20%</span></h3>
+        <p data-i18n="index.subRuidoDesc">37 estaciones acusticas SIVCA. Series desde 1998. OMS recomienda maximo 55 dB.</p>
       </div>
       <div class="subindex-card">
-        <h3>Movilidad <span class="sw">15%</span></h3>
-        <p>~4.000 sensores de trafico en tiempo real. Nivel de servicio: fluido, denso, congestionado.</p>
+        <h3><span data-i18n="index.subMovilidad">Movilidad</span> <span class="sw">15%</span></h3>
+        <p data-i18n="index.subMovilidadDesc">~4.000 sensores de trafico en tiempo real. Nivel de servicio: fluido, denso, congestionado.</p>
       </div>
       <div class="subindex-card">
-        <h3>Reciclaje <span class="sw">10%</span></h3>
-        <p>44.251 contenedores por tipo (papel, vidrio, organica, envases) per capita.</p>
+        <h3><span data-i18n="index.subReciclaje">Reciclaje</span> <span class="sw">10%</span></h3>
+        <p data-i18n="index.subReciclajeDesc">44.251 contenedores por tipo (papel, vidrio, organica, envases) per capita.</p>
       </div>
     </div>
 
     <div class="datasets-list">
-      <h3>17 conjuntos de datos del Portal de Datos Abiertos</h3>
+      <h3 data-i18n="index.datasetsTitle">17 conjuntos de datos del Portal de Datos Abiertos</h3>
       <div class="datasets-grid">
         <div class="dataset-group">
-          <h4>Tiempo real</h4>
+          <h4 data-i18n="index.dsRealtime">Tiempo real</h4>
           <ul>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f3c0f7d512273410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Calidad del aire — datos horarios</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=41e01e007c9bb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Trafico — intensidad en tiempo real</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f3c0f7d512273410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsAirHourly">Calidad del aire — datos horarios</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=41e01e007c9bb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsTrafficRealtime">Trafico — intensidad en tiempo real</a></li>
           </ul>
         </div>
         <div class="dataset-group">
-          <h4>Estaciones y sensores</h4>
+          <h4 data-i18n="index.dsStations">Estaciones y sensores</h4>
           <ul>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=9e42c176313eb410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Estaciones de control de calidad del aire</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f8f54ce8a0adb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Estaciones acusticas — contaminacion</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=b3c41f3cf6a6c410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Puntos de medida de trafico</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=9e42c176313eb410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsAirStations">Estaciones de control de calidad del aire</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=f8f54ce8a0adb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsNoiseStations">Estaciones acusticas — contaminacion</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=b3c41f3cf6a6c410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsTrafficSensors">Puntos de medida de trafico</a></li>
           </ul>
         </div>
         <div class="dataset-group">
-          <h4>Medio ambiente</h4>
+          <h4 data-i18n="index.dsEnvironment">Medio ambiente</h4>
           <ul>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=0201db243f3cb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Arbolado en parques — detalle especies</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=27e7eaac52bdb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Arbolado — superficie zonas verdes</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=dc758935dde13410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Parques y jardines municipales</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=8aacc5f020e07410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Contenedores de recogida de residuos</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=0201db243f3cb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsTreesParks">Arbolado en parques — detalle especies</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=27e7eaac52bdb410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsTreesGreenAreas">Arbolado — superficie zonas verdes</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=dc758935dde13410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsParks">Parques y jardines municipales</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=8aacc5f020e07410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsRecyclingContainers">Contenedores de recogida de residuos</a></li>
           </ul>
         </div>
         <div class="dataset-group">
-          <h4>Historico y sociodemografico</h4>
+          <h4 data-i18n="index.dsHistorical">Historico y sociodemografico</h4>
           <ul>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=aecb88a7e2b73410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener">Calidad del aire — datos diarios desde 2001</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=2ec892637b99b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Contaminacion acustica — datos diarios</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e6288dc1ec7e7410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Indicadores de distritos y barrios</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=aecb88a7e2b73410VgnVCM2000000c205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsAirDaily">Calidad del aire — datos diarios desde 2001</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=2ec892637b99b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsNoiseDaily">Contaminacion acustica — datos diarios</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e6288dc1ec7e7410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsDistrictIndicators">Indicadores de distritos y barrios</a></li>
           </ul>
         </div>
         <div class="dataset-group">
-          <h4>Movilidad sostenible</h4>
+          <h4 data-i18n="index.dsMobility">Movilidad sostenible</h4>
           <ul>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e79e4a0164d07410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">BiciMAD — disponibilidad en tiempo real (GBFS)</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e378b62184e0b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">BiciMAD — estaciones</a></li>
-            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=1a13e7c740e0b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener">Infraestructura ciclista — carriles bici</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e79e4a0164d07410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsBicimadLive">BiciMAD — disponibilidad en tiempo real (GBFS)</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=e378b62184e0b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsBicimadStations">BiciMAD — estaciones</a></li>
+            <li><a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=1a13e7c740e0b410VgnVCM1000000b205a0aRCRD" target="_blank" rel="noopener" data-i18n="index.dsBikeLanes">Infraestructura ciclista — carriles bici</a></li>
           </ul>
         </div>
         <div class="dataset-group">
-          <h4>Limites geograficos</h4>
+          <h4 data-i18n="index.dsGeographic">Limites geograficos</h4>
           <ul>
-            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=541f4ef6-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener">Limites administrativos — distritos</a></li>
-            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=422fa235-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener">Limites administrativos — barrios</a></li>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=541f4ef6-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsDistrictBoundaries">Limites administrativos — distritos</a></li>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=422fa235-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsNeighborhoodBoundaries">Limites administrativos — barrios</a></li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="tiers">
-      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span> Excelente</div>
-      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span> Bueno</div>
-      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span> Aceptable</div>
-      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> Mejorable</div>
-      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> Critico</div>
+      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span> <span data-i18n="tier.excellent">Excelente</span></div>
+      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span> <span data-i18n="tier.good">Bueno</span></div>
+      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span> <span data-i18n="tier.acceptable">Aceptable</span></div>
+      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> <span data-i18n="tier.improvable">Mejorable</span></div>
+      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> <span data-i18n="tier.critical">Critico</span></div>
     </div>
   </section>
 
 </BaseLayout>
 
+<!-- Page view analytics -->
+<script>
+  if (window.__mvAnalytics) {
+    window.__mvAnalytics('page_viewed', { page_type: 'home' });
+  }
+</script>
+
 <!-- BiciMAD dashboard script -->
 <script>
   import { fetchBiciMAD } from '../lib/bicimad';
+  import { t } from '../i18n/i18n.js';
 
   fetchBiciMAD().then((stations) => {
     const statsEl = document.getElementById('bicimad-stats');
     const listEl = document.getElementById('bicimad-list');
     if (!statsEl || !listEl || stations.length === 0) {
-      if (statsEl) statsEl.innerHTML = '<p>No se pudieron cargar los datos de BiciMAD</p>';
+      if (statsEl) statsEl.innerHTML = `<p>${t('index.bicimadError')}</p>`;
       return;
     }
 
@@ -225,15 +240,15 @@ function slugify(name: string): string {
     const availability = totalCapacity > 0 ? Math.round((totalBikes / totalCapacity) * 100) : 0;
 
     statsEl.innerHTML = `
-      <div class="bici-stat"><span class="bici-stat-value">${active.length}</span><span class="bici-stat-label">estaciones activas</span></div>
-      <div class="bici-stat"><span class="bici-stat-value">${totalBikes.toLocaleString('es-ES')}</span><span class="bici-stat-label">bicis disponibles ahora</span></div>
-      <div class="bici-stat"><span class="bici-stat-value">${totalDocks.toLocaleString('es-ES')}</span><span class="bici-stat-label">docks libres</span></div>
-      <div class="bici-stat"><span class="bici-stat-value">${availability}%</span><span class="bici-stat-label">disponibilidad</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${active.length}</span><span class="bici-stat-label" data-i18n="index.bicimadActiveStations">${t('index.bicimadActiveStations')}</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${totalBikes.toLocaleString('es-ES')}</span><span class="bici-stat-label" data-i18n="index.bicimadBikesAvailable">${t('index.bicimadBikesAvailable')}</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${totalDocks.toLocaleString('es-ES')}</span><span class="bici-stat-label" data-i18n="index.bicimadDocksAvailable">${t('index.bicimadDocksAvailable')}</span></div>
+      <div class="bici-stat"><span class="bici-stat-value">${availability}%</span><span class="bici-stat-label" data-i18n="index.bicimadAvailability">${t('index.bicimadAvailability')}</span></div>
     `;
 
     // Top 10 stations with most bikes
     const top = [...active].sort((a, b) => b.bikesAvailable - a.bikesAvailable).slice(0, 10);
-    listEl.innerHTML = '<h3>Estaciones con mas bicis disponibles</h3>' +
+    listEl.innerHTML = `<h3 data-i18n="index.bicimadTopStations">${t('index.bicimadTopStations')}</h3>` +
       top.map(s => {
         const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
         return `<div class="bici-row">
@@ -247,6 +262,8 @@ function slugify(name: string): string {
 
 <!-- Search geocoding script -->
 <script>
+  import { t as tSearch, getLang as getSearchLang } from '../i18n/i18n.js';
+
   const input = document.getElementById('address-search') as HTMLInputElement;
   const results = document.getElementById('search-results') as HTMLUListElement;
   let debounceTimer: number;
@@ -257,12 +274,16 @@ function slugify(name: string): string {
     if (q.length < 3) { results.classList.remove('visible'); return; }
     debounceTimer = window.setTimeout(async () => {
       try {
+        const acceptLang = getSearchLang() === 'en' ? 'en' : 'es';
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', Madrid, Spain')}&limit=5&addressdetails=1&viewbox=-3.89,40.31,-3.52,40.56&bounded=1`;
-        const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+        const res = await fetch(url, { headers: { 'Accept-Language': acceptLang } });
         const data = await res.json();
         results.innerHTML = '';
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('map_search_used', { query: q, has_result: String(data.length > 0) });
+        }
         if (data.length === 0) {
-          results.innerHTML = '<li>Sin resultados</li>';
+          results.innerHTML = `<li>${tSearch('index.searchNoResults')}</li>`;
         } else {
           data.forEach((item: any) => {
             const li = document.createElement('li');
@@ -284,6 +305,23 @@ function slugify(name: string): string {
   document.addEventListener('click', (e) => {
     if (!(e.target as Element).closest('.search-box')) results.classList.remove('visible');
   });
+</script>
+
+<!-- CSV export script -->
+<script>
+  import { computeGreenIndex } from '../lib/green-index';
+  import { exportDistrictCSV } from '../lib/export-csv';
+
+  const csvBtn = document.getElementById('export-csv-btn');
+  if (csvBtn) {
+    csvBtn.addEventListener('click', () => {
+      const districts = computeGreenIndex();
+      exportDistrictCSV(districts);
+      if (window.__mvAnalytics) {
+        window.__mvAnalytics('csv_exported', { type: 'all' });
+      }
+    });
+  }
 </script>
 
 <style>
@@ -383,6 +421,40 @@ function slugify(name: string): string {
   .stat-card--best .stat-badge { color: var(--color-bosque); }
   .stat-card--worst .stat-value { color: var(--color-arcilla); }
   .stat-card--worst .stat-badge { color: var(--color-arcilla); }
+
+  /* Export button */
+  .export-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.25rem 2rem 0;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
+    background: white;
+    color: var(--color-bosque);
+    border: 1.5px solid var(--color-bosque);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .export-btn:hover {
+    background: var(--color-bosque);
+    color: white;
+  }
+
+  .export-btn svg {
+    flex-shrink: 0;
+  }
 
   /* Ranking */
   .ranking { padding: 2rem 2rem 0; max-width: 960px; margin: 0 auto; }
@@ -490,6 +562,7 @@ function slugify(name: string): string {
     .map-wrapper { margin: 0; }
     .stats { grid-template-columns: repeat(2, 1fr); padding: 1rem 1rem 0; }
     .ranking { padding: 1.5rem 1rem 0; }
+    .export-row { padding: 1rem 1rem 0; }
     .search-box { max-width: 100%; }
     .subindex-grid { grid-template-columns: 1fr; }
     .tiers { flex-direction: column; }

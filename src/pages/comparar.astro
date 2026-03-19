@@ -24,8 +24,8 @@ const districtOptions = allDistricts.map(d => ({
 
 <BaseLayout title="Comparar distritos — MadridVerde" description="Compara el Indice Verde de hasta 4 distritos de Madrid con un radar chart interactivo">
   <section class="comparator">
-    <h1>Comparar distritos</h1>
-    <p class="comparator-subtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
+    <h1 data-i18n="comparePage.title">Comparar distritos</h1>
+    <p class="comparator-subtitle" data-i18n="comparePage.subtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
 
     <div class="selector" id="district-selector">
       {districtOptions.map(d => (
@@ -49,12 +49,19 @@ const districtOptions = allDistricts.map(d => ({
       <div class="comparison-table" id="comparison-table"></div>
     </div>
 
-    <p class="empty-state" id="empty-state">Selecciona al menos 2 distritos para comparar</p>
+    <p class="empty-state" id="empty-state" data-i18n="comparePage.emptyState">Selecciona al menos 2 distritos para comparar</p>
   </section>
 </BaseLayout>
 
 <script>
+  if (window.__mvAnalytics) {
+    window.__mvAnalytics('page_viewed', { page_type: 'compare' });
+  }
+</script>
+
+<script>
   import { Chart } from '../lib/chart-setup';
+  import { t as tCmp } from '../i18n/i18n.js';
 
   const COLORS = ['#2D6A4F', '#E76F51', '#264653', '#E9C46A'];
   const MAX_SELECTED = 4;
@@ -167,7 +174,7 @@ const districtOptions = allDistricts.map(d => ({
     });
 
     // Update table
-    let html = '<table><thead><tr><th>Sub-indice</th>';
+    let html = `<table><thead><tr><th>${tCmp('comparator.tableHeader')}</th>`;
     selected.forEach((d, i) => {
       html += `<th style="color:${COLORS[i]}">${d.name}</th>`;
     });
@@ -182,7 +189,7 @@ const districtOptions = allDistricts.map(d => ({
       html += '</tr>';
     });
     // Total row
-    html += '<tr class="total-row"><td><strong>Indice Verde</strong></td>';
+    html += `<tr class="total-row"><td><strong>${tCmp('comparator.tableTotal')}</strong></td>`;
     selected.forEach((d) => {
       html += `<td><strong>${d.score}</strong></td>`;
     });

@@ -37,17 +37,18 @@ const districtOptions = allDistricts.map(d => ({
 
   <div class="chart-area" id="chart-area" style="display:none">
     <div class="radar-container">
-      <canvas id="radar-chart" aria-label="Radar chart comparando sub-indices"></canvas>
+      <canvas id="radar-chart" aria-label="Radar chart comparando sub-indices" data-i18n-aria="comparator.radarAriaLabel"></canvas>
     </div>
     <div class="comparison-table" id="comparison-table"></div>
   </div>
 
-  <p class="empty-state" id="empty-state">Selecciona al menos 2 distritos para comparar</p>
-  <p class="comparator-note">Aire y Movilidad se actualizan en tiempo real en el mapa y en la ficha de cada distrito.</p>
+  <p class="empty-state" id="empty-state" data-i18n="comparator.emptyState">Selecciona al menos 2 distritos para comparar</p>
+  <p class="comparator-note" data-i18n="comparator.note">Aire y Movilidad se actualizan en tiempo real en el mapa y en la ficha de cada distrito.</p>
 </div>
 
 <script>
   import { Chart } from '../lib/chart-setup';
+  import { t as tComp } from '../i18n/i18n.js';
 
   const COLORS = ['#2D6A4F', '#E76F51', '#264653', '#E9C46A'];
   const MAX_SELECTED = 4;
@@ -72,20 +73,27 @@ const districtOptions = allDistricts.map(d => ({
   chips.forEach((chip) => {
     chip.addEventListener('click', () => {
       const code = chip.getAttribute('data-code')!;
+      const chipName = chip.getAttribute('data-name')!;
       const idx = selected.findIndex((d) => d.code === code);
 
       if (idx >= 0) {
         selected.splice(idx, 1);
         chip.classList.remove('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('comparison_district_added', { district_name: chipName, action: 'removed', total_selected: String(selected.length) });
+        }
       } else if (selected.length < MAX_SELECTED) {
         selected.push({
           code,
-          name: chip.getAttribute('data-name')!,
+          name: chipName,
           score: Number(chip.getAttribute('data-score')),
           color: chip.getAttribute('data-color')!,
           subIndices: JSON.parse(chip.getAttribute('data-subindices')!),
         });
         chip.classList.add('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('comparison_district_added', { district_name: chipName, action: 'added', total_selected: String(selected.length) });
+        }
       }
 
       updateChart();
@@ -102,6 +110,14 @@ const districtOptions = allDistricts.map(d => ({
 
     chartArea.style.display = 'grid';
     emptyState.style.display = 'none';
+
+    // Track comparison rendered
+    if (window.__mvAnalytics) {
+      window.__mvAnalytics('comparison_started', {
+        districts: selected.map((d) => d.name).join(','),
+        count: String(selected.length),
+      });
+    }
 
     // Defer chart creation to next frame to ensure container has dimensions
     requestAnimationFrame(() => renderRadar());
@@ -146,7 +162,7 @@ const districtOptions = allDistricts.map(d => ({
     });
 
     // Table
-    let html = '<table><thead><tr><th>Sub-indice</th>';
+    let html = `<table><thead><tr><th>${tComp('comparator.tableHeader')}</th>`;
     selected.forEach((d, i) => { html += `<th style="color:${COLORS[i]}">${d.name}</th>`; });
     html += '</tr></thead><tbody>';
     selected[0].subIndices.forEach((si, j) => {
@@ -158,7 +174,7 @@ const districtOptions = allDistricts.map(d => ({
       });
       html += '</tr>';
     });
-    html += '<tr class="total-row"><td><strong>Indice Verde</strong></td>';
+    html += `<tr class="total-row"><td><strong>${tComp('comparator.tableTotal')}</strong></td>`;
     selected.forEach((d) => { html += `<td><strong>${d.score}</strong></td>`; });
     html += '</tr></tbody></table>';
     tableContainer.innerHTML = html;

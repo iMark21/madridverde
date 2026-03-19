@@ -11,36 +11,36 @@
 ---
 
 <div id="map-container">
-  <div id="map" role="application" aria-label="Mapa interactivo de distritos de Madrid coloreados por puntuacion ambiental"></div>
+  <div id="map" role="application" aria-label="Mapa interactivo de distritos de Madrid coloreados por puntuacion ambiental" data-i18n-aria="map.ariaLabel"></div>
   <div id="map-legend" aria-label="Leyenda del mapa">
     <div class="legend-tabs" role="tablist">
-      <button class="legend-tab legend-tab--active" data-tab="indice" role="tab" aria-selected="true">Índice Verde</button>
-      <button class="legend-tab" data-tab="bicimad" role="tab" aria-selected="false">BiciMAD</button>
+      <button class="legend-tab legend-tab--active" data-tab="indice" role="tab" aria-selected="true" data-i18n="map.legendIndiceVerde">Indice Verde</button>
+      <button class="legend-tab" data-tab="bicimad" role="tab" aria-selected="false" data-i18n="map.legendBicimad">BiciMAD</button>
     </div>
     <div class="legend-panel" id="legend-panel-indice">
       <div class="legend-items">
-        <div class="legend-item"><span class="legend-color" style="background:#2D6A4F"></span> 85-100 Excelente</div>
-        <div class="legend-item"><span class="legend-color" style="background:#52B788"></span> 70-84 Bueno</div>
-        <div class="legend-item"><span class="legend-color" style="background:#E9C46A"></span> 55-69 Aceptable</div>
-        <div class="legend-item"><span class="legend-color" style="background:#F4A261"></span> 40-54 Mejorable</div>
-        <div class="legend-item"><span class="legend-color" style="background:#E76F51"></span> 0-39 Critico</div>
+        <div class="legend-item"><span class="legend-color" style="background:#2D6A4F"></span> 85-100 <span data-i18n="tier.excellent">Excelente</span></div>
+        <div class="legend-item"><span class="legend-color" style="background:#52B788"></span> 70-84 <span data-i18n="tier.good">Bueno</span></div>
+        <div class="legend-item"><span class="legend-color" style="background:#E9C46A"></span> 55-69 <span data-i18n="tier.acceptable">Aceptable</span></div>
+        <div class="legend-item"><span class="legend-color" style="background:#F4A261"></span> 40-54 <span data-i18n="tier.improvable">Mejorable</span></div>
+        <div class="legend-item"><span class="legend-color" style="background:#E76F51"></span> 0-39 <span data-i18n="tier.critical">Critico</span></div>
       </div>
     </div>
     <div class="legend-panel legend-panel--hidden" id="legend-panel-bicimad">
-      <p class="legend-section-title">Estaciones BiciMAD</p>
+      <p class="legend-section-title" data-i18n="map.legendBicimadStations">Estaciones BiciMAD</p>
       <div class="legend-items">
-        <div class="legend-item"><span class="legend-dot" style="background:#2D6A4F"></span> Alta disponibilidad (&ge;80%)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#E9C46A"></span> Media disponibilidad (20–79%)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#E76F51"></span> Baja disponibilidad (&lt;20%)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#2D6A4F"></span> <span data-i18n="map.legendHighAvail">Alta disponibilidad</span> (&ge;80%)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#E9C46A"></span> <span data-i18n="map.legendMedAvail">Media disponibilidad</span> (20-79%)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#E76F51"></span> <span data-i18n="map.legendLowAvail">Baja disponibilidad</span> (&lt;20%)</div>
       </div>
-      <p class="legend-section-title" style="margin-top:8px">Carriles ciclistas</p>
+      <p class="legend-section-title" style="margin-top:8px" data-i18n="map.legendBikeLanes">Carriles ciclistas</p>
       <div class="legend-items">
-        <div class="legend-item"><span class="legend-lane" style="background:#1B563D;height:4px"></span> Anillo Verde</div>
-        <div class="legend-item"><span class="legend-lane" style="background:#40916C;height:3px"></span> Vía Exclusiva</div>
-        <div class="legend-item"><span class="legend-lane" style="background:#74C69D;height:2px"></span> Vía Preferente</div>
-        <div class="legend-item"><span class="legend-lane" style="background:#E9C46A;height:2px"></span> Uso Compartido</div>
+        <div class="legend-item"><span class="legend-lane" style="background:#1B563D;height:4px"></span> <span data-i18n="map.legendAnilloVerde">Anillo Verde</span></div>
+        <div class="legend-item"><span class="legend-lane" style="background:#40916C;height:3px"></span> <span data-i18n="map.legendExclusive">Via Exclusiva</span></div>
+        <div class="legend-item"><span class="legend-lane" style="background:#74C69D;height:2px"></span> <span data-i18n="map.legendPreferred">Via Preferente</span></div>
+        <div class="legend-item"><span class="legend-lane" style="background:#E9C46A;height:2px"></span> <span data-i18n="map.legendShared">Uso Compartido</span></div>
       </div>
-      <p class="legend-footer">Datos en vivo · actualizado cada 14s</p>
+      <p class="legend-footer" data-i18n="map.legendLiveFooter">Datos en vivo · actualizado cada 14s</p>
     </div>
   </div>
 </div>
@@ -57,6 +57,7 @@
   import { fetchAirQuality, aggregateByDistrict } from '../lib/air-quality';
   import { fetchTrafficSummary } from '../lib/traffic';
   import { fetchBiciMAD } from '../lib/bicimad';
+  import { t as tMap } from '../i18n/i18n.js';
 
   function slugify(name: string): string {
     return name
@@ -131,7 +132,7 @@
 
         layer.bindTooltip(
           `<strong>${displayName}</strong><br/>` +
-          `Indice Verde: <strong>${context}</strong><br/>` +
+          `${tMap('map.tooltipGreenIndex')}: <strong>${context}</strong><br/>` +
           `<span style="font-size:0.8em">${subText}</span>`,
           { sticky: true, className: 'mv-tooltip' }
         );
@@ -146,6 +147,10 @@
           districtLayer.resetStyle(e.target);
         },
         click: () => {
+          if (window.__mvAnalytics) {
+            window.__mvAnalytics('map_district_clicked', { district_name: displayName, district_code: code, source: 'map' });
+            window.__mvAnalytics('district_viewed', { district_name: displayName, source: 'map' });
+          }
           window.location.href = `/barrio/${slugify(name)}`;
         },
       });
@@ -182,7 +187,7 @@
         const subText = d.subIndices.map((si) => `${si.name}: ${si.score}`).join(' · ');
         layer.setTooltipContent(
           `<strong>${displayName}</strong><br/>` +
-          `Indice Verde: <strong>${context}</strong><br/>` +
+          `${tMap('map.tooltipGreenIndex')}: <strong>${context}</strong><br/>` +
           `<span style="font-size:0.8em">${subText}</span>`
         );
       }
@@ -204,6 +209,9 @@
         const id = panel.id;
         panel.classList.toggle('legend-panel--hidden', !id.endsWith(tab as string));
       });
+      if (window.__mvAnalytics && tab) {
+        window.__mvAnalytics('map_layer_toggled', { layer_name: tab, visible: String(btn.classList.contains('legend-tab--active')) });
+      }
     });
   });
 
@@ -240,7 +248,7 @@
 
       const pct = Math.round((s.bikesAvailable / s.capacity) * 100);
       const dotColor = pct >= 80 ? '#2D6A4F' : pct >= 20 ? '#E9C46A' : '#E76F51';
-      const availLabel = pct >= 80 ? 'Alta' : pct >= 20 ? 'Media' : 'Baja';
+      const availLabel = pct >= 80 ? tMap('map.legendHighAvail') : pct >= 20 ? tMap('map.legendMedAvail') : tMap('map.legendLowAvail');
 
       const bikeIcon = L.divIcon({
         className: 'mv-bike-marker',
@@ -252,8 +260,8 @@
       const marker = L.marker([s.lat, s.lon], { icon: bikeIcon });
       marker.bindTooltip(
         `<strong>${s.name}</strong><br/>` +
-        `Disponibilidad: <span style="color:${dotColor};font-weight:600">${availLabel} (${pct}%)</span><br/>` +
-        `${s.bikesAvailable} bicis · ${s.docksAvailable} docks libres`,
+        `${tMap('map.tooltipAvailability')}: <span style="color:${dotColor};font-weight:600">${availLabel} (${pct}%)</span><br/>` +
+        `${s.bikesAvailable} ${tMap('scorecard.bicimadBikes')} · ${s.docksAvailable} ${tMap('scorecard.bicimadDocks')}`,
         { className: 'mv-tooltip' }
       );
       bikeLayer.addLayer(marker);

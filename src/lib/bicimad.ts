@@ -22,6 +22,8 @@ const INFO_CACHE_KEY = 'mv_bicimad_info';
 const STATUS_CACHE_KEY = 'mv_bicimad_status';
 const INFO_TTL = 60 * 60 * 1000;  // 1 hour (stations don't move)
 const STATUS_TTL = 60 * 1000;     // 1 minute (availability changes)
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 1500;
 
 function getCache(key: string, ttl: number): any | null {
   try {
@@ -39,23 +41,49 @@ function setCache(key: string, data: any): void {
   } catch {}
 }
 
+async function fetchWithRetry(url: string, retries = MAX_RETRIES): Promise<Response> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+      // On server error (5xx), retry; on client error (4xx), fail immediately
+      if (res.status >= 500 && attempt < retries) {
+        console.warn(`[BiciMAD] ${url} returned ${res.status}, retrying (${attempt + 1}/${retries})...`);
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * (attempt + 1)));
+        continue;
+      }
+      throw new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      if (attempt < retries) {
+        console.warn(`[BiciMAD] fetch failed for ${url}, retrying (${attempt + 1}/${retries})...`, err);
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * (attempt + 1)));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error('fetchWithRetry exhausted');
+}
+
 export async function fetchBiciMAD(): Promise<BiciMADStation[]> {
   try {
     // Station info (cached 1h)
     let infoStations = getCache(INFO_CACHE_KEY, INFO_TTL);
     if (!infoStations) {
-      const res = await fetch(`${GBFS_BASE}/station_information`);
-      if (!res.ok) return [];
+      const res = await fetchWithRetry(`${GBFS_BASE}/station_information`);
       const json = await res.json();
       infoStations = json.data?.stations || [];
+      if (infoStations.length === 0) {
+        console.warn('[BiciMAD] station_information returned 0 stations');
+        return [];
+      }
       setCache(INFO_CACHE_KEY, infoStations);
     }
 
     // Station status (cached 1min)
     let statusStations = getCache(STATUS_CACHE_KEY, STATUS_TTL);
     if (!statusStations) {
-      const res = await fetch(`${GBFS_BASE}/station_status`);
-      if (!res.ok) return [];
+      const res = await fetchWithRetry(`${GBFS_BASE}/station_status`);
       const json = await res.json();
       statusStations = json.data?.stations || [];
       setCache(STATUS_CACHE_KEY, statusStations);
@@ -79,7 +107,8 @@ export async function fetchBiciMAD(): Promise<BiciMADStation[]> {
         inService: status.is_renting === true && status.is_returning === true,
       };
     });
-  } catch {
+  } catch (err) {
+    console.error('[BiciMAD] Failed to load data after retries:', err);
     return [];
   }
 }
