@@ -2,15 +2,209 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Tendencias historicas — MadridVerde" description="Series temporales de calidad del aire y ruido en Madrid con anotaciones de politicas">
+<BaseLayout title="Tendencias historicas — MadridVerde" description="Evolucion de la calidad ambiental de Madrid: ruido, aire, y el impacto de las politicas publicas">
   <section class="trends">
     <h1>Tendencias historicas</h1>
-    <p class="trends-subtitle">Evolucion de la calidad ambiental de Madrid con anotaciones de politicas publicas</p>
-    <div class="trends-content">
-      <p class="placeholder">Graficos historicos con anotaciones (pendiente MV-11 + MV-29)</p>
+    <p class="trends-subtitle">Como ha cambiado la calidad ambiental de Madrid en las ultimas dos decadas</p>
+
+    <div class="chart-section">
+      <h2>Ruido ambiental (LAeq dB)</h2>
+      <p class="chart-description">Nivel medio de ruido equivalente en estaciones representativas de Madrid. La OMS recomienda no superar los 55 dB en zonas residenciales.</p>
+      <div class="chart-container">
+        <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid"></canvas>
+      </div>
+      <p class="chart-sr-only" id="noise-chart-desc">
+        <!-- Screen reader alternative provided by script -->
+      </p>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler } from 'chart.js';
+  import noiseData from '../data/noise-monthly.json';
+
+  Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler);
+
+  // Policy annotations as vertical reference points
+  const POLICIES = [
+    { year: 2005, label: 'Ley del Ruido', color: '#264653' },
+    { year: 2014, label: 'APR Centro', color: '#40916C' },
+    { year: 2018, label: 'Madrid Central', color: '#2D6A4F' },
+    { year: 2020, label: 'COVID-19', color: '#E76F51' },
+    { year: 2022, label: 'ZBE Madrid', color: '#2D6A4F' },
+  ];
+
+  // Select representative stations with good data coverage
+  const STATION_IDS = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
+  const STATION_COLORS = ['#2D6A4F', '#52B788', '#E9C46A', '#F4A261', '#264653'];
+
+  // Compute yearly averages per station
+  interface YearlyData {
+    year: number;
+    laeq: number;
+  }
+
+  function getYearlyAverages(stationId: string): YearlyData[] {
+    const station = (noiseData as any[]).find((s) => s.id === stationId);
+    if (!station) return [];
+
+    const years: Record<number, { sum: number; count: number }> = {};
+    for (const d of station.data) {
+      if (d.laeq == null || d.year < 2000) continue;
+      if (!years[d.year]) years[d.year] = { sum: 0, count: 0 };
+      years[d.year].sum += d.laeq;
+      years[d.year].count++;
+    }
+
+    return Object.entries(years)
+      .map(([y, v]) => ({ year: Number(y), laeq: Math.round((v.sum / v.count) * 10) / 10 }))
+      .sort((a, b) => a.year - b.year);
+  }
+
+  // Build labels (all years from 2000 to latest)
+  const allYears: number[] = [];
+  for (let y = 2000; y <= 2025; y++) allYears.push(y);
+
+  // Build datasets
+  const datasets = STATION_IDS.map((id, i) => {
+    const station = (noiseData as any[]).find((s) => s.id === id);
+    const yearly = getYearlyAverages(id);
+    const yearMap = new Map(yearly.map((d) => [d.year, d.laeq]));
+
+    return {
+      label: station?.name || id,
+      data: allYears.map((y) => yearMap.get(y) ?? null),
+      borderColor: STATION_COLORS[i],
+      backgroundColor: STATION_COLORS[i] + '20',
+      borderWidth: 2,
+      pointRadius: 3,
+      pointHoverRadius: 6,
+      tension: 0.3,
+      spanGaps: true,
+    };
+  });
+
+  // WHO guideline reference line
+  datasets.push({
+    label: 'Limite OMS (55 dB)',
+    data: allYears.map(() => 55),
+    borderColor: '#E76F51',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    tension: 0,
+    spanGaps: true,
+    // @ts-ignore
+    borderDash: [6, 4],
+  });
+
+  const canvas = document.getElementById('noise-chart') as HTMLCanvasElement;
+
+  const chart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: allYears.map(String),
+      datasets,
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            font: { family: 'Inter', size: 12 },
+            usePointStyle: true,
+            padding: 16,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#264653',
+          titleFont: { family: 'Inter', weight: 'bold' },
+          bodyFont: { family: 'Inter' },
+          callbacks: {
+            title: (items) => {
+              const year = Number(items[0].label);
+              const policy = POLICIES.find((p) => p.year === year);
+              return policy ? `${year} — ${policy.label}` : String(year);
+            },
+            label: (item) => {
+              if (item.raw === null) return '';
+              return `${item.dataset.label}: ${item.raw} dB`;
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          min: 50,
+          max: 75,
+          title: {
+            display: true,
+            text: 'LAeq (dB)',
+            font: { family: 'Inter', size: 13 },
+          },
+          ticks: {
+            font: { family: 'Inter', size: 11 },
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.06)',
+          },
+        },
+        x: {
+          ticks: {
+            font: { family: 'Inter', size: 11 },
+            maxRotation: 0,
+          },
+          grid: {
+            color: (ctx) => {
+              const year = allYears[ctx.index];
+              const policy = POLICIES.find((p) => p.year === year);
+              return policy ? policy.color + '40' : 'transparent';
+            },
+            lineWidth: (ctx) => {
+              const year = allYears[ctx.index];
+              return POLICIES.some((p) => p.year === year) ? 2 : 0;
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // SR-only table
+  const srDesc = document.getElementById('noise-chart-desc');
+  if (srDesc) {
+    let tableHTML = '<table><caption>Ruido medio anual (LAeq dB) por estacion</caption><thead><tr><th>Ano</th>';
+    STATION_IDS.forEach((id) => {
+      const s = (noiseData as any[]).find((s) => s.id === id);
+      tableHTML += `<th>${s?.name || id}</th>`;
+    });
+    tableHTML += '</tr></thead><tbody>';
+    allYears.forEach((y) => {
+      const hasData = STATION_IDS.some((id) => {
+        const yearly = getYearlyAverages(id);
+        return yearly.some((d) => d.year === y);
+      });
+      if (!hasData) return;
+      tableHTML += `<tr><td>${y}</td>`;
+      STATION_IDS.forEach((id) => {
+        const yearly = getYearlyAverages(id);
+        const d = yearly.find((d) => d.year === y);
+        tableHTML += `<td>${d ? d.laeq + ' dB' : '-'}</td>`;
+      });
+      tableHTML += '</tr>';
+    });
+    tableHTML += '</tbody></table>';
+    srDesc.innerHTML = tableHTML;
+  }
+</script>
 
 <style>
   .trends {
@@ -20,25 +214,65 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .trends h1 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     color: var(--color-bosque);
   }
 
   .trends-subtitle {
     margin-top: 0.5rem;
     font-size: 1.1rem;
+    max-width: 600px;
   }
 
-  .trends-content {
-    margin-top: 2rem;
+  .chart-section {
+    margin-top: 3rem;
   }
 
-  .placeholder {
-    font-style: italic;
+  .chart-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .chart-description {
+    font-size: 0.9rem;
     color: var(--color-piedra);
-    padding: 4rem 2rem;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.03);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+  }
+
+  .chart-container {
+    background: white;
     border-radius: 12px;
+    padding: 1.5rem;
+    height: 400px;
+    position: relative;
+  }
+
+  .chart-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .chart-sr-only :global(table) {
+    border-collapse: collapse;
+  }
+
+  .chart-sr-only :global(th),
+  .chart-sr-only :global(td) {
+    padding: 4px 8px;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    .trends {
+      padding: 1.5rem 1rem;
+    }
+    .chart-container {
+      height: 300px;
+      padding: 1rem;
+    }
   }
 </style>
