@@ -50,23 +50,23 @@ const html = `<!DOCTYPE html>
   }
 
   .pills {
-    display: flex; gap: 12px;
+    display: flex; gap: 10px;
     margin-bottom: 40px;
   }
   .pill {
-    padding: 12px 28px;
-    border-radius: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
     text-align: center;
-    min-width: 130px;
+    min-width: 100px;
   }
   .pill-label {
-    font-size: 11px; text-transform: uppercase;
+    font-size: 10px; text-transform: uppercase;
     letter-spacing: 0.08em; font-weight: 600;
-    margin-bottom: 4px; opacity: 0.85;
+    margin-bottom: 2px; opacity: 0.85;
   }
   .pill-value {
     font-family: 'DM Serif Display', serif;
-    font-size: 28px;
+    font-size: 24px;
   }
   .pill-aire { background: #52B788; }
   .pill-verde { background: #40916C; }
