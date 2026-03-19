@@ -83,7 +83,15 @@ function calcVerde(distCode: string, population: number): SubIndex {
   const treeScore = normalize(treesPer1000, 0, 500);
 
   const score = Math.round(greenScore * 0.7 + treeScore * 0.3);
-  const detail = `${m2PerCap.toFixed(1)} m²/hab, ${Math.round(treesPer1000)} arboles/1000 hab`;
+
+  let detail: string;
+  if (m2PerCap < 9) {
+    detail = `Solo ${m2PerCap.toFixed(1)} m²/hab de zonas verdes — la OMS recomienda minimo 9`;
+  } else if (m2PerCap < 15) {
+    detail = `${m2PerCap.toFixed(1)} m²/hab — cumple el minimo de la OMS pero hay margen de mejora`;
+  } else {
+    detail = `${m2PerCap.toFixed(1)} m²/hab de zonas verdes — bien por encima del minimo de la OMS`;
+  }
 
   return { name: 'Verde', score, weight: 0.25, detail };
 }
@@ -142,7 +150,15 @@ function calcRuido(distCode: string): SubIndex {
   // WHO guideline: 55 dB max recommended, 70 dB harmful
   // Scale: 50 dB → 100, 70 dB → 0
   const score = normalizeInverse(avgLaeq, 50, 70);
-  const detail = `${avgLaeq.toFixed(1)} dB LAeq (media reciente)`;
+
+  let detail: string;
+  if (avgLaeq > 65) {
+    detail = `${avgLaeq.toFixed(1)} dB — nivel alto, supera ampliamente la recomendacion de la OMS (55 dB)`;
+  } else if (avgLaeq > 55) {
+    detail = `${avgLaeq.toFixed(1)} dB — por encima de la recomendacion de la OMS (55 dB)`;
+  } else {
+    detail = `${avgLaeq.toFixed(1)} dB — dentro de los limites recomendados por la OMS`;
+  }
 
   return { name: 'Ruido', score, weight: 0.20, detail };
 }
@@ -165,7 +181,15 @@ function calcReciclaje(distCode: string, population: number, distName: string): 
   const per1000 = (rec.total / population) * 1000;
   // Range: 4-25 containers/1000 hab observed
   const score = normalize(per1000, 0, 25);
-  const detail = `${per1000.toFixed(1)} contenedores/1000 hab`;
+
+  let detail: string;
+  if (per1000 < 8) {
+    detail = `Solo ${per1000.toFixed(1)} contenedores por cada 1.000 vecinos — infraestructura limitada`;
+  } else if (per1000 < 15) {
+    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — cobertura aceptable`;
+  } else {
+    detail = `${per1000.toFixed(1)} contenedores/1.000 hab — buena cobertura de reciclaje`;
+  }
 
   return { name: 'Reciclaje', score, weight: 0.10, detail };
 }

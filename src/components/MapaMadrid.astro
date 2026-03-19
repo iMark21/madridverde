@@ -155,6 +155,27 @@
 
     console.log('[MadridVerde] Air quality data loaded, map updated');
   });
+
+  // --- Geocoding: listen for address search events ---
+
+  let searchMarker: L.Marker | null = null;
+
+  window.addEventListener('mv-geocode', ((e: CustomEvent) => {
+    const { lat, lon } = e.detail;
+
+    if (searchMarker) map.removeLayer(searchMarker);
+
+    searchMarker = L.marker([lat, lon], {
+      icon: L.divIcon({
+        className: 'mv-search-marker',
+        html: '<div class="mv-marker-pin"></div>',
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+      }),
+    }).addTo(map);
+
+    map.setView([lat, lon], 14, { animate: true });
+  }) as EventListener);
 </script>
 
 <style>
@@ -212,6 +233,21 @@
     height: 12px;
     border-radius: 2px;
     flex-shrink: 0;
+  }
+
+  :global(.mv-search-marker) {
+    background: none !important;
+    border: none !important;
+  }
+
+  :global(.mv-marker-pin) {
+    width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: var(--color-arcilla);
+    transform: rotate(-45deg);
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
 
   :global(.mv-tooltip) {

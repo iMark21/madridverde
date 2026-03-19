@@ -22,6 +22,10 @@ function titleCase(str: string): string {
       <h1>Indice Verde de Madrid</h1>
       <p class="hero-subtitle">14 datasets abiertos, un solo score por distrito</p>
       <p class="hero-cta">Haz clic en un distrito para ver su scorecard</p>
+      <div class="search-box">
+        <input type="text" id="address-search" placeholder="Busca tu direccion en Madrid..." aria-label="Buscar direccion" autocomplete="off" />
+        <ul id="search-results" class="search-results" role="listbox" aria-label="Resultados de busqueda"></ul>
+      </div>
     </div>
     <div class="hero-map">
       <MapaMadrid />
@@ -62,6 +66,54 @@ function titleCase(str: string): string {
       ))}
     </div>
   </section>
+<script>
+  const input = document.getElementById('address-search') as HTMLInputElement;
+  const results = document.getElementById('search-results') as HTMLUListElement;
+  let debounceTimer: number;
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if (q.length < 3) { results.classList.remove('visible'); return; }
+
+    debounceTimer = window.setTimeout(async () => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', Madrid, Spain')}&limit=5&addressdetails=1&viewbox=-3.89,40.31,-3.52,40.56&bounded=1`;
+        const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+        const data = await res.json();
+
+        results.innerHTML = '';
+        if (data.length === 0) {
+          results.innerHTML = '<li>Sin resultados</li>';
+        } else {
+          data.forEach((item: any) => {
+            const li = document.createElement('li');
+            li.role = 'option';
+            li.textContent = item.display_name.replace(', España', '').replace(', Comunidad de Madrid', '');
+            li.addEventListener('click', () => {
+              const lat = parseFloat(item.lat);
+              const lon = parseFloat(item.lon);
+              // Dispatch custom event for the map to pick up
+              window.dispatchEvent(new CustomEvent('mv-geocode', { detail: { lat, lon, name: item.display_name } }));
+              results.classList.remove('visible');
+              input.value = li.textContent || '';
+            });
+            results.appendChild(li);
+          });
+        }
+        results.classList.add('visible');
+      } catch { /* silently fail */ }
+    }, 500);
+  });
+
+  // Close on click outside
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.search-box')) {
+      results.classList.remove('visible');
+    }
+  });
+</script>
+
 </BaseLayout>
 
 <style>
@@ -204,6 +256,65 @@ function titleCase(str: string): string {
     font-family: var(--font-display);
     font-size: 1.5rem;
     z-index: 1;
+  }
+
+  /* Search */
+  .search-box {
+    position: relative;
+    max-width: 400px;
+    margin: 1rem auto 0;
+  }
+
+  #address-search {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: 24px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    background: white;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  #address-search:focus {
+    border-color: var(--color-bosque);
+  }
+
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .search-results.visible {
+    display: block;
+  }
+
+  .search-results li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .search-results li:hover {
+    background: rgba(45, 106, 79, 0.06);
+  }
+
+  .search-results li:last-child {
+    border-bottom: none;
   }
 
   @media (max-width: 768px) {
