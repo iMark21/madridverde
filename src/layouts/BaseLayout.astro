@@ -53,16 +53,42 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     <nav class="nav" aria-label="Navegacion principal">
       <a href="/" class="nav-logo">MadridVerde</a>
       <ul class="nav-links">
-        <li><a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Mapa</a></li>
-        <li><a href="/comparar" aria-current={Astro.url.pathname === '/comparar' ? 'page' : undefined}>Comparar</a></li>
-        <li><a href="/historico" aria-current={Astro.url.pathname === '/historico' ? 'page' : undefined}>Tendencias</a></li>
-        <li><a href="/metodologia" aria-current={Astro.url.pathname === '/metodologia' ? 'page' : undefined}>Metodologia</a></li>
+        <li><a href="/#mapa">Mapa</a></li>
+        <li><a href="/#comparar">Comparar</a></li>
+        <li><a href="/#tendencias">Tendencias</a></li>
+        <li><a href="/#metodologia">Metodologia</a></li>
       </ul>
     </nav>
 
     <main id="main">
       <slot />
     </main>
+
+    <script>
+      // Highlight active nav link based on scroll position
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-links a');
+
+      if (sections.length > 0 && navLinks.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              navLinks.forEach((link) => {
+                const href = link.getAttribute('href') || '';
+                if (href.includes('#' + id)) {
+                  link.setAttribute('aria-current', 'page');
+                } else {
+                  link.removeAttribute('aria-current');
+                }
+              });
+            }
+          });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+
+        sections.forEach((section) => observer.observe(section));
+      }
+    </script>
 
     <footer class="footer">
       <p>&copy; {new Date().getFullYear()} MadridVerde — Datos abiertos del Ayuntamiento de Madrid</p>
@@ -98,6 +124,7 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     color: var(--color-piedra);
     background-color: var(--color-arena);
     line-height: 1.6;
+    scroll-behavior: smooth;
   }
 
   h1, h2, h3 {

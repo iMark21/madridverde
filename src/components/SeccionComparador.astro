@@ -1,0 +1,219 @@
+---
+import { computeGreenIndex } from '../lib/green-index';
+
+const allDistricts = computeGreenIndex();
+
+function titleCase(str: string): string {
+  const minor = new Set(['de', 'del', 'el', 'la', 'las', 'los', 'y', 'e']);
+  return str.toLowerCase().split(' ')
+    .map((w, i) => (i === 0 || !minor.has(w)) ? w.charAt(0).toUpperCase() + w.slice(1) : w)
+    .join(' ');
+}
+
+const districtOptions = allDistricts.map(d => ({
+  code: d.code,
+  name: titleCase(d.name),
+  score: d.score,
+  tierColor: d.tierColor,
+  subIndices: d.subIndices.map(si => ({ name: si.name, score: si.score, weight: si.weight })),
+}));
+---
+
+<div class="comparator-content">
+  <div class="selector" id="district-selector">
+    {districtOptions.map(d => (
+      <button
+        class="selector-chip"
+        data-code={d.code}
+        data-name={d.name}
+        data-score={d.score}
+        data-color={d.tierColor}
+        data-subindices={JSON.stringify(d.subIndices)}
+      >
+        {d.name} <span class="chip-score">{d.score}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="chart-area" id="chart-area" style="display:none">
+    <div class="radar-container">
+      <canvas id="radar-chart" aria-label="Radar chart comparando sub-indices"></canvas>
+    </div>
+    <div class="comparison-table" id="comparison-table"></div>
+  </div>
+
+  <p class="empty-state" id="empty-state">Selecciona al menos 2 distritos para comparar</p>
+</div>
+
+<script>
+  import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
+
+  Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+
+  const COLORS = ['#2D6A4F', '#E76F51', '#264653', '#E9C46A'];
+  const MAX_SELECTED = 4;
+
+  interface DistrictData {
+    code: string;
+    name: string;
+    score: number;
+    color: string;
+    subIndices: { name: string; score: number; weight: number }[];
+  }
+
+  const selected: DistrictData[] = [];
+  let chart: Chart | null = null;
+
+  const chips = document.querySelectorAll('.selector-chip');
+  const chartArea = document.getElementById('chart-area')!;
+  const emptyState = document.getElementById('empty-state')!;
+  const tableContainer = document.getElementById('comparison-table')!;
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const code = chip.getAttribute('data-code')!;
+      const idx = selected.findIndex((d) => d.code === code);
+
+      if (idx >= 0) {
+        selected.splice(idx, 1);
+        chip.classList.remove('selected');
+      } else if (selected.length < MAX_SELECTED) {
+        selected.push({
+          code,
+          name: chip.getAttribute('data-name')!,
+          score: Number(chip.getAttribute('data-score')),
+          color: chip.getAttribute('data-color')!,
+          subIndices: JSON.parse(chip.getAttribute('data-subindices')!),
+        });
+        chip.classList.add('selected');
+      }
+
+      updateChart();
+    });
+  });
+
+  function updateChart() {
+    if (selected.length < 2) {
+      chartArea.style.display = 'none';
+      emptyState.style.display = 'block';
+      if (chart) { chart.destroy(); chart = null; }
+      return;
+    }
+
+    chartArea.style.display = 'grid';
+    emptyState.style.display = 'none';
+
+    const labels = selected[0].subIndices.map((si) => `${si.name} (${Math.round(si.weight * 100)}%)`);
+    const datasets = selected.map((d, i) => ({
+      label: `${d.name} (${d.score})`,
+      data: d.subIndices.map((si) => si.score),
+      borderColor: COLORS[i],
+      backgroundColor: COLORS[i] + '25',
+      borderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 7,
+      pointBackgroundColor: COLORS[i],
+    }));
+
+    if (chart) chart.destroy();
+
+    const canvas = document.getElementById('radar-chart') as HTMLCanvasElement;
+    chart = new Chart(canvas, {
+      type: 'radar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 }, usePointStyle: true, padding: 12 } },
+          tooltip: { backgroundColor: '#264653' },
+        },
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { stepSize: 25, font: { family: 'Inter', size: 10 }, backdropColor: 'transparent' },
+            pointLabels: { font: { family: 'Inter', size: 12, weight: '500' }, color: '#264653' },
+            grid: { color: 'rgba(0,0,0,0.08)' },
+            angleLines: { color: 'rgba(0,0,0,0.08)' },
+          },
+        },
+      },
+    });
+
+    // Table
+    let html = '<table><thead><tr><th>Sub-indice</th>';
+    selected.forEach((d, i) => { html += `<th style="color:${COLORS[i]}">${d.name}</th>`; });
+    html += '</tr></thead><tbody>';
+    selected[0].subIndices.forEach((si, j) => {
+      html += `<tr><td>${si.name} <span class="weight">${Math.round(si.weight * 100)}%</span></td>`;
+      selected.forEach((d) => {
+        const val = d.subIndices[j].score;
+        const color = val >= 70 ? '#2D6A4F' : val >= 40 ? '#E9C46A' : '#E76F51';
+        html += `<td style="color:${color};font-weight:600">${val}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '<tr class="total-row"><td><strong>Indice Verde</strong></td>';
+    selected.forEach((d) => { html += `<td><strong>${d.score}</strong></td>`; });
+    html += '</tr></tbody></table>';
+    tableContainer.innerHTML = html;
+  }
+
+  // Pre-select Centro vs Moncloa-Aravaca
+  ['01', '09'].forEach((code) => {
+    const chip = document.querySelector(`.selector-chip[data-code="${code}"]`);
+    if (chip) (chip as HTMLElement).click();
+  });
+</script>
+
+<style>
+  .selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .selector-chip {
+    padding: 0.4rem 0.8rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-piedra);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .selector-chip:hover { border-color: var(--color-bosque); color: var(--color-bosque); }
+  .selector-chip.selected { background: var(--color-bosque); color: white; border-color: var(--color-bosque); }
+
+  .chip-score { font-family: var(--font-display); font-size: 0.9rem; }
+
+  .chart-area {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .radar-container { background: white; border-radius: 12px; padding: 1.5rem; height: 380px; }
+
+  .comparison-table :global(table) { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+  .comparison-table :global(th), .comparison-table :global(td) { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 0.85rem; }
+  .comparison-table :global(th) { font-weight: 600; font-size: 0.8rem; }
+  .comparison-table :global(.weight) { font-size: 0.7rem; color: var(--color-piedra); opacity: 0.6; }
+  .comparison-table :global(.total-row td) { border-top: 2px solid rgba(0,0,0,0.1); font-family: var(--font-display); font-size: 1.1rem; }
+
+  .empty-state { text-align: center; color: var(--color-piedra); padding: 2rem; font-style: italic; }
+
+  @media (max-width: 768px) {
+    .chart-area { grid-template-columns: 1fr; }
+    .radar-container { height: 280px; }
+  }
+</style>
