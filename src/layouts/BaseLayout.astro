@@ -138,9 +138,14 @@ const { title, description = 'Dashboard medioambiental de Madrid — Indice Verd
     font-weight: 500;
   }
 
-  .nav-links a:hover,
+  .nav-links a:hover {
+    color: var(--color-bosque);
+  }
+
   .nav-links a[aria-current='page'] {
     color: var(--color-bosque);
+    border-bottom: 2px solid var(--color-bosque);
+    padding-bottom: 2px;
   }
 
   .footer {
