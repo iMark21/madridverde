@@ -29,11 +29,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
-  import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler } from 'chart.js';
-  import annotationPlugin from 'chartjs-plugin-annotation';
+  import { Chart } from '../lib/chart-setup';
   import noiseData from '../data/noise-monthly.json';
-
-  Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler, annotationPlugin);
 
   // Policy annotations as vertical reference points
   const POLICIES = [
