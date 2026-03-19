@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import MapaDistrito from '../../components/MapaDistrito.astro';
 import districtsIndex from '../../data/districts-index.json';
 import treesData from '../../data/trees.json';
 import recyclingData from '../../data/recycling.json';
@@ -131,6 +132,8 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
           ))}
         </div>
       </div>
+
+      <MapaDistrito districtCode={code} districtName={displayName} />
 
       <div class="data-details">
         <h2>Datos del distrito</h2>
