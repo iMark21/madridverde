@@ -1,0 +1,611 @@
+[
+  {
+    "code": "01",
+    "name": "CENTRO",
+    "totalTrees": 14188,
+    "greenM2": 304499.69,
+    "greenHa": 30.45,
+    "topSpecies": [
+      {
+        "name": "LJA",
+        "count": 2677
+      },
+      {
+        "name": "PDA",
+        "count": 1850
+      },
+      {
+        "name": "SJA",
+        "count": 1634
+      },
+      {
+        "name": "AHI",
+        "count": 603
+      },
+      {
+        "name": "PAR",
+        "count": 523
+      }
+    ]
+  },
+  {
+    "code": "02",
+    "name": "ARGANZUELA",
+    "totalTrees": 29281,
+    "greenM2": 903031.21,
+    "greenHa": 90.3,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 3931
+      },
+      {
+        "name": "SJA",
+        "count": 2444
+      },
+      {
+        "name": "CAU",
+        "count": 2062
+      },
+      {
+        "name": "MEA",
+        "count": 1677
+      },
+      {
+        "name": "PPI",
+        "count": 1492
+      }
+    ]
+  },
+  {
+    "code": "03",
+    "name": "RETIRO",
+    "totalTrees": 31090,
+    "greenM2": 367055.33,
+    "greenHa": 36.71,
+    "topSpecies": [
+      {
+        "name": "AHI",
+        "count": 5970
+      },
+      {
+        "name": "PDA",
+        "count": 3555
+      },
+      {
+        "name": "SJA",
+        "count": 2715
+      },
+      {
+        "name": "UPU",
+        "count": 2121
+      },
+      {
+        "name": "LJA",
+        "count": 1298
+      }
+    ]
+  },
+  {
+    "code": "04",
+    "name": "SALAMANCA",
+    "totalTrees": 20672,
+    "greenM2": 357211.07,
+    "greenHa": 35.72,
+    "topSpecies": [
+      {
+        "name": "SJA",
+        "count": 5820
+      },
+      {
+        "name": "PDA",
+        "count": 2449
+      },
+      {
+        "name": "LJA",
+        "count": 1751
+      },
+      {
+        "name": "UPU",
+        "count": 832
+      },
+      {
+        "name": "AHI",
+        "count": 720
+      }
+    ]
+  },
+  {
+    "code": "05",
+    "name": "CHAMARTIN",
+    "totalTrees": 25784,
+    "greenM2": 560941.81,
+    "greenHa": 56.09,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 5991
+      },
+      {
+        "name": "SJA",
+        "count": 3615
+      },
+      {
+        "name": "UPU",
+        "count": 2401
+      },
+      {
+        "name": "CAU",
+        "count": 1292
+      },
+      {
+        "name": "PPI",
+        "count": 1077
+      }
+    ]
+  },
+  {
+    "code": "06",
+    "name": "TETUAN",
+    "totalTrees": 15172,
+    "greenM2": 630953.32,
+    "greenHa": 63.1,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 4774
+      },
+      {
+        "name": "LJA",
+        "count": 890
+      },
+      {
+        "name": "UPU",
+        "count": 729
+      },
+      {
+        "name": "PCP",
+        "count": 575
+      },
+      {
+        "name": "MEA",
+        "count": 566
+      }
+    ]
+  },
+  {
+    "code": "07",
+    "name": "CHAMBERI",
+    "totalTrees": 13748,
+    "greenM2": 99944.98,
+    "greenHa": 9.99,
+    "topSpecies": [
+      {
+        "name": "SJA",
+        "count": 5689
+      },
+      {
+        "name": "PDA",
+        "count": 1754
+      },
+      {
+        "name": "CAU",
+        "count": 817
+      },
+      {
+        "name": "UPU",
+        "count": 759
+      },
+      {
+        "name": "LJA",
+        "count": 605
+      }
+    ]
+  },
+  {
+    "code": "08",
+    "name": "FUENCARRAL-EL PARDO",
+    "totalTrees": 60369,
+    "greenM2": 3745002.14,
+    "greenHa": 374.5,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 9529
+      },
+      {
+        "name": "CAU",
+        "count": 4780
+      },
+      {
+        "name": "UPU",
+        "count": 4649
+      },
+      {
+        "name": "PPI",
+        "count": 3454
+      },
+      {
+        "name": "MEA",
+        "count": 2467
+      }
+    ]
+  },
+  {
+    "code": "09",
+    "name": "MONCLOA-ARAVACA",
+    "totalTrees": 55487,
+    "greenM2": 1891038.42,
+    "greenHa": 189.1,
+    "topSpecies": [
+      {
+        "name": "PPI",
+        "count": 8304
+      },
+      {
+        "name": "PDA",
+        "count": 6180
+      },
+      {
+        "name": "SJA",
+        "count": 3559
+      },
+      {
+        "name": "UPU",
+        "count": 2578
+      },
+      {
+        "name": "ANE",
+        "count": 1886
+      }
+    ]
+  },
+  {
+    "code": "10",
+    "name": "LATINA",
+    "totalTrees": 38049,
+    "greenM2": 2608854.39,
+    "greenHa": 260.89,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 5530
+      },
+      {
+        "name": "UPU",
+        "count": 3727
+      },
+      {
+        "name": "PPI",
+        "count": 2718
+      },
+      {
+        "name": "CAU",
+        "count": 2076
+      },
+      {
+        "name": "SJA",
+        "count": 1806
+      }
+    ]
+  },
+  {
+    "code": "11",
+    "name": "CARABANCHEL",
+    "totalTrees": 44339,
+    "greenM2": 2557571.96,
+    "greenHa": 255.76,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 7499
+      },
+      {
+        "name": "PPI",
+        "count": 5057
+      },
+      {
+        "name": "SJA",
+        "count": 2714
+      },
+      {
+        "name": "UPU",
+        "count": 2571
+      },
+      {
+        "name": "CAU",
+        "count": 2352
+      }
+    ]
+  },
+  {
+    "code": "12",
+    "name": "USERA",
+    "totalTrees": 36286,
+    "greenM2": 1678026.79,
+    "greenHa": 167.8,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 5442
+      },
+      {
+        "name": "UPU",
+        "count": 3703
+      },
+      {
+        "name": "PPI",
+        "count": 3495
+      },
+      {
+        "name": "RPS",
+        "count": 1950
+      },
+      {
+        "name": "CAU",
+        "count": 1803
+      }
+    ]
+  },
+  {
+    "code": "13",
+    "name": "PUENTE DE VALLECAS",
+    "totalTrees": 51025,
+    "greenM2": 2806838.37,
+    "greenHa": 280.68,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 4643
+      },
+      {
+        "name": "POR",
+        "count": 4255
+      },
+      {
+        "name": "PPI",
+        "count": 3542
+      },
+      {
+        "name": "SJA",
+        "count": 3539
+      },
+      {
+        "name": "RPS",
+        "count": 3239
+      }
+    ]
+  },
+  {
+    "code": "14",
+    "name": "MORATALAZ",
+    "totalTrees": 38061,
+    "greenM2": 1175935.2,
+    "greenHa": 117.59,
+    "topSpecies": [
+      {
+        "name": "UPU",
+        "count": 6207
+      },
+      {
+        "name": "PPI",
+        "count": 4510
+      },
+      {
+        "name": "PHA",
+        "count": 3165
+      },
+      {
+        "name": "CAU",
+        "count": 3030
+      },
+      {
+        "name": "PDA",
+        "count": 2162
+      }
+    ]
+  },
+  {
+    "code": "15",
+    "name": "CIUDAD LINEAL",
+    "totalTrees": 37369,
+    "greenM2": 1349618.59,
+    "greenHa": 134.96,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 4517
+      },
+      {
+        "name": "UPU",
+        "count": 4084
+      },
+      {
+        "name": "PPI",
+        "count": 3462
+      },
+      {
+        "name": "CAU",
+        "count": 1600
+      },
+      {
+        "name": "SJA",
+        "count": 1578
+      }
+    ]
+  },
+  {
+    "code": "16",
+    "name": "HORTALEZA",
+    "totalTrees": 73228,
+    "greenM2": 3248233.34,
+    "greenHa": 324.82,
+    "topSpecies": [
+      {
+        "name": "CAU",
+        "count": 5721
+      },
+      {
+        "name": "PPI",
+        "count": 5219
+      },
+      {
+        "name": "PDA",
+        "count": 4554
+      },
+      {
+        "name": "SJA",
+        "count": 2916
+      },
+      {
+        "name": "QIL",
+        "count": 2513
+      }
+    ]
+  },
+  {
+    "code": "17",
+    "name": "VILLAVERDE",
+    "totalTrees": 47297,
+    "greenM2": 2165847.32,
+    "greenHa": 216.58,
+    "topSpecies": [
+      {
+        "name": "CAU",
+        "count": 5531
+      },
+      {
+        "name": "UPU",
+        "count": 5230
+      },
+      {
+        "name": "PDA",
+        "count": 3091
+      },
+      {
+        "name": "PPI",
+        "count": 2735
+      },
+      {
+        "name": "PNI",
+        "count": 2283
+      }
+    ]
+  },
+  {
+    "code": "18",
+    "name": "VILLA DE VALLECAS",
+    "totalTrees": 40226,
+    "greenM2": 3008407.88,
+    "greenHa": 300.84,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 5014
+      },
+      {
+        "name": "CAU",
+        "count": 3312
+      },
+      {
+        "name": "PHA",
+        "count": 2720
+      },
+      {
+        "name": "ANE",
+        "count": 1966
+      },
+      {
+        "name": "UPU",
+        "count": 1954
+      }
+    ]
+  },
+  {
+    "code": "19",
+    "name": "VICALVARO",
+    "totalTrees": 31780,
+    "greenM2": 1974128.36,
+    "greenHa": 197.41,
+    "topSpecies": [
+      {
+        "name": "CAU",
+        "count": 2482
+      },
+      {
+        "name": "PCY",
+        "count": 2111
+      },
+      {
+        "name": "PDA",
+        "count": 1900
+      },
+      {
+        "name": "LJA",
+        "count": 1818
+      },
+      {
+        "name": "POR",
+        "count": 1733
+      }
+    ]
+  },
+  {
+    "code": "20",
+    "name": "SAN BLAS-CANILLEJAS",
+    "totalTrees": 54724,
+    "greenM2": 1804470.86,
+    "greenHa": 180.45,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 8193
+      },
+      {
+        "name": "PHA",
+        "count": 5734
+      },
+      {
+        "name": "PPI",
+        "count": 4314
+      },
+      {
+        "name": "CAU",
+        "count": 3268
+      },
+      {
+        "name": "ANE",
+        "count": 1712
+      }
+    ]
+  },
+  {
+    "code": "21",
+    "name": "BARAJAS",
+    "totalTrees": 34838,
+    "greenM2": 1063570.63,
+    "greenHa": 106.36,
+    "topSpecies": [
+      {
+        "name": "PDA",
+        "count": 3956
+      },
+      {
+        "name": "OEU",
+        "count": 2584
+      },
+      {
+        "name": "PPI",
+        "count": 1817
+      },
+      {
+        "name": "CBI",
+        "count": 1560
+      },
+      {
+        "name": "CSE",
+        "count": 1466
+      }
+    ]
+  }
+]

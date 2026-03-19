@@ -1,0 +1,504 @@
+[
+  {
+    "name": "ARGANZUELA",
+    "total": 686,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 361
+      },
+      {
+        "type": "Vidrio",
+        "count": 325
+      }
+    ]
+  },
+  {
+    "name": "BARAJAS",
+    "total": 893,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 213
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 182
+      },
+      {
+        "type": "PMB",
+        "count": 171
+      },
+      {
+        "type": "Vidrio",
+        "count": 167
+      },
+      {
+        "type": "Orgánica",
+        "count": 160
+      }
+    ]
+  },
+  {
+    "name": "CARABANCHEL",
+    "total": 5560,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 1842
+      },
+      {
+        "type": "PMB",
+        "count": 1359
+      },
+      {
+        "type": "Orgánica",
+        "count": 1221
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 591
+      },
+      {
+        "type": "Vidrio",
+        "count": 547
+      }
+    ]
+  },
+  {
+    "name": "CENTRO",
+    "total": 567,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 202
+      },
+      {
+        "type": "Vidrio",
+        "count": 186
+      },
+      {
+        "type": "PMB",
+        "count": 179
+      }
+    ]
+  },
+  {
+    "name": "CHAMARTIN",
+    "total": 1152,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 393
+      },
+      {
+        "type": "Vidrio",
+        "count": 365
+      },
+      {
+        "type": "Resto",
+        "count": 173
+      },
+      {
+        "type": "PMB",
+        "count": 124
+      },
+      {
+        "type": "Orgánica",
+        "count": 97
+      }
+    ]
+  },
+  {
+    "name": "CHAMBERI",
+    "total": 590,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 302
+      },
+      {
+        "type": "Vidrio",
+        "count": 288
+      }
+    ]
+  },
+  {
+    "name": "CIUDAD LINEAL",
+    "total": 2196,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 533
+      },
+      {
+        "type": "Vidrio",
+        "count": 495
+      },
+      {
+        "type": "Resto",
+        "count": 407
+      },
+      {
+        "type": "Orgánica",
+        "count": 386
+      },
+      {
+        "type": "PMB",
+        "count": 375
+      }
+    ]
+  },
+  {
+    "name": "FUENCARRAL-EL PARDO",
+    "total": 2366,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 625
+      },
+      {
+        "type": "Vidrio",
+        "count": 620
+      },
+      {
+        "type": "Resto",
+        "count": 429
+      },
+      {
+        "type": "PMB",
+        "count": 368
+      },
+      {
+        "type": "Orgánica",
+        "count": 324
+      }
+    ]
+  },
+  {
+    "name": "HORTALEZA",
+    "total": 2761,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 676
+      },
+      {
+        "type": "Vidrio",
+        "count": 586
+      },
+      {
+        "type": "PMB",
+        "count": 517
+      },
+      {
+        "type": "Resto",
+        "count": 501
+      },
+      {
+        "type": "Orgánica",
+        "count": 481
+      }
+    ]
+  },
+  {
+    "name": "LATINA",
+    "total": 4939,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 1615
+      },
+      {
+        "type": "PMB",
+        "count": 1252
+      },
+      {
+        "type": "Orgánica",
+        "count": 945
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 574
+      },
+      {
+        "type": "Vidrio",
+        "count": 553
+      }
+    ]
+  },
+  {
+    "name": "MONCLOA-ARAVACA",
+    "total": 2462,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 814
+      },
+      {
+        "type": "PMB",
+        "count": 593
+      },
+      {
+        "type": "Orgánica",
+        "count": 457
+      },
+      {
+        "type": "Vidrio",
+        "count": 315
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 283
+      }
+    ]
+  },
+  {
+    "name": "MORATALAZ",
+    "total": 1808,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 499
+      },
+      {
+        "type": "PMB",
+        "count": 458
+      },
+      {
+        "type": "Orgánica",
+        "count": 409
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 225
+      },
+      {
+        "type": "Vidrio",
+        "count": 217
+      }
+    ]
+  },
+  {
+    "name": "PUENTE DE VALLECAS",
+    "total": 4144,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 1121
+      },
+      {
+        "type": "Orgánica",
+        "count": 1073
+      },
+      {
+        "type": "PMB",
+        "count": 1007
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 487
+      },
+      {
+        "type": "Vidrio",
+        "count": 456
+      }
+    ]
+  },
+  {
+    "name": "RETIRO",
+    "total": 481,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 247
+      },
+      {
+        "type": "Vidrio",
+        "count": 234
+      }
+    ]
+  },
+  {
+    "name": "SALAMANCA",
+    "total": 722,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 327
+      },
+      {
+        "type": "Vidrio",
+        "count": 297
+      },
+      {
+        "type": "Resto",
+        "count": 44
+      },
+      {
+        "type": "PMB",
+        "count": 29
+      },
+      {
+        "type": "Orgánica",
+        "count": 25
+      }
+    ]
+  },
+  {
+    "name": "SAN BLAS-CANILLEJAS",
+    "total": 2184,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 556
+      },
+      {
+        "type": "Vidrio",
+        "count": 473
+      },
+      {
+        "type": "Orgánica",
+        "count": 401
+      },
+      {
+        "type": "Resto",
+        "count": 388
+      },
+      {
+        "type": "PMB",
+        "count": 366
+      }
+    ]
+  },
+  {
+    "name": "TETUAN",
+    "total": 2566,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 872
+      },
+      {
+        "type": "PMB",
+        "count": 617
+      },
+      {
+        "type": "Orgánica",
+        "count": 451
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 318
+      },
+      {
+        "type": "Vidrio",
+        "count": 308
+      }
+    ]
+  },
+  {
+    "name": "USERA",
+    "total": 1822,
+    "types": [
+      {
+        "type": "Orgánica",
+        "count": 444
+      },
+      {
+        "type": "PMB",
+        "count": 405
+      },
+      {
+        "type": "Resto",
+        "count": 395
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 307
+      },
+      {
+        "type": "Vidrio",
+        "count": 271
+      }
+    ]
+  },
+  {
+    "name": "VICALVARO",
+    "total": 1938,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 468
+      },
+      {
+        "type": "PMB",
+        "count": 450
+      },
+      {
+        "type": "Orgánica",
+        "count": 433
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 313
+      },
+      {
+        "type": "Vidrio",
+        "count": 274
+      }
+    ]
+  },
+  {
+    "name": "VILLA DE VALLECAS",
+    "total": 1520,
+    "types": [
+      {
+        "type": "Papel-Cartón",
+        "count": 417
+      },
+      {
+        "type": "Vidrio",
+        "count": 343
+      },
+      {
+        "type": "Resto",
+        "count": 275
+      },
+      {
+        "type": "PMB",
+        "count": 244
+      },
+      {
+        "type": "Orgánica",
+        "count": 241
+      }
+    ]
+  },
+  {
+    "name": "VILLAVERDE",
+    "total": 2892,
+    "types": [
+      {
+        "type": "Resto",
+        "count": 805
+      },
+      {
+        "type": "Orgánica",
+        "count": 667
+      },
+      {
+        "type": "PMB",
+        "count": 655
+      },
+      {
+        "type": "Papel-Cartón",
+        "count": 426
+      },
+      {
+        "type": "Vidrio",
+        "count": 339
+      }
+    ]
+  }
+]
