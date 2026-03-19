@@ -15,7 +15,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   <!-- Noise chart -->
   <div class="chart-block">
     <h3>Ruido ambiental (LAeq dB)</h3>
-    <p class="chart-description">Selecciona estaciones para comparar su evolucion. La OMS recomienda no superar 55 dB.</p>
+    <p class="chart-description">Selecciona estaciones para comparar su evolucion. OMS recomienda no superar 55 dB. <em>Datos SIVCA, ultima actualizacion: febrero 2026.</em></p>
 
     <div class="station-selector" id="noise-station-selector">
       {stationsWithData.map(s => (
@@ -37,7 +37,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   <!-- Air chart -->
   <div class="chart-block">
     <h3>Calidad del aire (NO2 µg/m³)</h3>
-    <p class="chart-description">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 µg/m³.</p>
+    <p class="chart-description">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 µg/m³. <em>Datos horarios agregados, hasta febrero 2026.</em></p>
 
     <div class="station-selector" id="air-station-selector">
       {(airStationsData as any[]).map(s => (
