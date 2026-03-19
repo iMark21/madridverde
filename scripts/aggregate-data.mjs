@@ -152,6 +152,20 @@ async function aggregateTrees() {
     }
   }
 
+  // Species code → common name mapping (Madrid municipal tree census)
+  const SPECIES_NAMES = {
+    'PDA': 'Platano de sombra', 'PPI': 'Pino pinonero', 'UPU': 'Olmo',
+    'CAU': 'Cedro', 'SJA': 'Sophora japonica', 'PHA': 'Pino carrasco',
+    'LJA': 'Ligustro japones', 'AHI': 'Aligustre', 'POR': 'Populus',
+    'ANE': 'Acacia negra', 'RPS': 'Robinia', 'MEA': 'Morera',
+    'OEU': 'Olivo', 'QIL': 'Encina', 'PNI': 'Pino nigra',
+    'PCY': 'Prunus cerezo', 'CBI': 'Catalpa', 'CSE': 'Castano de Indias',
+    'PAR': 'Palmera', 'PCP': 'Ciruelo', 'TTO': 'Tilo',
+    'APS': 'Arce', 'FEX': 'Fresno', 'PPE': 'Peral',
+    'CLA': 'Cinamomo', 'SBA': 'Sauce', 'GTS': 'Ginkgo',
+    'JRE': 'Nogal', 'PMI': 'Pino maritimo', 'DESC': 'Desconocido',
+  };
+
   // Build output: top 5 species per district + totals (exclude non-Madrid like "99")
   const output = Object.values(districts)
     .filter((d) => Number(d.code) >= 1 && Number(d.code) <= 21)
@@ -160,7 +174,7 @@ async function aggregateTrees() {
       const topSpecies = Object.entries(d.species)
         .sort(([, a], [, b]) => b - a)
         .slice(0, 5)
-        .map(([name, count]) => ({ name, count }));
+        .map(([code, count]) => ({ name: SPECIES_NAMES[code] || code, count }));
 
       return {
         code: d.code,
