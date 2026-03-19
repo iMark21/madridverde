@@ -1,90 +1,133 @@
 /**
- * Generate OG image as a clean PNG using a canvas approach.
- * Since we don't have puppeteer/sharp, we generate a simpler but
- * well-proportioned SVG that renders correctly.
+ * OG Image Generator — MadridVerde
+ * Renders HTML to a pixel-perfect 1200x630 PNG using Puppeteer.
+ * Usage: npx puppeteer browsers install chrome && node scripts/generate-og-image.mjs
  */
 
-import { writeFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import puppeteer from 'puppeteer';
+import { writeFile } from 'fs/promises';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Simple, clean OG image - everything fits within 1200x630
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2D6A4F"/>
-      <stop offset="100%" stop-color="#264653"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg)"/>
-
-  <!-- Subtle pattern -->
-  <circle cx="1100" cy="100" r="300" fill="rgba(255,255,255,0.03)"/>
-  <circle cx="100" cy="530" r="200" fill="rgba(255,255,255,0.03)"/>
-
-  <!-- Title -->
-  <text x="100" y="180" font-family="Georgia, 'Times New Roman', serif" font-size="80" fill="white" font-weight="bold">MadridVerde</text>
-
-  <!-- Subtitle -->
-  <text x="100" y="240" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="rgba(255,255,255,0.8)">Indice Verde de Madrid</text>
-
-  <!-- Stats line -->
-  <text x="100" y="310" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="rgba(255,255,255,0.6)">17 datasets abiertos  ·  5 sub-indices  ·  3 APIs en tiempo real</text>
-
-  <!-- Sub-index pills -->
-  <rect x="100" y="360" width="170" height="55" rx="10" fill="#52B788"/>
-  <text x="185" y="382" text-anchor="middle" font-family="Arial" font-size="13" fill="rgba(255,255,255,0.9)">AIRE</text>
-  <text x="185" y="404" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="white">30%</text>
-
-  <rect x="290" y="360" width="170" height="55" rx="10" fill="#40916C"/>
-  <text x="375" y="382" text-anchor="middle" font-family="Arial" font-size="13" fill="rgba(255,255,255,0.9)">VERDE</text>
-  <text x="375" y="404" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="white">25%</text>
-
-  <rect x="480" y="360" width="170" height="55" rx="10" fill="#E9C46A"/>
-  <text x="565" y="382" text-anchor="middle" font-family="Arial" font-size="13" fill="rgba(0,0,0,0.6)">RUIDO</text>
-  <text x="565" y="404" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="rgba(0,0,0,0.7)">20%</text>
-
-  <rect x="670" y="360" width="170" height="55" rx="10" fill="#F4A261"/>
-  <text x="755" y="382" text-anchor="middle" font-family="Arial" font-size="13" fill="rgba(0,0,0,0.6)">MOVILIDAD</text>
-  <text x="755" y="404" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="rgba(0,0,0,0.7)">15%</text>
-
-  <rect x="860" y="360" width="170" height="55" rx="10" fill="#264653" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-  <text x="945" y="382" text-anchor="middle" font-family="Arial" font-size="13" fill="rgba(255,255,255,0.9)">RECICLAJE</text>
-  <text x="945" y="404" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="white">10%</text>
-
-  <!-- Tagline -->
-  <text x="100" y="490" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="rgba(255,255,255,0.5)" font-style="italic">Porque respirar no deberia ser cuestion de codigo postal</text>
-
-  <!-- URL -->
-  <text x="100" y="560" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="rgba(255,255,255,0.7)">madrid-verde.web.app</text>
-
-  <!-- Bottom accent line -->
-  <rect x="0" y="620" width="1200" height="10" fill="#52B788"/>
-</svg>`;
-
-// Save SVG
-const svgPath = join(__dirname, '..', 'public', 'og-image.svg');
-writeFileSync(svgPath, svg, 'utf-8');
-console.log('[og] SVG saved');
-
-// Convert to PNG using macOS qlmanage
-import { execSync } from 'node:child_process';
-try {
-  execSync(`qlmanage -t -s 1200 -o "${join(__dirname, '..', 'public')}" "${svgPath}"`, { stdio: 'pipe' });
-  // Rename .svg.png to .png
-  const fs = await import('node:fs');
-  const pngSrc = join(__dirname, '..', 'public', 'og-image.svg.png');
-  const pngDst = join(__dirname, '..', 'public', 'og-image.png');
-  if (fs.existsSync(pngSrc)) {
-    fs.copyFileSync(pngSrc, pngDst);
-    fs.unlinkSync(pngSrc);
-    const size = (fs.statSync(pngDst).size / 1024).toFixed(0);
-    console.log(`[og] PNG saved (${size} KB)`);
+const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px;
+    background: linear-gradient(135deg, #2D6A4F 0%, #264653 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 80px;
+    font-family: 'Inter', sans-serif;
+    color: white; position: relative; overflow: hidden;
   }
-} catch (e) {
-  console.log('[og] PNG conversion failed, SVG only');
+  .bg-circle {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .bg-1 { width: 500px; height: 500px; top: -150px; right: -100px; }
+  .bg-2 { width: 300px; height: 300px; bottom: -80px; left: -60px; }
+  .bg-3 { width: 200px; height: 200px; top: 200px; right: 200px; }
+
+  .title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 72px; font-weight: 400;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .subtitle {
+    font-size: 26px; font-weight: 400;
+    opacity: 0.85; margin-bottom: 12px;
+  }
+  .stats {
+    font-size: 18px; opacity: 0.6;
+    margin-bottom: 40px;
+    letter-spacing: 0.02em;
+  }
+
+  .pills {
+    display: flex; gap: 12px;
+    margin-bottom: 40px;
+  }
+  .pill {
+    padding: 12px 28px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .pill-label {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 600;
+    margin-bottom: 4px; opacity: 0.85;
+  }
+  .pill-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+  }
+  .pill-aire { background: #52B788; }
+  .pill-verde { background: #40916C; }
+  .pill-ruido { background: #E9C46A; color: rgba(0,0,0,0.7); }
+  .pill-movilidad { background: #F4A261; color: rgba(0,0,0,0.7); }
+  .pill-reciclaje { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
+
+  .tagline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; font-style: italic;
+    opacity: 0.45;
+  }
+  .url {
+    position: absolute; bottom: 30px; right: 80px;
+    font-size: 18px; opacity: 0.5; font-weight: 500;
+  }
+  .accent {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 6px; background: #52B788;
+  }
+</style></head>
+<body>
+  <div class="bg-circle bg-1"></div>
+  <div class="bg-circle bg-2"></div>
+  <div class="bg-circle bg-3"></div>
+
+  <div class="title">MadridVerde</div>
+  <div class="subtitle">Indice Verde de Madrid</div>
+  <div class="stats">17 datasets abiertos · 5 sub-indices · 3 APIs en tiempo real</div>
+
+  <div class="pills">
+    <div class="pill pill-aire"><div class="pill-label">Aire</div><div class="pill-value">30%</div></div>
+    <div class="pill pill-verde"><div class="pill-label">Verde</div><div class="pill-value">25%</div></div>
+    <div class="pill pill-ruido"><div class="pill-label">Ruido</div><div class="pill-value">20%</div></div>
+    <div class="pill pill-movilidad"><div class="pill-label">Movilidad</div><div class="pill-value">15%</div></div>
+    <div class="pill pill-reciclaje"><div class="pill-label">Reciclaje</div><div class="pill-value">10%</div></div>
+  </div>
+
+  <div class="tagline">Porque respirar no deberia ser cuestion de codigo postal</div>
+  <div class="url">madrid-verde.web.app</div>
+  <div class="accent"></div>
+</body></html>`;
+
+async function main() {
+  console.log('[og] Launching browser...');
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 2 });
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+
+  // Wait for fonts
+  await page.evaluate(() => document.fonts.ready);
+  await new Promise(r => setTimeout(r, 500));
+
+  const outPath = join(__dirname, '..', 'public', 'og-image.jpg');
+  await page.screenshot({ path: outPath, type: 'jpeg', quality: 90 });
+  await browser.close();
+
+  const { statSync } = await import('fs');
+  const size = (statSync(outPath).size / 1024).toFixed(0);
+  console.log(`[og] Done: ${outPath} (${size} KB)`);
 }
+
+main().catch(e => { console.error(e); process.exit(1); });
