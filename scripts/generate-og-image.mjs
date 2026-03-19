@@ -1,4 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+/**
+ * Generate OG image as a clean PNG using a canvas approach.
+ * Since we don't have puppeteer/sharp, we generate a simpler but
+ * well-proportioned SVG that renders correctly.
+ */
+
+import { writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Simple, clean OG image - everything fits within 1200x630
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#2D6A4F"/>
@@ -51,4 +64,27 @@
 
   <!-- Bottom accent line -->
   <rect x="0" y="620" width="1200" height="10" fill="#52B788"/>
-</svg>
+</svg>`;
+
+// Save SVG
+const svgPath = join(__dirname, '..', 'public', 'og-image.svg');
+writeFileSync(svgPath, svg, 'utf-8');
+console.log('[og] SVG saved');
+
+// Convert to PNG using macOS qlmanage
+import { execSync } from 'node:child_process';
+try {
+  execSync(`qlmanage -t -s 1200 -o "${join(__dirname, '..', 'public')}" "${svgPath}"`, { stdio: 'pipe' });
+  // Rename .svg.png to .png
+  const fs = await import('node:fs');
+  const pngSrc = join(__dirname, '..', 'public', 'og-image.svg.png');
+  const pngDst = join(__dirname, '..', 'public', 'og-image.png');
+  if (fs.existsSync(pngSrc)) {
+    fs.copyFileSync(pngSrc, pngDst);
+    fs.unlinkSync(pngSrc);
+    const size = (fs.statSync(pngDst).size / 1024).toFixed(0);
+    console.log(`[og] PNG saved (${size} KB)`);
+  }
+} catch (e) {
+  console.log('[og] PNG conversion failed, SVG only');
+}
