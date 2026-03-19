@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MapaMadrid from '../components/MapaMadrid.astro';
+import SeccionComparador from '../components/SeccionComparador.astro';
+import SeccionTendencias from '../components/SeccionTendencias.astro';
 import { computeGreenIndex } from '../lib/green-index';
 
 const districts = computeGreenIndex();
@@ -14,58 +16,135 @@ function titleCase(str: string): string {
     .map((w, i) => (i === 0 || !minor.has(w)) ? w.charAt(0).toUpperCase() + w.slice(1) : w)
     .join(' ');
 }
+
+function slugify(name: string): string {
+  return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
 ---
 
 <BaseLayout title="MadridVerde — Indice Verde de Madrid" description="Dashboard medioambiental que transforma 14 datasets abiertos en un Indice Verde por distrito de Madrid">
-  <section class="hero">
-    <div class="hero-text">
+
+  <!-- SECTION: MAPA -->
+  <section id="mapa" class="section">
+    <div class="section-header section-header--hero">
       <h1>Indice Verde de Madrid</h1>
-      <p class="hero-subtitle">14 datasets abiertos, un solo score por distrito</p>
-      <p class="hero-cta">Haz clic en un distrito para ver su scorecard</p>
+      <p class="section-subtitle">14 datasets abiertos, un solo score por distrito</p>
       <div class="search-box">
         <input type="text" id="address-search" placeholder="Busca tu direccion en Madrid..." aria-label="Buscar direccion" autocomplete="off" />
         <ul id="search-results" class="search-results" role="listbox" aria-label="Resultados de busqueda"></ul>
       </div>
     </div>
-    <div class="hero-map">
+
+    <div class="map-wrapper">
       <MapaMadrid />
     </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-value">{avgScore}</span>
+        <span class="stat-label">Media de Madrid</span>
+      </div>
+      <div class="stat-card stat-card--best">
+        <span class="stat-value">{best.score}</span>
+        <span class="stat-label">{titleCase(best.name)}</span>
+        <span class="stat-badge">Mejor distrito</span>
+      </div>
+      <div class="stat-card stat-card--worst">
+        <span class="stat-value">{worst.score}</span>
+        <span class="stat-label">{titleCase(worst.name)}</span>
+        <span class="stat-badge">Necesita atencion</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">14</span>
+        <span class="stat-label">Datasets abiertos</span>
+      </div>
+    </div>
+
+    <div class="ranking">
+      <h2>Ranking de distritos</h2>
+      <div class="ranking-list">
+        {districts.sort((a, b) => b.score - a.score).map((d, i) => (
+          <a href={`/barrio/${slugify(d.name)}`} class="ranking-item">
+            <span class="ranking-pos">#{i + 1}</span>
+            <span class="ranking-bar" style={`width: ${d.score}%; background: ${d.tierColor}`}></span>
+            <span class="ranking-name">{titleCase(d.name)}</span>
+            <span class="ranking-score" style={`color: ${d.tierColor}`}>{d.score}</span>
+          </a>
+        ))}
+      </div>
+    </div>
   </section>
 
-  <section class="stats">
-    <div class="stat-card">
-      <span class="stat-value">{avgScore}</span>
-      <span class="stat-label">Media de Madrid</span>
+  <!-- SECTION: COMPARAR -->
+  <section id="comparar" class="section">
+    <div class="section-header">
+      <h2>Comparar distritos</h2>
+      <p class="section-subtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
     </div>
-    <div class="stat-card stat-card--best">
-      <span class="stat-value">{best.score}</span>
-      <span class="stat-label">{titleCase(best.name)}</span>
-      <span class="stat-badge">Mejor distrito</span>
+    <SeccionComparador />
+  </section>
+
+  <!-- SECTION: TENDENCIAS -->
+  <section id="tendencias" class="section">
+    <div class="section-header">
+      <h2>Tendencias historicas</h2>
+      <p class="section-subtitle">Como ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
     </div>
-    <div class="stat-card stat-card--worst">
-      <span class="stat-value">{worst.score}</span>
-      <span class="stat-label">{titleCase(worst.name)}</span>
-      <span class="stat-badge">Necesita atencion</span>
+    <SeccionTendencias />
+  </section>
+
+  <!-- SECTION: METODOLOGIA -->
+  <section id="metodologia" class="section">
+    <div class="section-header">
+      <h2>Metodologia</h2>
+      <p class="section-subtitle">Transparencia total: como se calcula el Indice Verde</p>
     </div>
-    <div class="stat-card">
-      <span class="stat-value">14</span>
-      <span class="stat-label">Datasets abiertos</span>
+
+    <div class="formula-card">
+      <p class="formula-title">Indice Verde (0-100)</p>
+      <p class="formula">IV = Aire x 0.30 + Verde x 0.25 + Ruido x 0.20 + Movilidad x 0.15 + Reciclaje x 0.10</p>
+    </div>
+
+    <div class="subindex-grid">
+      <div class="subindex-card" style="border-left: 4px solid #2D6A4F">
+        <h3>Aire <span class="sw">30%</span></h3>
+        <p>NO2, PM2.5, PM10, O3 en tiempo real. 24 estaciones, 4 contaminantes. Limites OMS.</p>
+      </div>
+      <div class="subindex-card" style="border-left: 4px solid #52B788">
+        <h3>Verde <span class="sw">25%</span></h3>
+        <p>793.000 arboles censados + m2 zonas verdes por habitante. OMS recomienda minimo 9 m2/hab.</p>
+      </div>
+      <div class="subindex-card" style="border-left: 4px solid #E9C46A">
+        <h3>Ruido <span class="sw">20%</span></h3>
+        <p>37 estaciones acusticas SIVCA. Series desde 1998. OMS recomienda maximo 55 dB.</p>
+      </div>
+      <div class="subindex-card" style="border-left: 4px solid #F4A261">
+        <h3>Movilidad <span class="sw">15%</span></h3>
+        <p>~4.000 sensores de trafico en tiempo real. Nivel de servicio: fluido, denso, congestionado.</p>
+      </div>
+      <div class="subindex-card" style="border-left: 4px solid #264653">
+        <h3>Reciclaje <span class="sw">10%</span></h3>
+        <p>44.251 contenedores por tipo (papel, vidrio, organica, envases) per capita.</p>
+      </div>
+    </div>
+
+    <div class="data-flow-summary">
+      <h3>14 fuentes de datos</h3>
+      <p>Todos los datos proceden de <a href="https://datos.madrid.es" target="_blank" rel="noopener">datos.madrid.es</a> y <a href="https://ciudadesabiertas.madrid.es" target="_blank" rel="noopener">ciudadesabiertas.madrid.es</a>. Los datos en tiempo real se actualizan cada 5-20 minutos. Los datos historicos se procesan en build-time.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier" style="--tier-color: #2D6A4F"><span class="tier-range">85-100</span> Excelente</div>
+      <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span> Bueno</div>
+      <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span> Aceptable</div>
+      <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> Mejorable</div>
+      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> Critico</div>
     </div>
   </section>
 
-  <section class="ranking">
-    <h2>Ranking de distritos</h2>
-    <div class="ranking-list">
-      {districts.sort((a, b) => b.score - a.score).map((d, i) => (
-        <a href={`/barrio/${d.code === '01' ? 'centro' : districts.find(x => x.code === d.code) ? d.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : d.code}`} class="ranking-item">
-          <span class="ranking-pos">#{i + 1}</span>
-          <span class="ranking-bar" style={`width: ${d.score}%; background: ${d.tierColor}`}></span>
-          <span class="ranking-name">{titleCase(d.name)}</span>
-          <span class="ranking-score" style={`color: ${d.tierColor}`}>{d.score}</span>
-        </a>
-      ))}
-    </div>
-  </section>
+</BaseLayout>
+
+<!-- Search geocoding script -->
 <script>
   const input = document.getElementById('address-search') as HTMLInputElement;
   const results = document.getElementById('search-results') as HTMLUListElement;
@@ -75,13 +154,11 @@ function titleCase(str: string): string {
     clearTimeout(debounceTimer);
     const q = input.value.trim();
     if (q.length < 3) { results.classList.remove('visible'); return; }
-
     debounceTimer = window.setTimeout(async () => {
       try {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', Madrid, Spain')}&limit=5&addressdetails=1&viewbox=-3.89,40.31,-3.52,40.56&bounded=1`;
         const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
         const data = await res.json();
-
         results.innerHTML = '';
         if (data.length === 0) {
           results.innerHTML = '<li>Sin resultados</li>';
@@ -91,10 +168,7 @@ function titleCase(str: string): string {
             li.role = 'option';
             li.textContent = item.display_name.replace(', España', '').replace(', Comunidad de Madrid', '');
             li.addEventListener('click', () => {
-              const lat = parseFloat(item.lat);
-              const lon = parseFloat(item.lon);
-              // Dispatch custom event for the map to pick up
-              window.dispatchEvent(new CustomEvent('mv-geocode', { detail: { lat, lon, name: item.display_name } }));
+              window.dispatchEvent(new CustomEvent('mv-geocode', { detail: { lat: parseFloat(item.lat), lon: parseFloat(item.lon) } }));
               results.classList.remove('visible');
               input.value = li.textContent || '';
             });
@@ -102,160 +176,57 @@ function titleCase(str: string): string {
           });
         }
         results.classList.add('visible');
-      } catch { /* silently fail */ }
+      } catch {}
     }, 500);
   });
 
-  // Close on click outside
   document.addEventListener('click', (e) => {
-    if (!(e.target as Element).closest('.search-box')) {
-      results.classList.remove('visible');
-    }
+    if (!(e.target as Element).closest('.search-box')) results.classList.remove('visible');
   });
 </script>
 
-</BaseLayout>
-
 <style>
-  .hero {
-    min-height: 70vh;
-    display: flex;
-    flex-direction: column;
+  /* Sections */
+  .section {
+    padding: 4rem 2rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    scroll-margin-top: 60px;
   }
 
-  .hero-text {
-    padding: 2rem 2rem 1rem;
+  .section:first-child {
+    padding-top: 1.5rem;
+    max-width: 100%;
+  }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header--hero {
     text-align: center;
+    padding: 0 2rem;
   }
 
-  .hero-text h1 {
+  .section-header h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
     color: var(--color-bosque);
   }
 
-  .hero-subtitle {
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
+  .section-header h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--color-bosque);
   }
 
-  .hero-cta {
-    font-size: 0.85rem;
-    color: var(--color-hoja);
-    margin-top: 0.25rem;
-    font-style: italic;
-  }
-
-  .hero-map {
-    flex: 1;
-    margin: 0 2rem 2rem;
-  }
-
-  /* Stats */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    padding: 0 2rem;
-    margin-top: -1rem;
-  }
-
-  .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .stat-value {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    color: var(--color-tinta);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 0.85rem;
+  .section-subtitle {
+    font-size: 1.05rem;
+    margin-top: 0.3rem;
     color: var(--color-piedra);
   }
 
-  .stat-badge {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.25rem;
-  }
-
-  .stat-card--best .stat-value { color: var(--color-bosque); }
-  .stat-card--best .stat-badge { color: var(--color-bosque); }
-  .stat-card--worst .stat-value { color: var(--color-arcilla); }
-  .stat-card--worst .stat-badge { color: var(--color-arcilla); }
-
-  /* Ranking */
-  .ranking {
-    padding: 3rem 2rem 0;
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  .ranking h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .ranking-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .ranking-item {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 1rem;
-    background: white;
-    border-radius: 8px;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.1s;
-  }
-
-  .ranking-item:hover {
-    transform: translateX(4px);
-  }
-
-  .ranking-bar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    opacity: 0.1;
-    border-radius: 8px;
-  }
-
-  .ranking-pos {
-    font-size: 0.8rem;
-    color: var(--color-piedra);
-    font-weight: 600;
-    z-index: 1;
-  }
-
-  .ranking-name {
-    font-weight: 500;
-    color: var(--color-tinta);
-    z-index: 1;
-  }
-
-  .ranking-score {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    z-index: 1;
+  /* Divider between sections */
+  .section + .section {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   /* Search */
@@ -278,82 +249,121 @@ function titleCase(str: string): string {
     color: var(--color-tinta);
   }
 
-  #address-search::placeholder {
-    color: var(--color-piedra);
-    opacity: 0.7;
+  #address-search::placeholder { color: var(--color-piedra); opacity: 0.7; }
+  #address-search:focus { border-color: var(--color-bosque); box-shadow: 0 0 0 3px rgba(45,106,79,0.12); }
+
+  /* Map */
+  .map-wrapper {
+    margin: 0 2rem;
   }
 
-  #address-search:focus {
-    border-color: var(--color-bosque);
-    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem 2rem 0;
   }
+
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .stat-value { font-family: var(--font-display); font-size: 2.2rem; color: var(--color-tinta); line-height: 1; }
+  .stat-label { font-size: 0.8rem; color: var(--color-piedra); }
+  .stat-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
+  .stat-card--best .stat-value { color: var(--color-bosque); }
+  .stat-card--best .stat-badge { color: var(--color-bosque); }
+  .stat-card--worst .stat-value { color: var(--color-arcilla); }
+  .stat-card--worst .stat-badge { color: var(--color-arcilla); }
+
+  /* Ranking */
+  .ranking { padding: 2rem 2rem 0; max-width: 960px; margin: 0 auto; }
+  .ranking h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+  .ranking-list { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .ranking-item {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s;
+  }
+
+  .ranking-item:hover { transform: translateX(4px); }
+  .ranking-bar { position: absolute; left: 0; top: 0; bottom: 0; opacity: 0.1; border-radius: 8px; }
+  .ranking-pos { font-size: 0.8rem; color: var(--color-piedra); font-weight: 600; z-index: 1; }
+  .ranking-name { font-weight: 500; color: var(--color-tinta); z-index: 1; }
+  .ranking-score { font-family: var(--font-display); font-size: 1.4rem; z-index: 1; }
+
+  /* Methodology */
+  .formula-card {
+    background: var(--color-bosque);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .formula-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; }
+  .formula { font-family: var(--font-display); font-size: 1rem; margin-top: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 8px; }
+
+  .subindex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .subindex-card { background: white; border-radius: 10px; padding: 1.25rem; }
+  .subindex-card h3 { font-size: 1rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .subindex-card p { font-size: 0.8rem; line-height: 1.5; color: var(--color-piedra); }
+  .sw { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-bosque); }
+
+  .data-flow-summary { margin-bottom: 1.5rem; }
+  .data-flow-summary h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .data-flow-summary p { font-size: 0.85rem; line-height: 1.6; max-width: 700px; }
+  .data-flow-summary a { font-weight: 500; }
+
+  .tiers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; border-top: 4px solid var(--tier-color); font-size: 0.8rem; }
+  .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
   @media (max-width: 768px) {
-    .hero-map {
-      margin: 0;
-    }
-    .hero-text {
-      padding: 1.5rem 1rem 0.75rem;
-    }
-    .search-box {
-      max-width: 100%;
-    }
-    .stats {
-      grid-template-columns: repeat(2, 1fr);
-      padding: 0 1rem;
-    }
-    .ranking {
-      padding: 2rem 1rem 0;
-    }
+    .section { padding: 3rem 1rem 1.5rem; }
+    .section:first-child { padding-top: 1rem; }
+    .map-wrapper { margin: 0; }
+    .stats { grid-template-columns: repeat(2, 1fr); padding: 1rem 1rem 0; }
+    .ranking { padding: 1.5rem 1rem 0; }
+    .search-box { max-width: 100%; }
+    .subindex-grid { grid-template-columns: 1fr; }
+    .tiers { flex-direction: column; }
   }
 </style>
 
 <style is:global>
   .search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    list-style: none;
-    padding: 0.25rem 0;
-    margin: 6px 0 0;
-    z-index: 1000;
-    display: none;
-    max-height: 220px;
-    overflow-y: auto;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    list-style: none; padding: 0.25rem 0; margin: 6px 0 0; z-index: 1000;
+    display: none; max-height: 220px; overflow-y: auto;
   }
-
-  .search-results.visible {
-    display: block;
-  }
-
-  .search-results li {
-    padding: 0.6rem 1.25rem;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #264653;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    transition: background 0.1s;
-    line-height: 1.4;
-  }
-
-  .search-results li:hover {
-    background: rgba(45, 106, 79, 0.08);
-    color: #2D6A4F;
-  }
-
-  .search-results li:last-child {
-    border-bottom: none;
-  }
-
-  .search-results li:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  .search-results li:last-child {
-    border-radius: 0 0 12px 12px;
-  }
+  .search-results.visible { display: block; }
+  .search-results li { padding: 0.6rem 1.25rem; cursor: pointer; font-size: 0.85rem; color: #264653; border-bottom: 1px solid rgba(0,0,0,0.04); transition: background 0.1s; line-height: 1.4; }
+  .search-results li:hover { background: rgba(45,106,79,0.08); color: #2D6A4F; }
+  .search-results li:last-child { border-bottom: none; }
 </style>
