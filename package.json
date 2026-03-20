@@ -1,7 +1,7 @@
 {
   "name": "madridverde",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "private": true,
   "description": "Dashboard medioambiental de Madrid — Indice Verde por distrito",
   "engines": {
