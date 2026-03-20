@@ -22,7 +22,7 @@ function slugify(name: string): string {
 }
 ---
 
-<BaseLayout title="MadridVerde — Indice Verde de Madrid" description="Dashboard medioambiental que transforma 14 datasets abiertos en un Indice Verde por distrito de Madrid">
+<BaseLayout title="MadridVerde — Índice Verde de Madrid" description="Dashboard medioambiental que transforma 14 datasets abiertos en un Índice Verde por distrito de Madrid">
 
   <!-- SECTION: MAPA -->
   <section id="mapa" class="section">
@@ -144,6 +144,49 @@ function slugify(name: string): string {
       <p class="section-subtitle" data-i18n="index.trendsSubtitle">Como ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
     </div>
     <SeccionTendencias />
+  </section>
+
+  <!-- SECTION: MCP / PREGUNTA A TU IA -->
+  <section id="mcp" class="section">
+    <div class="section-header">
+      <h2 data-i18n="index.mcpTitle">Pregunta a tu IA sobre Madrid</h2>
+      <p class="section-subtitle" data-i18n="index.mcpSubtitle">Integra los datos de MadridVerde en Claude, ChatGPT o Cursor</p>
+    </div>
+    <div class="mcp-card">
+    <div class="mcp-content">
+      <div class="mcp-demo">
+        <div class="mcp-chat">
+          <div class="mcp-msg mcp-msg--user">
+            <p data-i18n="index.mcpQ1">Como esta la calidad del aire en Chamberi ahora mismo?</p>
+          </div>
+          <div class="mcp-msg mcp-msg--ai">
+            <p data-i18n="index.mcpA1">Chamberi tiene un nivel de NO2 de 28 ug/m3 (por debajo del limite UE de 40). La estacion mas cercana es Cuatro Caminos. Indice Verde del distrito: 67/100 (Aceptable).</p>
+          </div>
+          <div class="mcp-msg mcp-msg--user">
+            <p data-i18n="index.mcpQ2">Hay incidencias en la linea 27?</p>
+          </div>
+          <div class="mcp-msg mcp-msg--ai">
+            <p data-i18n="index.mcpA2">Si, hay 2 alertas activas en la linea 27: una concentracion en paseo del Prado y un evento en el Estadio Santiago Bernabeu que afectan al itinerario.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mcp-info">
+        <h3 data-i18n="index.mcpHowTitle">Como funciona</h3>
+        <p data-i18n="index.mcpHowDesc">MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 8 herramientas, datos en tiempo real, sin API key.</p>
+        <div class="mcp-tools-list">
+          <span class="mcp-tool-tag">get_air_quality</span>
+          <span class="mcp-tool-tag">get_noise_levels</span>
+          <span class="mcp-tool-tag">get_green_index</span>
+          <span class="mcp-tool-tag">get_bicimad</span>
+          <span class="mcp-tool-tag">get_traffic</span>
+          <span class="mcp-tool-tag">get_emt_alerts</span>
+          <span class="mcp-tool-tag">get_green_areas</span>
+          <span class="mcp-tool-tag">compare_districts</span>
+        </div>
+        <a href="https://github.com/iMark21/madridverde-mcp" target="_blank" rel="noopener" class="mcp-cta" data-i18n="index.mcpCta">Ver en GitHub</a>
+      </div>
+    </div>
+    </div>
   </section>
 
   <!-- SECTION: METODOLOGIA -->
@@ -709,6 +752,99 @@ function slugify(name: string): string {
     margin-top: 1rem; font-size: 0.75rem; color: #6C757D; font-style: italic;
   }
 
+  /* MCP Section */
+  .mcp-card {
+    background: var(--color-bosque, #2D6A4F);
+    color: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+  }
+
+  .mcp-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-top: 1.5rem;
+    align-items: start;
+  }
+
+  .mcp-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mcp-msg {
+    padding: 0.85rem 1.15rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .mcp-msg p { margin: 0; }
+
+  .mcp-msg--user {
+    background: rgba(255,255,255,0.15);
+    align-self: flex-end;
+    max-width: 85%;
+    border-bottom-right-radius: 4px;
+  }
+
+  .mcp-msg--ai {
+    background: rgba(255,255,255,0.08);
+    align-self: flex-start;
+    max-width: 90%;
+    border-bottom-left-radius: 4px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .mcp-info h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .mcp-info p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1.25rem;
+  }
+
+  .mcp-tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .mcp-tool-tag {
+    font-family: monospace;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .mcp-cta {
+    display: inline-block;
+    padding: 0.65rem 1.75rem;
+    background: white;
+    color: var(--color-bosque, #2D6A4F);
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .mcp-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
   .tiers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
@@ -723,6 +859,7 @@ function slugify(name: string): string {
     .search-box { max-width: 100%; }
     .subindex-grid { grid-template-columns: 1fr; }
     .tiers { flex-direction: column; }
+    .mcp-content { grid-template-columns: 1fr; gap: 1.5rem; }
   }
 </style>
 

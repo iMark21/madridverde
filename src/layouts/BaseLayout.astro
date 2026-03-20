@@ -4,7 +4,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets abiertos, un Indice Verde por distrito' } = Astro.props;
+const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets abiertos, un Índice Verde por distrito' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -82,7 +82,7 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
   <body>
     <a href="#main" class="skip-link" data-i18n="nav.skipToContent">Saltar al contenido</a>
 
-    <nav class="nav" aria-label="Navegacion principal" data-i18n-aria="nav.ariaLabel">
+    <nav class="nav" aria-label="Navegación principal" data-i18n-aria="nav.ariaLabel">
       <a href="/" class="nav-logo">MadridVerde</a>
       <div class="nav-right">
         <ul class="nav-links">
@@ -91,7 +91,8 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
           <li><a href="/#emt" data-i18n="nav.emt">EMT</a></li>
           <li><a href="/#comparar" data-i18n="nav.compare">Comparar</a></li>
           <li><a href="/#tendencias" data-i18n="nav.trends">Tendencias</a></li>
-          <li><a href="/#metodologia" data-i18n="nav.methodology">Metodologia</a></li>
+          <li><a href="/#mcp" data-i18n="nav.mcp">IA</a></li>
+          <li><a href="/#metodologia" data-i18n="nav.methodology">Metodología</a></li>
         </ul>
         <div class="lang-toggle" role="group" aria-label="Language">
           <button class="lang-toggle-btn lang-toggle-btn--active" data-lang="es" type="button">ES</button>
@@ -152,14 +153,14 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
 
     <footer class="footer">
       <p>&copy; {new Date().getFullYear()} <span data-i18n="footer.copyright">MadridVerde — Datos abiertos del Ayuntamiento de Madrid</span></p>
-      <p class="footer-tagline" data-i18n="footer.tagline">Porque respirar no deberia ser cuestion de codigo postal</p>
+      <p class="footer-tagline" data-i18n="footer.tagline">Porque respirar no debería ser cuestión de código postal</p>
     </footer>
 
     <!-- Cookie consent banner -->
     <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Aviso de cookies" hidden>
-      <p class="cookie-text" data-i18n="cookies.text">Este sitio usa cookies analiticas para medir el uso.</p>
+      <p class="cookie-text" data-i18n="cookies.text">Este sitio usa cookies analíticas para medir el uso.</p>
       <div class="cookie-actions">
-        <a href="/#metodologia" class="cookie-link" data-i18n="cookies.info">Mas info</a>
+        <a href="/#metodologia" class="cookie-link" data-i18n="cookies.info">Más info</a>
         <button class="cookie-accept" id="cookie-accept" data-i18n="cookies.accept">Aceptar</button>
       </div>
     </div>
@@ -226,7 +227,7 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
         }
 
         // --- section_viewed: fire once per section when it enters viewport ---
-        var sectionIds = ['mapa', 'bicimad', 'emt', 'comparar', 'tendencias', 'metodologia'];
+        var sectionIds = ['mapa', 'bicimad', 'emt', 'comparar', 'tendencias', 'mcp', 'metodologia'];
         var sectionSeen = {};
 
         if ('IntersectionObserver' in window) {
