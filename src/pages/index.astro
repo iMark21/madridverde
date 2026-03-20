@@ -96,6 +96,38 @@ function slugify(name: string): string {
     </div>
   </section>
 
+  <!-- SECTION: EMT -->
+  <section id="emt" class="section">
+    <div class="section-header">
+      <h2 data-i18n="index.emtTitle">Autobuses EMT</h2>
+      <p class="section-subtitle" data-i18n="index.emtSubtitle">4.910 paradas y 235 lineas — frecuencia media en hora punta y alertas en tiempo real</p>
+    </div>
+    <div class="emt-dashboard">
+      <div class="emt-global-stats">
+        <div class="emt-gstat"><strong>4.910</strong> <span data-i18n="index.emtParadas">paradas</span></div>
+        <div class="emt-gstat"><strong>235</strong> <span data-i18n="index.emtLineas">lineas</span></div>
+        <div class="emt-gstat"><strong>21</strong> <span data-i18n="index.emtDistritos">distritos cubiertos</span></div>
+      </div>
+      <div class="emt-alerts" id="emt-alerts">
+        <p class="emt-alerts-loading" data-i18n="index.emtAlertsLoading">Cargando incidencias en tiempo real...</p>
+      </div>
+      <div class="emt-district-table">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="index.emtThDistrito">Distrito</th>
+              <th data-i18n="index.emtThParadas">Paradas</th>
+              <th data-i18n="index.emtThLineas">Lineas</th>
+              <th data-i18n="index.emtThFreq">Freq. media (min)</th>
+            </tr>
+          </thead>
+          <tbody id="emt-table-body"></tbody>
+        </table>
+      </div>
+      <p class="emt-source-note" data-i18n="index.emtSourceNote">Fuente: EMT Madrid — datos.emtmadrid.es (GTFS) + openapi.emtmadrid.es (alertas en tiempo real)</p>
+    </div>
+  </section>
+
   <!-- SECTION: COMPARAR -->
   <section id="comparar" class="section">
     <div class="section-header">
@@ -320,6 +352,87 @@ function slugify(name: string): string {
       if (window.__mvAnalytics) {
         window.__mvAnalytics('csv_exported', { type: 'all' });
       }
+    });
+  }
+</script>
+
+<!-- EMT section: table + live alerts -->
+<script>
+  import emtData from '../data/emt.json';
+  import { t } from '../i18n/i18n.js';
+
+  // Populate EMT table
+  const tbody = document.getElementById('emt-table-body');
+  if (tbody) {
+    const rows = (emtData as any[])
+      .sort((a, b) => b.totalStops - a.totalStops)
+      .map((d) => {
+        const freq = d.avgHeadwayMin ? `${d.avgHeadwayMin}` : '--';
+        return `<tr>
+          <td><a href="/barrio/${d.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}">${d.name}</a></td>
+          <td>${d.totalStops}</td>
+          <td>${d.totalLines}</td>
+          <td>${freq}</td>
+        </tr>`;
+      })
+      .join('');
+    tbody.innerHTML = rows;
+  }
+
+  // Fetch live service alerts (protobuf — public endpoint, no auth)
+  const alertsEl = document.getElementById('emt-alerts');
+  if (alertsEl) {
+    import('gtfs-realtime-bindings').then(({ transit_realtime }) => {
+      fetch('https://openapi.emtmadrid.es/v1/bus/servicealerts/proto')
+        .then((r) => r.arrayBuffer())
+        .then((buf) => {
+          const feed = transit_realtime.FeedMessage.decode(new Uint8Array(buf));
+          const now = Math.floor(Date.now() / 1000);
+
+          // Filter active alerts (current or future)
+          const active = feed.entity.filter((e) => {
+            const a = e.alert;
+            if (!a?.activePeriod?.length) return true;
+            return a.activePeriod.some((p) => {
+              const end = typeof p.end === 'object' ? p.end.toNumber() : Number(p.end || 0);
+              return end === 0 || end > now;
+            });
+          });
+
+          // Deduplicate by header text
+          const seenHeaders = new Set();
+          const unique = active.filter((e) => {
+            const header = e.alert?.headerText?.translation?.[0]?.text ?? '';
+            if (!header || seenHeaders.has(header)) return false;
+            seenHeaders.add(header);
+            return true;
+          });
+
+          if (unique.length === 0) {
+            alertsEl.innerHTML = `<p class="emt-no-alerts">${t('index.emtNoAlerts')}</p>`;
+            return;
+          }
+
+          const html = unique.slice(0, 12).map((e, i) => {
+            const a = e.alert!;
+            const header = a.headerText?.translation?.[0]?.text ?? '';
+            const desc = a.descriptionText?.translation?.[0]?.text ?? '';
+            return `<details class="emt-alert-item">
+              <summary>${header}</summary>
+              <p>${desc}</p>
+            </details>`;
+          }).join('');
+
+          alertsEl.innerHTML = `
+            <h3>${t('index.emtAlertsTitle')} <span class="emt-alert-count">${unique.length}</span></h3>
+            ${html}
+          `;
+        })
+        .catch(() => {
+          alertsEl.innerHTML = `<p class="emt-alerts-error">${t('index.emtAlertsError')}</p>`;
+        });
+    }).catch(() => {
+      alertsEl.innerHTML = '';
     });
   }
 </script>
@@ -552,6 +665,48 @@ function slugify(name: string): string {
   /* BiciMAD */
   .bicimad-dashboard { margin-top: 1rem; }
 
+  /* EMT Section */
+  .emt-dashboard { margin-top: 1rem; }
+
+  .emt-global-stats {
+    display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+
+  .emt-gstat {
+    font-size: 0.95rem; color: #264653;
+  }
+
+  .emt-gstat strong {
+    font-family: var(--font-display); font-size: 1.5rem; color: #0178BC; margin-right: 0.3rem;
+  }
+
+  .emt-district-table { margin-top: 1.5rem; overflow-x: auto; }
+
+  .emt-district-table table {
+    width: 100%; border-collapse: collapse; font-size: 0.85rem;
+  }
+
+  .emt-district-table th {
+    text-align: left; padding: 0.6rem 0.75rem; border-bottom: 2px solid #0178BC;
+    font-weight: 600; color: #264653; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+
+  .emt-district-table td {
+    padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .emt-district-table td:first-child a {
+    color: #0178BC; text-decoration: none; font-weight: 500;
+  }
+
+  .emt-district-table td:first-child a:hover { text-decoration: underline; }
+
+  .emt-district-table tr:hover { background: rgba(1,120,188,0.04); }
+
+  .emt-source-note {
+    margin-top: 1rem; font-size: 0.75rem; color: #6C757D; font-style: italic;
+  }
+
   .tiers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
@@ -649,5 +804,52 @@ function slugify(name: string): string {
   @media (max-width: 768px) {
     .bicimad-stats { grid-template-columns: repeat(2, 1fr); }
     .bici-row { grid-template-columns: 1fr 100px 50px; font-size: 0.8rem; }
+  }
+
+  /* EMT Alerts (global — rendered via innerHTML) */
+  .emt-alerts h3 {
+    font-size: 1.1rem; margin-bottom: 0.75rem; color: #264653;
+  }
+
+  .emt-alert-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 1.5rem; padding: 0.1rem 0.4rem; background: #E76F51;
+    color: white; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
+    margin-left: 0.4rem; vertical-align: middle;
+  }
+
+  .emt-alert-item {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .emt-alert-item summary {
+    padding: 0.65rem 0; font-size: 0.85rem; color: var(--color-tinta, #264653);
+    cursor: pointer; line-height: 1.4; list-style: none;
+  }
+
+  .emt-alert-item summary::-webkit-details-marker { display: none; }
+
+  .emt-alert-item summary::before {
+    content: '+'; display: inline-block; width: 1.2rem; font-weight: 600;
+    color: var(--color-piedra, #6C757D); font-size: 0.9rem;
+  }
+
+  .emt-alert-item[open] summary::before { content: '−'; }
+
+  .emt-alert-item p {
+    padding: 0 0 0.75rem 1.2rem; font-size: 0.8rem;
+    color: var(--color-piedra, #6C757D); line-height: 1.5; margin: 0;
+  }
+
+  .emt-no-alerts {
+    color: #2D6A4F; font-style: italic; font-size: 0.85rem;
+  }
+
+  .emt-alerts-error {
+    color: #6C757D; font-style: italic; font-size: 0.85rem;
+  }
+
+  .emt-alerts-loading {
+    color: #6C757D; font-style: italic; font-size: 0.85rem;
   }
 </style>

@@ -24,6 +24,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "gtfs-realtime-bindings": "^1.1.1",
     "puppeteer": "^24.39.1"
   }
 }

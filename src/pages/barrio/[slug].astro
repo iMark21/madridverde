@@ -5,6 +5,8 @@ import districtsIndex from '../../data/districts-index.json';
 import treesData from '../../data/trees.json';
 import recyclingData from '../../data/recycling.json';
 import { computeGreenIndex, getContextPhrase } from '../../lib/green-index';
+import emtData from '../../data/emt.json';
+import emtLinesData from '../../data/emt-lines.json';
 
 export function getStaticPaths() {
   return districtsIndex.map((d) => ({
@@ -33,6 +35,21 @@ const recyclingInfo = (recyclingData as any[]).find((r) => {
 });
 
 const population = district?.population || 0;
+const emtDistrict = (emtData as any[]).find((e: any) => e.code === code);
+const emtLines: string[] = emtDistrict?.lines ?? [];
+const emtStops: number = emtDistrict?.totalStops ?? 0;
+const emtLineCount: number = emtDistrict?.totalLines ?? 0;
+const emtStopsPer1000 = population > 0 ? ((emtStops / population) * 1000).toFixed(1) : '--';
+
+// Build line detail lookup
+const emtLineMap = new Map((emtLinesData as any[]).map((l: any) => [l.line, l]));
+const emtLinesHtmlRich = emtLines.map((line) => {
+  const info = emtLineMap.get(line);
+  const route = info?.routeName ?? '';
+  const freq = info?.avgHeadwayMin ?? '';
+  return `<button class="emt-line-badge" data-line="${line}" data-route="${route}" data-freq="${freq}">${line}</button>`;
+}).join('');
+const emtLinesHtml = emtLines.map((l) => `<span class="emt-line-badge">${l}</span>`).join('');
 const greenM2PerCap = treeInfo && population ? (treeInfo.greenM2 / population).toFixed(1) : '--';
 const treesPer1000 = treeInfo && population ? Math.round((treeInfo.totalTrees / population) * 1000) : '--';
 const containersPer1000 = recyclingInfo && population ? ((recyclingInfo.total / population) * 1000).toFixed(1) : '--';
@@ -164,6 +181,16 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
             <span class="detail-value">{population.toLocaleString('es-ES')}</span>
             <span class="detail-label" data-i18n="scorecard.populationLabel">habitantes (padron 2025)</span>
           </div>
+          <div class="detail-card" style={emtStops === 0 ? 'display:none' : ''}>
+            <span class="detail-icon">🚌</span>
+            <span class="detail-value">{emtStops}</span>
+            <span class="detail-label" data-i18n="scorecard.busStops">paradas de autobus EMT</span>
+          </div>
+          <div class="detail-card" style={emtLineCount === 0 ? 'display:none' : ''}>
+            <span class="detail-icon">🚍</span>
+            <span class="detail-value">{emtLineCount}</span>
+            <span class="detail-label" data-i18n="scorecard.busLines">lineas EMT</span>
+          </div>
         </div>
 
         {treeInfo?.topSpecies && treeInfo.topSpecies.length > 0 && (
@@ -196,6 +223,18 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
             </div>
           </div>
         )}
+      </div>
+
+      <div class="emt-section" style={emtStops === 0 ? 'display:none' : ''}>
+        <h2 data-i18n="scorecard.emtTitle">Autobuses EMT</h2>
+        <div class="emt-summary">
+          <span class="emt-stat"><strong>{emtStops}</strong> <span data-i18n="scorecard.emtStopsLabel">paradas</span></span>
+          <span class="emt-stat"><strong>{emtLineCount}</strong> <span data-i18n="scorecard.emtLinesLabel">lineas</span></span>
+          <span class="emt-stat"><strong>{emtStopsPer1000}</strong> <span data-i18n="scorecard.emtStopsPer1000">paradas/1.000 hab</span></span>
+        </div>
+        <div class="emt-lines" set:html={emtLinesHtmlRich} />
+        <div class="emt-line-detail" id="emt-line-detail"></div>
+        <p class="emt-source" data-i18n="scorecard.emtSource">Fuente: EMT Madrid — datos.emtmadrid.es (GTFS)</p>
       </div>
 
       <div class="bicimad-district" id="bicimad-district">
@@ -432,6 +471,96 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       }
     });
   }
+
+  // --- EMT line detail: click badge → show route, frequency, incidents ---
+  const lineDetailEl = document.getElementById('emt-line-detail');
+  const lineBadges = document.querySelectorAll('.emt-line-badge[data-line]');
+
+  // Fetch alerts once, cache
+  let emtAlerts: any[] | null = null;
+  async function getAlerts() {
+    if (emtAlerts !== null) return emtAlerts;
+    try {
+      const { transit_realtime } = await import('gtfs-realtime-bindings');
+      const res = await fetch('https://openapi.emtmadrid.es/v1/bus/servicealerts/proto');
+      const buf = await res.arrayBuffer();
+      const feed = transit_realtime.FeedMessage.decode(new Uint8Array(buf));
+      emtAlerts = feed.entity.map((e: any) => e.alert).filter(Boolean);
+    } catch {
+      emtAlerts = [];
+    }
+    return emtAlerts!;
+  }
+
+  lineBadges.forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const line = btn.getAttribute('data-line') || '';
+      const route = btn.getAttribute('data-route') || '';
+      const freq = btn.getAttribute('data-freq') || '';
+
+      // Highlight active badge
+      lineBadges.forEach((b) => b.classList.remove('emt-line-badge--active'));
+      btn.classList.add('emt-line-badge--active');
+
+      if (!lineDetailEl) return;
+
+      // Build detail
+      let html = `<div class="emt-ld-header"><strong>${tCard('scorecard.emtLineLabel', { line })}</strong>`;
+      if (route) html += ` <span class="emt-ld-route">${route}</span>`;
+      html += `</div>`;
+
+      if (freq) {
+        html += `<p class="emt-ld-freq">${tCard('scorecard.emtFreqLabel', { freq })}</p>`;
+      }
+
+      // Show loading for alerts
+      html += `<p class="emt-ld-loading">${tCard('scorecard.emtAlertLoading')}</p>`;
+      lineDetailEl.innerHTML = html;
+      lineDetailEl.style.display = '';
+
+      // Fetch and filter alerts for this line
+      const alerts = await getAlerts();
+      const padLine = line.padStart(3, '0');
+      const seen = new Set<string>();
+      const lineAlerts = alerts.filter((a: any) => {
+        const matchEntity = a.informedEntity?.some((ie: any) => {
+          const rid = ie.routeId || '';
+          return rid === line || rid === padLine;
+        });
+        if (!matchEntity) {
+          const header = a.headerText?.translation?.[0]?.text || '';
+          const desc = a.descriptionText?.translation?.[0]?.text || '';
+          const re = new RegExp(`\\b0*${line}\\b`);
+          if (!re.test(header) && !re.test(desc)) return false;
+        }
+        // Deduplicate by header text
+        const key = a.headerText?.translation?.[0]?.text || '';
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      // Replace loading with results
+      let alertsHtml = '';
+      if (lineAlerts.length > 0) {
+        alertsHtml = `<div class="emt-ld-alerts">
+          <p class="emt-ld-alerts-title">${tCard('scorecard.emtLineAlerts', { count: String(lineAlerts.length) })}</p>
+          ${lineAlerts.slice(0, 5).map((a: any) => {
+            const h = a.headerText?.translation?.[0]?.text || '';
+            const d = a.descriptionText?.translation?.[0]?.text || '';
+            return `<details class="emt-ld-alert-item"><summary>${h}</summary><p>${d}</p></details>`;
+          }).join('')}
+        </div>`;
+      } else {
+        alertsHtml = `<p class="emt-ld-no-alerts">${tCard('scorecard.emtNoLineAlerts')}</p>`;
+      }
+
+      // Remove loading, append alerts
+      const loadingEl = lineDetailEl.querySelector('.emt-ld-loading');
+      if (loadingEl) loadingEl.remove();
+      lineDetailEl.insertAdjacentHTML('beforeend', alertsHtml);
+    });
+  });
 </script>
 
 </BaseLayout>
@@ -635,6 +764,161 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
     margin-bottom: 0;
   }
 
+  /* EMT Bus section */
+  .emt-section {
+    margin-top: 3rem;
+  }
+
+  .emt-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .emt-summary {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .emt-stat {
+    font-size: 0.9rem;
+    color: #264653;
+  }
+
+  .emt-stat strong {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: #0178BC;
+    margin-right: 0.25rem;
+  }
+
+  :global(.emt-lines) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  :global(.emt-line-badge) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    padding: 0.25rem 0.5rem;
+    background: #0178BC;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  :global(.emt-line-badge:hover) {
+    background: #015f96;
+    transform: translateY(-1px);
+  }
+
+  :global(.emt-line-badge--active) {
+    background: var(--color-bosque, #2D6A4F);
+    box-shadow: 0 0 0 2px rgba(45,106,79,0.3);
+  }
+
+  :global(.emt-line-detail) {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-arena, #F5F1EB);
+    border-radius: 8px;
+  }
+
+  :global(.emt-ld-header) {
+    font-size: 0.95rem;
+    color: var(--color-tinta, #264653);
+  }
+
+  :global(.emt-ld-header strong) {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+  }
+
+  :global(.emt-ld-route) {
+    color: var(--color-piedra, #6C757D);
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+
+  :global(.emt-ld-freq) {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--color-tinta, #264653);
+  }
+
+  :global(.emt-ld-alerts) {
+    margin-top: 0.75rem;
+  }
+
+  :global(.emt-ld-alerts-title) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #E76F51;
+    margin-bottom: 0.35rem;
+  }
+
+  :global(.emt-ld-alert-item) {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  :global(.emt-ld-alert-item summary) {
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    color: var(--color-tinta, #264653);
+    cursor: pointer;
+    list-style: none;
+    line-height: 1.35;
+  }
+
+  :global(.emt-ld-alert-item summary::-webkit-details-marker) { display: none; }
+
+  :global(.emt-ld-alert-item summary::before) {
+    content: '+';
+    display: inline-block;
+    width: 1rem;
+    font-weight: 600;
+    color: var(--color-piedra, #6C757D);
+  }
+
+  :global(.emt-ld-alert-item[open] summary::before) { content: '−'; }
+
+  :global(.emt-ld-alert-item p) {
+    padding: 0 0 0.6rem 1rem;
+    font-size: 0.78rem;
+    color: var(--color-piedra, #6C757D);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  :global(.emt-ld-no-alerts) {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-hoja, #52B788);
+    font-style: italic;
+  }
+
+  :global(.emt-ld-loading) {
+    font-size: 0.8rem;
+    color: var(--color-piedra, #6C757D);
+    font-style: italic;
+    margin-top: 0.35rem;
+  }
+
+  .emt-source {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #6C757D;
+    font-style: italic;
+  }
+
   /* BiciMAD district */
   .bicimad-district {
     margin-top: 3rem;
@@ -718,7 +1002,7 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 
   .details-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
   }
 
