@@ -1,0 +1,527 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets abiertos, un Índice Verde por distrito' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:image" content="https://madrid-verde.web.app/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://madrid-verde.web.app" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://madrid-verde.web.app/og-image.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <title>{title}</title>
+
+    <!-- Firebase Analytics -->
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+      import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js';
+
+      const app = initializeApp({
+        apiKey: 'FIREBASE_API_KEY',
+        authDomain: 'madrid-verde.firebaseapp.com',
+        projectId: 'madrid-verde',
+        storageBucket: 'madrid-verde.firebasestorage.app',
+        messagingSenderId: 'FIREBASE_SENDER_ID',
+        appId: 'FIREBASE_APP_ID',
+        measurementId: 'FIREBASE_MEASUREMENT_ID',
+      });
+
+      try {
+        const analytics = getAnalytics(app);
+        logEvent(analytics, 'page_view');
+
+        // Expose a global helper so components can fire events without
+        // re-importing Firebase. Accepts an event name + optional params.
+        window.__mvAnalytics = function (eventName, params) {
+          try { logEvent(analytics, eventName, params); } catch (_) {}
+        };
+
+        // Auto-track any element that carries data-analytics="event_name".
+        // Picks up data-analytics-* attributes as event parameters.
+        document.addEventListener('click', function (e) {
+          var target = e.target.closest('[data-analytics]');
+          if (!target) return;
+          var name = target.getAttribute('data-analytics');
+          if (!name) return;
+          var params = {};
+          Array.from(target.attributes).forEach(function (attr) {
+            if (attr.name.startsWith('data-analytics-') && attr.name !== 'data-analytics') {
+              params[attr.name.replace('data-analytics-', '')] = attr.value;
+            }
+          });
+          logEvent(analytics, name, params);
+        });
+      } catch (e) {
+        // Analytics may be blocked by ad blockers — provide a no-op fallback
+        window.__mvAnalytics = function () {};
+      }
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link" data-i18n="nav.skipToContent">Saltar al contenido</a>
+
+    <nav class="nav" aria-label="Navegación principal" data-i18n-aria="nav.ariaLabel">
+      <a href="/" class="nav-logo">MadridVerde</a>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="/#mapa" data-i18n="nav.map">Mapa</a></li>
+          <li><a href="/#bicimad" data-i18n="nav.bicimad">BiciMAD</a></li>
+          <li><a href="/#emt" data-i18n="nav.emt">EMT</a></li>
+          <li><a href="/#comparar" data-i18n="nav.compare">Comparar</a></li>
+          <li><a href="/#tendencias" data-i18n="nav.trends">Tendencias</a></li>
+          <li><a href="/#mcp" data-i18n="nav.mcp">IA</a></li>
+          <li><a href="/#metodologia" data-i18n="nav.methodology">Metodología</a></li>
+        </ul>
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle-btn lang-toggle-btn--active" data-lang="es" type="button">ES</button>
+          <button class="lang-toggle-btn" data-lang="en" type="button">EN</button>
+        </div>
+      </div>
+    </nav>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <script>
+      // Highlight active nav link based on scroll position
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-links a');
+
+      if (sections.length > 0 && navLinks.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              navLinks.forEach((link) => {
+                const href = link.getAttribute('href') || '';
+                if (href.includes('#' + id)) {
+                  link.setAttribute('aria-current', 'page');
+                } else {
+                  link.removeAttribute('aria-current');
+                }
+              });
+            }
+          });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+
+        sections.forEach((section) => observer.observe(section));
+      }
+    </script>
+
+    <script>
+      import { initI18n, setLang, getLang } from '../i18n/i18n.js';
+
+      // Initialize i18n on page load
+      initI18n();
+
+      // Language toggle buttons
+      document.querySelectorAll('.lang-toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          if (!lang) return;
+          const previous = getLang();
+          if (lang !== previous && window.__mvAnalytics) {
+            window.__mvAnalytics('language_changed', { language: lang, previous });
+          }
+          setLang(lang);
+        });
+      });
+    </script>
+
+    <footer class="footer">
+      <p>&copy; {new Date().getFullYear()} <span data-i18n="footer.copyright">MadridVerde — Datos abiertos del Ayuntamiento de Madrid</span></p>
+      <p class="footer-tagline" data-i18n="footer.tagline">Porque respirar no debería ser cuestión de código postal</p>
+    </footer>
+
+    <!-- Cookie consent banner -->
+    <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Aviso de cookies" hidden>
+      <p class="cookie-text" data-i18n="cookies.text">Este sitio usa cookies analíticas para medir el uso.</p>
+      <div class="cookie-actions">
+        <a href="/#metodologia" class="cookie-link" data-i18n="cookies.info">Más info</a>
+        <button class="cookie-accept" id="cookie-accept" data-i18n="cookies.accept">Aceptar</button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        if (localStorage.getItem('cookieConsent') === 'true') return;
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        banner.removeAttribute('hidden');
+        // Trigger slide-up after a frame so the transition plays
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            banner.classList.add('cookie-banner--visible');
+          });
+        });
+        document.getElementById('cookie-accept').addEventListener('click', function () {
+          localStorage.setItem('cookieConsent', 'true');
+          if (window.__mvAnalytics) {
+            window.__mvAnalytics('cookie_accepted');
+          }
+          banner.classList.remove('cookie-banner--visible');
+          banner.addEventListener('transitionend', function () {
+            banner.setAttribute('hidden', '');
+          }, { once: true });
+        });
+      })();
+    </script>
+    <!-- Engagement analytics: scroll depth, time on page, section viewed -->
+    <script>
+      (function () {
+        // --- scroll_depth: fire at 25%, 50%, 75%, 100% ---
+        var scrollFired = {};
+        var scrollThresholds = [25, 50, 75, 100];
+
+        function checkScroll() {
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          if (docHeight <= 0) return;
+          var pct = Math.round((scrollTop / docHeight) * 100);
+          for (var i = 0; i < scrollThresholds.length; i++) {
+            var t = scrollThresholds[i];
+            if (pct >= t && !scrollFired[t]) {
+              scrollFired[t] = true;
+              if (window.__mvAnalytics) {
+                window.__mvAnalytics('scroll_depth', { depth: String(t) });
+              }
+            }
+          }
+        }
+
+        window.addEventListener('scroll', checkScroll, { passive: true });
+
+        // --- time_on_page: fire at 30s, 60s, 180s, 300s ---
+        var timeThresholds = [30, 60, 180, 300];
+        for (var j = 0; j < timeThresholds.length; j++) {
+          (function (seconds) {
+            setTimeout(function () {
+              if (window.__mvAnalytics) {
+                window.__mvAnalytics('time_on_page', { seconds: String(seconds) });
+              }
+            }, seconds * 1000);
+          })(timeThresholds[j]);
+        }
+
+        // --- section_viewed: fire once per section when it enters viewport ---
+        var sectionIds = ['mapa', 'bicimad', 'emt', 'comparar', 'tendencias', 'mcp', 'metodologia'];
+        var sectionSeen = {};
+
+        if ('IntersectionObserver' in window) {
+          var sectionObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                var id = entry.target.id;
+                if (id && !sectionSeen[id]) {
+                  sectionSeen[id] = true;
+                  if (window.__mvAnalytics) {
+                    window.__mvAnalytics('section_viewed', { section_name: id });
+                  }
+                }
+              }
+            });
+          }, { threshold: 0.3 });
+
+          sectionIds.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) sectionObserver.observe(el);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --color-bosque: #2D6A4F;
+    --color-hoja: #40916C;
+    --color-salvia: #52B788;
+    --color-arena: #F5F1EB;
+    --color-piedra: #6C757D;
+    --color-arcilla: #E76F51;
+    --color-ambar: #E9C46A;
+    --color-tinta: #264653;
+
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  html {
+    font-family: var(--font-body);
+    color: var(--color-piedra);
+    background-color: var(--color-arena);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    color: var(--color-tinta);
+    line-height: 1.2;
+  }
+
+  a {
+    color: var(--color-hoja);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-bosque);
+  }
+
+  /* Focus visible for keyboard navigation */
+  :focus-visible {
+    outline: 3px solid var(--color-bosque);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove outline for mouse clicks */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--color-bosque);
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;
+    border-radius: 0 0 8px 0;
+    font-weight: 600;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: var(--color-arena);
+    backdrop-filter: blur(8px);
+    background: rgba(245, 241, 235, 0.92);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-bosque);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .nav-links a {
+    color: var(--color-piedra);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-bosque);
+  }
+
+  .nav-links a[aria-current='page'] {
+    color: var(--color-bosque);
+    border-bottom: 2px solid var(--color-bosque);
+    padding-bottom: 2px;
+  }
+
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .lang-toggle-btn {
+    padding: 0.2rem 0.5rem;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-piedra);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+
+  .lang-toggle-btn:hover {
+    color: var(--color-bosque);
+  }
+
+  .lang-toggle-btn--active {
+    background: var(--color-bosque);
+    color: white;
+  }
+
+  .lang-toggle-btn--active:hover {
+    color: white;
+  }
+
+  .footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin-top: 4rem;
+    font-size: 0.85rem;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-hoja);
+    margin-top: 0.5rem;
+  }
+
+  /* Cookie consent banner */
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.7rem 2rem;
+    background: var(--color-piedra);
+    color: var(--color-arena);
+    font-size: 0.82rem;
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+  }
+
+  .cookie-banner--visible {
+    transform: translateY(0);
+  }
+
+  .cookie-text {
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .cookie-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .cookie-link {
+    color: var(--color-arena);
+    opacity: 0.8;
+    text-decoration: underline;
+    font-size: 0.8rem;
+  }
+
+  .cookie-link:hover {
+    opacity: 1;
+    color: var(--color-arena);
+  }
+
+  .cookie-accept {
+    padding: 0.35rem 1rem;
+    background: var(--color-bosque);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .cookie-accept:hover {
+    background: var(--color-hoja);
+  }
+
+  @media (max-width: 768px) {
+    .nav {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .nav-right {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .nav-links {
+      gap: 1rem;
+    }
+    .cookie-banner {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+  }
+</style>

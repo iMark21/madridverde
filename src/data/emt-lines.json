@@ -1,0 +1,1412 @@
+[
+  {
+    "line": "1",
+    "routeName": "Plaza de Cristo Rey - Prosperidad",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=1",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "2",
+    "routeName": "Plaza de Manuel Becerra - Avenida Reina Victoria",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=2",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "3",
+    "routeName": "Puerta de Toledo - Plaza de San Amaro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=3",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "4",
+    "routeName": "Plaza de Ciudad Lineal - Puerta de Arganda",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=4",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "5",
+    "routeName": "Puerta del Sol/sevilla - Estacion de Chamartin",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=5",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "6",
+    "routeName": "Plaza Tirso de Molina - Orcasitas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=6",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "7",
+    "routeName": "Plaza de Alonso Martinez - Manoteras",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=7",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "8",
+    "routeName": "Plaza de Legazpi - Valdebernardo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=8",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "9",
+    "routeName": "Puerta del Sol/sevilla - Hortaleza",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=9",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "10",
+    "routeName": "Plaza de Cibeles - Palomeras",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=10",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "11",
+    "routeName": "Marques de Viana - Barrio Blanco",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=11",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "12",
+    "routeName": "Plaza de Cristo Rey - Paseo Marques de Zafra",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=12",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "14",
+    "routeName": "Plaza de Conde de Casal - Avenida de Pio XII",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=14",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "15",
+    "routeName": "Puerta del Sol/sevilla - la Elipa",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=15",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "16",
+    "routeName": "Moncloa - Avenida de Pio XII",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=16",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "17",
+    "routeName": "Plaza Mayor - Colonia Parque de Europa",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=17",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "18",
+    "routeName": "Plaza Mayor - Villaverde Cruce",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=18",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "19",
+    "routeName": "Plaza de Cataluña - Plaza de Legazpi",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=19",
+    "avgHeadwayMin": 8
+  },
+  {
+    "line": "20",
+    "routeName": "Puerta del Sol/sevilla - Pavones",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=20",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "21",
+    "routeName": "Paseo del Pintor Rosales - Barrio el Salvador",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=21",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "22",
+    "routeName": "Plaza de Legazpi - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=22",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "23",
+    "routeName": "Plaza Mayor - Villaverde Cruce",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=23",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "24",
+    "routeName": "Estacion de Atocha - Estacion el Pozo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=24",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "25",
+    "routeName": "Plaza de España - Casa de Campo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=25",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "26",
+    "routeName": "Plaza de Tirso de Molina - Diego de Leon",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=26",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "27",
+    "routeName": "Glorieta de Embajadores - Plaza de Castilla",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=27",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "28",
+    "routeName": "Puerta de Alcala - Barrio de Canillejas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=28",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "29",
+    "routeName": "Avenida de Felipe II - Manoteras",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=29",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "30",
+    "routeName": "Avenida de Felipe II - Pavones",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=30",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "31",
+    "routeName": "Plaza Mayor - Aluche",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=31",
+    "avgHeadwayMin": 8
+  },
+  {
+    "line": "32",
+    "routeName": "Plaza de Tirso de Molina - Pavones",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=32",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "33",
+    "routeName": "Principe Pio - Casa de Campo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=33",
+    "avgHeadwayMin": 30
+  },
+  {
+    "line": "34",
+    "routeName": "Plaza de Cibeles - las Aguilas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=34",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "35",
+    "routeName": "Plaza Mayor - Carabanchel Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=35",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "36",
+    "routeName": "Atocha - Campamento",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=36",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "37",
+    "routeName": "Glorieta de Cuatro Caminos - Puente de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=37",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "38",
+    "routeName": "Plaza de Manuel Becerra - las Rosas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=38",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "39",
+    "routeName": "Plaza de España - Colonia San Ignacio de Loyola",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=39",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "40",
+    "routeName": "Tribunal - Alfonso XIII",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=40",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "41",
+    "routeName": "Atocha - Colonia Manzanares",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=41",
+    "avgHeadwayMin": 23
+  },
+  {
+    "line": "42",
+    "routeName": "Plaza de Castilla - Barrio de Peñagrande",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=42",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "43",
+    "routeName": "Avenida de Felipe II - Estrecho",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=43",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "44",
+    "routeName": "Plaza del Callao - Marques de Viana",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=44",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "45",
+    "routeName": "Plaza de Legazpi - Avenida Reina Victoria",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=45",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "46",
+    "routeName": "Puerta del Sol/sevilla - Moncloa",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=46",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "47",
+    "routeName": "Atocha - Carabanchel Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=47",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "48",
+    "routeName": "Plaza de Manuel Becerra - Barrio de Canillejas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=48",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "49",
+    "routeName": "Plaza de Castilla - Pitis",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=49",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "50",
+    "routeName": "Plaza Mayor - Avenida del Manzanares",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=50",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "51",
+    "routeName": "Puerta del Sol/sevilla - Plaza del Peru",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=51",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "52",
+    "routeName": "Puerta del Sol/sevilla - Santamarca",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=52",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "53",
+    "routeName": "Puerta del Sol/sevilla - Arturo Soria",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=53",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "54",
+    "routeName": "Estacion de Atocha - Congosto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=54",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "55",
+    "routeName": "Atocha - Batan",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=55",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "56",
+    "routeName": "Diego de Leon - Numancia",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=56",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "57",
+    "routeName": "Estacion de Atocha - Alto del Arenal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=57",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "58",
+    "routeName": "Puente Vallecas - Barrio de Santa Eugenia",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=58",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "59",
+    "routeName": "Estacion de Atocha - Colonia San Cristobal de los Angeles",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=59",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "60",
+    "routeName": "Plaza de la Cebada - Orcasitas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=60",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "61",
+    "routeName": "Moncloa - Narvaez",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=61",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "62",
+    "routeName": "Plaza de Cristo Rey - los Puertos",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=62",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "63",
+    "routeName": "Avenida de Felipe II - Barrio de Santa Eugenia",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=63",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "64",
+    "routeName": "Glorieta de Cuatro Caminos - Pitis",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=64",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "65",
+    "routeName": "Plaza de Jacinto Benavente - Colonia Gran Capitan",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=65",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "66",
+    "routeName": "Glorieta de Cuatro Caminos - Fuencarral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=66",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "67",
+    "routeName": "Plaza de Castilla - Barrio de Peñagrande",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=67",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "70",
+    "routeName": "Plaza de Castilla - Alsacia",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=70",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "71",
+    "routeName": "Plaza de Manuel Becerra - Puerta de Arganda",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=71",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "72",
+    "routeName": "Diego de Leon - Hortaleza",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=72",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "73",
+    "routeName": "Diego de Leon - Feria de Madrid",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=73",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "74",
+    "routeName": "Paseo del Pintor Rosales - Parque de las Avenidas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=74",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "75",
+    "routeName": "Plaza del Callao - Colonia Manzanares",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=75",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "76",
+    "routeName": "Plaza Beata Maria Ana de Jesus - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=76",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "77",
+    "routeName": "Plaza de Ciudad Lineal - Colonia Fin de Semana",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=77",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "78",
+    "routeName": "Glorieta de Embajadores - Barrio de San Fermin",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=78",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "79",
+    "routeName": "Plaza de Legazpi - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=79",
+    "avgHeadwayMin": 22
+  },
+  {
+    "line": "81",
+    "routeName": "Oporto - Hospital 12 de Octubre",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=81",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "82",
+    "routeName": "Moncloa - Pitis",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=82",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "83",
+    "routeName": "Moncloa - Barrio de la Paz",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=83",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "85",
+    "routeName": "Estacion de Atocha - Butarque",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=85",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "86",
+    "routeName": "Estacion de Atocha - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=86",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "87",
+    "routeName": "Plaza de la Republica Dominicana - las Carcavas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=87",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "88",
+    "routeName": "Canillejas - Rejas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=88",
+    "avgHeadwayMin": 42
+  },
+  {
+    "line": "100",
+    "routeName": "Moratalaz - Valderrivas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=100",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "101",
+    "routeName": "Canillejas - Aeropuerto - Barajas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=101",
+    "avgHeadwayMin": 24
+  },
+  {
+    "line": "102",
+    "routeName": "Estacion de Atocha - Estacion el Pozo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=102",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "103",
+    "routeName": "Estacion el Pozo - Ecobulevar",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=103",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "104",
+    "routeName": "Plaza de Ciudad Lineal - Mar de Cristal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=104",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "105",
+    "routeName": "Plaza de Ciudad Lineal - Barajas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=105",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "106",
+    "routeName": "Plaza de Manuel Becerra - Vicalvaro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=106",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "107",
+    "routeName": "Plaza de Castilla - Hortaleza",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=107",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "108",
+    "routeName": "Oporto - Cementerio de Carabanchel",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=108",
+    "avgHeadwayMin": 25
+  },
+  {
+    "line": "109",
+    "routeName": "Plaza de Ciudad Lineal - Castillo de Ucles",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=109",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "110",
+    "routeName": "Plaza de Manuel Becerra - Cementerio de la Almudena",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=110",
+    "avgHeadwayMin": 35
+  },
+  {
+    "line": "111",
+    "routeName": "Puente Vallecas - Entrevias",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=111",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "112",
+    "routeName": "Mar de Cristal - Barrio del Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=112",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "113",
+    "routeName": "Mendez Alvaro - Plaza de Ciudad Lineal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=113",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "114",
+    "routeName": "Avenida de America - Barrio del Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=114",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "115",
+    "routeName": "Avenida de America - Barajas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=115",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "116",
+    "routeName": "Glorieta de Embajadores - Villaverde Cruce",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=116",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "118",
+    "routeName": "Glorieta de Embajadores - Avenida de la Peseta",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=118",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "119",
+    "routeName": "Atocha - Barrio de Goya",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=119",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "120",
+    "routeName": "Plaza de Lima - Hortaleza",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=120",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "121",
+    "routeName": "Campamento - Hospital 12 de Octubre",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=121",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "122",
+    "routeName": "Avenida de America - Feria de Madrid",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=122",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "123",
+    "routeName": "Plaza de Legazpi - Butarque",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=123",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "124",
+    "routeName": "Glorieta de Cuatro Caminos - Lacoma",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=124",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "125",
+    "routeName": "Mar de Cristal - Hospital Ramon y Cajal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=125",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "126",
+    "routeName": "Nuevos Ministerios - Barrio del Pilar",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=126",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "127",
+    "routeName": "Glorieta de Cuatro Caminos - Ciudad de los Periodistas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=127",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "128",
+    "routeName": "Glorieta de Cuatro Caminos - Barrio del Pilar",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=128",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "129",
+    "routeName": "Plaza de Castilla - Manoteras",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=129",
+    "avgHeadwayMin": 23
+  },
+  {
+    "line": "130",
+    "routeName": "Villaverde Alto - Vicalvaro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=130",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "131",
+    "routeName": "Campamento - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=131",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "132",
+    "routeName": "Moncloa - Hospital la Paz",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=132",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "133",
+    "routeName": "Plaza del Callao - Mirasierra",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=133",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "134",
+    "routeName": "Plaza de Castilla|vaguada - Montecarmelo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=134",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "135",
+    "routeName": "Plaza de Castilla - Hospital Ramon y Cajal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=135",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "136",
+    "routeName": "Pacifico - Madrid Sur",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=136",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "137",
+    "routeName": "Ciudad Puerta de Hierro - Fuencarral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=137",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "138",
+    "routeName": "Plaza de Cristo Rey - Colonia San Ignacio de Loyola",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=138",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "139",
+    "routeName": "Dehesa del Principe - Carabanchel Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=139",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "140",
+    "routeName": "Pavones - Canillejas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=140",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "141",
+    "routeName": "Estacion de Atocha - Buenos Aires",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=141",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "142",
+    "routeName": "Pavones - Ensanche de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=142",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "143",
+    "routeName": "Plaza de Manuel Becerra - Villa de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=143",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "144",
+    "routeName": "Pavones - Entrevias",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=144",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "145",
+    "routeName": "Plaza del Conde de Casal - Ensanche de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=145",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "146",
+    "routeName": "Plaza del Callao - los Molinos",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=146",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "147",
+    "routeName": "Plaza del Callao - Barrio del Pilar",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=147",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "148",
+    "routeName": "Plaza del Callao - Puente de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=148",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "149",
+    "routeName": "Tribunal - Plaza de Castilla",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=149",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "150",
+    "routeName": "Puerta del Sol/sevilla - Colonia Virgen del Cortijo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=150",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "151",
+    "routeName": "Canillejas - Barajas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=151",
+    "avgHeadwayMin": 18
+  },
+  {
+    "line": "152",
+    "routeName": "Avenida de Felipe II - Mendez Alvaro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=152",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "153",
+    "routeName": "las Rosas - Mar de Cristal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=153",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "155",
+    "routeName": "Plaza Eliptica - Aluche",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=155",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "156",
+    "routeName": "Plaza de Manuel Becerra - Plaza de Legazpi",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=156",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "158",
+    "routeName": "Plaza de España - los Carmenes",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=158",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "159",
+    "routeName": "Alsacia - el Cañaveral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=159",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "160",
+    "routeName": "Moncloa - Aravaca",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=160",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "161",
+    "routeName": "Moncloa - Aravaca Sur",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=161",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "162",
+    "routeName": "Moncloa - el Barrial",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=162",
+    "avgHeadwayMin": 21
+  },
+  {
+    "line": "163",
+    "routeName": "Estacion de Aravaca - el Plantio",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=163",
+    "avgHeadwayMin": 30
+  },
+  {
+    "line": "164",
+    "routeName": "Moncloa - el Pardo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=164",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "165",
+    "routeName": "Alsacia - Hospital Ramon y Cajal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=165",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "166",
+    "routeName": "Barajas - Hospital Ramon y Cajal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=166",
+    "avgHeadwayMin": 33
+  },
+  {
+    "line": "167",
+    "routeName": "Alsacia - Colonia Fin de Semana",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=167",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "170",
+    "routeName": "Arroyo del Fresno - Sanchinarro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=170",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "171",
+    "routeName": "Mar de Cristal - Valdebebas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=171",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "172",
+    "routeName": "Mar de Cristal - Telefonica",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=172",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "172SF",
+    "routeName": "Mar de Cristal - las Tablas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=172SF",
+    "avgHeadwayMin": 27
+  },
+  {
+    "line": "173",
+    "routeName": "Plaza de Castilla - Sanchinarro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=173",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "174",
+    "routeName": "Plaza de Castilla - Valdebebas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=174",
+    "avgHeadwayMin": 17
+  },
+  {
+    "line": "175",
+    "routeName": "Plaza de Castilla - las Tablas Norte",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=175",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "176",
+    "routeName": "Plaza de Castilla - las Tablas Sur",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=176",
+    "avgHeadwayMin": 12
+  },
+  {
+    "line": "177",
+    "routeName": "Plaza de Castilla - Marques de Viana",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=177",
+    "avgHeadwayMin": 20
+  },
+  {
+    "line": "178",
+    "routeName": "Plaza de Castilla - Montecarmelo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=178",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "179",
+    "routeName": "Plaza Castilla - el Pardo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=179",
+    "avgHeadwayMin": 31
+  },
+  {
+    "line": "180",
+    "routeName": "Plaza de Legazpi - Estacion el Pozo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=180",
+    "avgHeadwayMin": 30
+  },
+  {
+    "line": "200",
+    "routeName": "Avenida de America - Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=200",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "203",
+    "routeName": "Estacion de Atocha - Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=203",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "210",
+    "routeName": "Diego de Leon - la Elipa",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=210",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "215",
+    "routeName": "Avenida de Felipe II - Parque de Roma",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=215",
+    "avgHeadwayMin": 33
+  },
+  {
+    "line": "247",
+    "routeName": "Atocha - Colonia San Jose Obrero",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=247",
+    "avgHeadwayMin": 26
+  },
+  {
+    "line": "310",
+    "routeName": "Pacifico - Estacion el Pozo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=310",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "A",
+    "routeName": "Moncloa - Campus Somosaguas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=A",
+    "avgHeadwayMin": 5
+  },
+  {
+    "line": "BR1",
+    "routeName": "Valdebebas - Hospital Ramon y Cajal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=BR1",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "C03",
+    "routeName": "Puerta de Toledo - Argüelles",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=C03",
+    "avgHeadwayMin": 16
+  },
+  {
+    "line": "C1",
+    "routeName": "Circular 1 -",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=C1",
+    "avgHeadwayMin": 8
+  },
+  {
+    "line": "C2",
+    "routeName": "Circular 2 -",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=C2",
+    "avgHeadwayMin": 7
+  },
+  {
+    "line": "E",
+    "routeName": "Plaza del Conde de Casal - Sierra de Guadalupe",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "E1",
+    "routeName": "Plaza de Cibeles - la Peseta",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E1",
+    "avgHeadwayMin": 13
+  },
+  {
+    "line": "E2",
+    "routeName": "Avenida de Felipe II - las Rosas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E2",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "E3",
+    "routeName": "Avenida de Felipe II - Valderrivas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E3",
+    "avgHeadwayMin": 8
+  },
+  {
+    "line": "E4",
+    "routeName": "Avenida de Felipe II - Valdebernardo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E4",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "E5",
+    "routeName": "Manuel Becerra - el Cañaveral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=E5",
+    "avgHeadwayMin": 14
+  },
+  {
+    "line": "F",
+    "routeName": "Glorieta de Cuatro Caminos - Ciudad Universitaria",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=F",
+    "avgHeadwayMin": 7
+  },
+  {
+    "line": "G",
+    "routeName": "Moncloa - Ciudad Universitaria",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=G",
+    "avgHeadwayMin": 5
+  },
+  {
+    "line": "H",
+    "routeName": "Aluche - Campus de Somosaguas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=H",
+    "avgHeadwayMin": 6
+  },
+  {
+    "line": "H1",
+    "routeName": "Sierra de Guadalupe - Hospital Infanta Leonor",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=H1",
+    "avgHeadwayMin": 9
+  },
+  {
+    "line": "M1",
+    "routeName": "Puerta del Sol/sevilla - Glorieta de Embajadores",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=M1",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "M3",
+    "routeName": "Puerta del Sol/sevilla - Puerta Toledo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=M3",
+    "avgHeadwayMin": 24
+  },
+  {
+    "line": "N1",
+    "routeName": "Plaza de Cibeles - Sanchinarro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N1",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N10",
+    "routeName": "Plaza de Cibeles - Palomeras",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N10",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N11",
+    "routeName": "Plaza de Cibeles - Madrid Sur",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N11",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N12",
+    "routeName": "Plaza de Cibeles - Butarque",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N12",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N13",
+    "routeName": "Plaza de Cibeles - Colonia San Cristobal de los Angeles",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N13",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N14",
+    "routeName": "Plaza de Cibeles - Villaverde Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N14",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N15",
+    "routeName": "Plaza de Cibeles - Hospital 12 de Octubre",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N15",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N16",
+    "routeName": "Plaza de Cibeles - Avenida de la Peseta",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N16",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N17",
+    "routeName": "Plaza de Cibeles - Carabanchel Alto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N17",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N18",
+    "routeName": "Plaza de Cibeles - las Águilas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N18",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N19",
+    "routeName": "Plaza de Cibeles - Colonia San Ignacio de Loyola",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N19",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N2",
+    "routeName": "Plaza de Cibeles - Valdebebas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N2",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N20",
+    "routeName": "Plaza de Cibeles - Pitis",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N20",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N21",
+    "routeName": "Plaza de Cibeles - Arroyo del Fresno",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N21",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N22",
+    "routeName": "Plaza de Cibeles - Barrio de la Paz",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N22",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N23",
+    "routeName": "Plaza de Cibeles - Montecarmelo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N23",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N24",
+    "routeName": "Plaza de Cibeles - las Tablas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N24",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N25",
+    "routeName": "Plaza de Alonso Martinez - Villa de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N25",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N26",
+    "routeName": "Plaza de Alonso Martinez - Aluche",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N26",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N27",
+    "routeName": "Plaza de Cibeles - Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N27",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N28",
+    "routeName": "Moncloa - Aravaca",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N28",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N3",
+    "routeName": "Plaza de Cibeles - Feria de Madrid",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N3",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N31",
+    "routeName": "Moncloa - el Pardo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N31",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N32",
+    "routeName": "Avenida de America - Aeropuerto",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N32",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N4",
+    "routeName": "Plaza de Cibeles - Barajas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N4",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N5",
+    "routeName": "Plaza de Cibeles - Colonia Fin de Semana",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N5",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N6",
+    "routeName": "Plaza de Cibeles - el Cañaveral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N6",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N7",
+    "routeName": "Plaza de Cibeles - Valderrivas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N7",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N8",
+    "routeName": "Plaza de Cibeles - Pavones",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N8",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "N9",
+    "routeName": "Plaza de Cibeles - Ensanche de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=N9",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "NC1",
+    "routeName": "Cuatro Caminos - Estacion de Atocha",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=NC1",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "NC2",
+    "routeName": "Cuatro Caminos - Estacion de Atocha",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=NC2",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SC1",
+    "routeName": "Cuatro Caminos - Legazpi",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SC1",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SC2",
+    "routeName": "Cuatro Caminos - Legazpi",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SC2",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SE2",
+    "routeName": "Plaza Eliptica - Cuatro Vientos",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE2",
+    "avgHeadwayMin": 19
+  },
+  {
+    "line": "SE3",
+    "routeName": "Batan - Lucero",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE3",
+    "avgHeadwayMin": 10
+  },
+  {
+    "line": "SE702",
+    "routeName": "Plaza Eliptica - Cementerio Sur",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE702",
+    "avgHeadwayMin": 30
+  },
+  {
+    "line": "SE704",
+    "routeName": "Plaza de Castilla - Cementerio de Fuencarral",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE704",
+    "avgHeadwayMin": 40
+  },
+  {
+    "line": "SE709",
+    "routeName": "Feria de Madrid - Hospital Enfermera Isabel Zendal",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE709",
+    "avgHeadwayMin": 30
+  },
+  {
+    "line": "SE718",
+    "routeName": "Puerta de Arganda - Cañada Real",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE718",
+    "avgHeadwayMin": 58
+  },
+  {
+    "line": "SE721",
+    "routeName": "Canillejas - Estadio Metropolitano",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE721",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SE730",
+    "routeName": "Plaza Eliptica - Pinar de San Jose",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE730",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SE766",
+    "routeName": "Atocha - Poligono Industrial de Vallecas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE766",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "SE832",
+    "routeName": "Principe Pio - Hospital Fundacion San Jose",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE832",
+    "avgHeadwayMin": 45
+  },
+  {
+    "line": "SE833",
+    "routeName": "Plaza Castilla - las Tablas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=SE833",
+    "avgHeadwayMin": 60
+  },
+  {
+    "line": "T11",
+    "routeName": "Mar de Cristal - Parque Empresarial Cristalia",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T11",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "T23",
+    "routeName": "Puerta de Arganda - Poligono Industrial de Vicalvaro",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T23",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "T31",
+    "routeName": "Estacion el Pozo - Sierra de Guadalupe",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T31",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "T32",
+    "routeName": "Plaza de Legazpi - Mercamadrid - C. T. M",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T32",
+    "avgHeadwayMin": 15
+  },
+  {
+    "line": "T41",
+    "routeName": "Villaverde Alto - Poligono Industrial la Resina",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T41",
+    "avgHeadwayMin": null
+  },
+  {
+    "line": "T61",
+    "routeName": "Estacion de Cercanias de Fuencarral - las Tablas",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=T61",
+    "avgHeadwayMin": 11
+  },
+  {
+    "line": "U",
+    "routeName": "Avenida de Seneca - Paraninfo",
+    "url": "https://www.emtmadrid.es/EMTBUS/Mi-linea?linea=U",
+    "avgHeadwayMin": 10
+  }
+]

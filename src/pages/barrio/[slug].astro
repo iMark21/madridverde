@@ -1,0 +1,1119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MapaDistrito from '../../components/MapaDistrito.astro';
+import districtsIndex from '../../data/districts-index.json';
+import treesData from '../../data/trees.json';
+import recyclingData from '../../data/recycling.json';
+import { computeGreenIndex, getContextPhrase } from '../../lib/green-index';
+import emtData from '../../data/emt.json';
+import emtLinesData from '../../data/emt-lines.json';
+
+export function getStaticPaths() {
+  return districtsIndex.map((d) => ({
+    params: { slug: d.slug },
+    props: { name: d.name, code: d.code },
+  }));
+}
+
+interface Props {
+  name: string;
+  code: string;
+}
+
+const { slug } = Astro.params;
+const { name, code } = Astro.props;
+
+const allDistricts = computeGreenIndex();
+const district = allDistricts.find((d) => d.code === code);
+
+// Extra data for the rich scorecard
+const treeInfo = (treesData as any[]).find((t) => t.code === code);
+const nameUpper = name.toUpperCase();
+const recyclingInfo = (recyclingData as any[]).find((r) => {
+  const rName = r.name.toUpperCase();
+  return rName === nameUpper || nameUpper.includes(rName) || rName.includes(nameUpper.slice(0, 8));
+});
+
+const population = district?.population || 0;
+const emtDistrict = (emtData as any[]).find((e: any) => e.code === code);
+const emtLines: string[] = emtDistrict?.lines ?? [];
+const emtStops: number = emtDistrict?.totalStops ?? 0;
+const emtLineCount: number = emtDistrict?.totalLines ?? 0;
+const emtStopsPer1000 = population > 0 ? ((emtStops / population) * 1000).toFixed(1) : '--';
+
+// Build line detail lookup
+const emtLineMap = new Map((emtLinesData as any[]).map((l: any) => [l.line, l]));
+const emtLinesHtmlRich = emtLines.map((line) => {
+  const info = emtLineMap.get(line);
+  const route = info?.routeName ?? '';
+  const freq = info?.avgHeadwayMin ?? '';
+  return `<button class="emt-line-badge" data-line="${line}" data-route="${route}" data-freq="${freq}">${line}</button>`;
+}).join('');
+const emtLinesHtml = emtLines.map((l) => `<span class="emt-line-badge">${l}</span>`).join('');
+const greenM2PerCap = treeInfo && population ? (treeInfo.greenM2 / population).toFixed(1) : '--';
+const treesPer1000 = treeInfo && population ? Math.round((treeInfo.totalTrees / population) * 1000) : '--';
+const containersPer1000 = recyclingInfo && population ? ((recyclingInfo.total / population) * 1000).toFixed(1) : '--';
+
+function titleCase(str: string): string {
+  const minorWords = new Set(['de', 'del', 'el', 'la', 'las', 'los', 'y', 'e']);
+  return str.toLowerCase().split(' ')
+    .map((word, i) => (i === 0 || !minorWords.has(word)) ? word.charAt(0).toUpperCase() + word.slice(1) : word)
+    .join(' ');
+}
+
+const displayName = titleCase(name);
+const contextPhrase = district ? getContextPhrase(district) : '--';
+
+// Generate data-driven narrative
+function generateNarrative(): string[] {
+  if (!district || !treeInfo) return [];
+  const lines: string[] = [];
+  const verde = district.subIndices.find(s => s.name === 'Verde');
+  const ruido = district.subIndices.find(s => s.name === 'Ruido');
+  const reciclaje = district.subIndices.find(s => s.name === 'Reciclaje');
+
+  // Best sub-index
+  const best = [...district.subIndices].sort((a, b) => b.score - a.score)[0];
+  const worst = [...district.subIndices].sort((a, b) => a.score - b.score)[0];
+
+  if (best.score > worst.score + 20) {
+    lines.push(`${displayName} destaca en ${best.name.toLowerCase()} (${best.score}/100) pero tiene margen de mejora en ${worst.name.toLowerCase()} (${worst.score}/100).`);
+  }
+
+  const gm2 = Number(greenM2PerCap);
+  if (gm2 < 9) {
+    lines.push(`Con ${greenM2PerCap} m² de zonas verdes por habitante, ${displayName} esta por debajo del minimo recomendado por la OMS (9 m²/hab). ${treeInfo.totalTrees.toLocaleString('es-ES')} arboles censados dan sombra a sus calles.`);
+  } else if (gm2 > 15) {
+    lines.push(`${displayName} es uno de los distritos mas verdes de Madrid: ${greenM2PerCap} m² por habitante y ${treeInfo.totalTrees.toLocaleString('es-ES')} arboles censados.`);
+  }
+
+  if (reciclaje && Number(containersPer1000) > 15) {
+    lines.push(`Buena infraestructura de reciclaje: ${containersPer1000} contenedores por cada 1.000 vecinos.`);
+  } else if (reciclaje && Number(containersPer1000) < 8) {
+    lines.push(`La infraestructura de reciclaje es limitada: solo ${containersPer1000} contenedores por cada 1.000 vecinos.`);
+  }
+
+  return lines;
+}
+
+const narrative = generateNarrative();
+
+// OG share data
+const shareText = `${displayName} tiene un Indice Verde de ${district?.score || '--'}/100. Descubre como respira tu barrio en MadridVerde.`;
+const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
+---
+
+<BaseLayout title={`${displayName} — MadridVerde`} description={`Indice Verde y metricas medioambientales del distrito ${displayName} de Madrid`}>
+  <section class="scorecard">
+    <div class="scorecard-header">
+      <a href="/" class="back-link">&larr; <span data-i18n="scorecard.backLink">Volver al mapa</span></a>
+      <div class="district-title">
+        <span class="district-code">{code}</span>
+        <h1>{displayName}</h1>
+      </div>
+      {district && <p class="district-pop">{district.population.toLocaleString('es-ES')} <span data-i18n="scorecard.inhabitants">habitantes</span></p>}
+    </div>
+
+    {district && (
+      <div class="scorecard-grid">
+        <div class="score-card score-card--main" style={`background: ${district.tierColor}`}>
+          <p class="score-label" data-i18n="scorecard.greenIndex">Indice Verde</p>
+          <p class="score-value">{district.score}</p>
+          <p class="score-tier">{district.tier}</p>
+          <p class="score-context">{contextPhrase}</p>
+        </div>
+        <div class="score-actions">
+          <button class="share-btn" id="share-btn" data-text={shareText} data-url={shareUrl} data-i18n="scorecard.shareButton">Compartir resultado</button>
+          <button class="export-district-btn" id="export-district-csv" data-district-code={code}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+            <span data-i18n="export.district_button">Descargar datos del distrito</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="narrative" style={narrative.length === 0 ? 'display:none' : ''}>
+        <h2><span data-i18n="scorecard.narrativeTitle">La historia de</span> {displayName}</h2>
+        {narrative.map((line) => (
+          <p>{line}</p>
+        ))}
+      </div>
+
+      <MapaDistrito districtCode={code} districtName={displayName} tierColor={district.tierColor} />
+
+      <div class="sub-indices">
+        <h2 data-i18n="scorecard.subIndicesTitle">Sub-indices</h2>
+        <div class="sub-indices-grid">
+          {district.subIndices.map((si) => (
+            <div class="sub-index">
+              <div class="sub-index-header">
+                <span class="sub-index-name">{si.name}</span>
+                <span class="sub-index-weight">{Math.round(si.weight * 100)}%</span>
+              </div>
+              <span class="sub-index-value" style={`color: ${si.score >= 70 ? '#2D6A4F' : si.score >= 40 ? '#E9C46A' : '#E76F51'}`}>{si.score}</span>
+              <span class="sub-index-detail">{si.detail}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="data-details">
+        <h2 data-i18n="scorecard.dataTitle">Datos del distrito</h2>
+        <div class="details-grid">
+          {treeInfo && (
+            <div class="detail-card">
+              <span class="detail-icon">🌳</span>
+              <span class="detail-value">{treeInfo.totalTrees.toLocaleString('es-ES')}</span>
+              <span class="detail-label" data-i18n="scorecard.treesCounted">arboles censados</span>
+            </div>
+          )}
+          <div class="detail-card">
+            <span class="detail-icon">🌿</span>
+            <span class="detail-value">{greenM2PerCap}</span>
+            <span class="detail-label" data-i18n="scorecard.greenM2PerHab">m2 de zonas verdes por habitante</span>
+          </div>
+          <div class="detail-card">
+            <span class="detail-icon">🗑️</span>
+            <span class="detail-value">{containersPer1000}</span>
+            <span class="detail-label" data-i18n="scorecard.containersPerHab">contenedores por 1.000 hab</span>
+          </div>
+          <div class="detail-card">
+            <span class="detail-icon">👥</span>
+            <span class="detail-value">{population.toLocaleString('es-ES')}</span>
+            <span class="detail-label" data-i18n="scorecard.populationLabel">habitantes (padron 2025)</span>
+          </div>
+          <div class="detail-card" style={emtStops === 0 ? 'display:none' : ''}>
+            <span class="detail-icon">🚌</span>
+            <span class="detail-value">{emtStops}</span>
+            <span class="detail-label" data-i18n="scorecard.busStops">paradas de autobus EMT</span>
+          </div>
+          <div class="detail-card" style={emtLineCount === 0 ? 'display:none' : ''}>
+            <span class="detail-icon">🚍</span>
+            <span class="detail-value">{emtLineCount}</span>
+            <span class="detail-label" data-i18n="scorecard.busLines">lineas EMT</span>
+          </div>
+        </div>
+
+        {treeInfo?.topSpecies && treeInfo.topSpecies.length > 0 && (
+          <div class="species-section">
+            <h3 data-i18n="scorecard.topSpecies">Especies mas frecuentes</h3>
+            <div class="species-list">
+              {(treeInfo.topSpecies as any[]).map((sp: any) => (
+                <div class="species-item">
+                  <span class="species-name">{sp.name}</span>
+                  <span class="species-count">{sp.count.toLocaleString('es-ES')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {recyclingInfo?.types && (
+          <div class="recycling-section">
+            <h3 data-i18n="scorecard.containersByType">Contenedores por tipo</h3>
+            <div class="recycling-bars">
+              {(recyclingInfo.types as any[]).slice(0, 5).map((t: any) => (
+                <div class="recycling-bar-item">
+                  <span class="recycling-type">{t.type}</span>
+                  <div class="recycling-bar-track">
+                    <div class="recycling-bar-fill" style={`width: ${(t.count / recyclingInfo.total * 100).toFixed(0)}%`}></div>
+                  </div>
+                  <span class="recycling-count">{t.count.toLocaleString('es-ES')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div class="emt-section" style={emtStops === 0 ? 'display:none' : ''}>
+        <h2 data-i18n="scorecard.emtTitle">Autobuses EMT</h2>
+        <div class="emt-summary">
+          <span class="emt-stat"><strong>{emtStops}</strong> <span data-i18n="scorecard.emtStopsLabel">paradas</span></span>
+          <span class="emt-stat"><strong>{emtLineCount}</strong> <span data-i18n="scorecard.emtLinesLabel">lineas</span></span>
+          <span class="emt-stat"><strong>{emtStopsPer1000}</strong> <span data-i18n="scorecard.emtStopsPer1000">paradas/1.000 hab</span></span>
+        </div>
+        <div class="emt-lines" set:html={emtLinesHtmlRich} />
+        <div class="emt-line-detail" id="emt-line-detail"></div>
+        <p class="emt-source" data-i18n="scorecard.emtSource">Fuente: EMT Madrid — datos.emtmadrid.es (GTFS)</p>
+      </div>
+
+      <div class="bicimad-district" id="bicimad-district">
+        <h2><span data-i18n="scorecard.bicimadTitle">BiciMAD en</span> {displayName}</h2>
+        <p class="bicimad-loading-d" data-i18n="scorecard.bicimadLoading">Cargando estaciones de BiciMAD...</p>
+      </div>
+    )}
+  </section>
+<script>
+  import { fetchAirQuality, aggregateByDistrict } from '../../lib/air-quality';
+  import { fetchTrafficSummary } from '../../lib/traffic';
+  import { fetchBiciMAD } from '../../lib/bicimad';
+  import { t as tCard } from '../../i18n/i18n.js';
+
+  // --- Live hydration: update Aire + Movilidad sub-indices ---
+  const scoreValueEl = document.querySelector('.score-value');
+  const subIndexEls = document.querySelectorAll('.sub-index');
+  const scoreCardEl = document.querySelector('.score-card--main');
+
+  Promise.all([fetchAirQuality(), fetchTrafficSummary()]).then(([readings, traffic]) => {
+    if (readings.length === 0 && !traffic) return;
+
+    // Get district code from the URL
+    const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+    const codeMap: Record<string, string> = {
+      'centro':'01','arganzuela':'02','retiro':'03','salamanca':'04',
+      'chamartin':'05','tetuan':'06','chamberi':'07','fuencarral-el-pardo':'08',
+      'moncloa-aravaca':'09','latina':'10','carabanchel':'11','usera':'12',
+      'puente-de-vallecas':'13','moratalaz':'14','ciudad-lineal':'15',
+      'hortaleza':'16','villaverde':'17','villa-de-vallecas':'18',
+      'vicalvaro':'19','san-blas-canillejas':'20','barajas':'21',
+    };
+    const distCode = codeMap[slug];
+    if (!distCode) return;
+
+    // Update Aire sub-index
+    if (readings.length > 0) {
+      const airByDistrict = aggregateByDistrict(readings);
+      const airData = airByDistrict.get(distCode);
+      if (airData) {
+        subIndexEls.forEach((el) => {
+          const nameEl = el.querySelector('.sub-index-name');
+          if (nameEl?.textContent === 'Aire') {
+            const valueEl = el.querySelector('.sub-index-value');
+            const detailEl = el.querySelector('.sub-index-detail');
+            if (valueEl) {
+              valueEl.textContent = String(airData.score);
+              (valueEl as HTMLElement).style.color = airData.score >= 70 ? '#2D6A4F' : airData.score >= 40 ? '#E9C46A' : '#E76F51';
+            }
+            if (detailEl) {
+              const contNames = Object.keys(airData.readings).join(', ');
+              detailEl.textContent = tCard('gi.aireLiveDetail', { contaminants: contNames });
+            }
+          }
+        });
+      }
+    }
+
+    // Update Movilidad sub-index
+    if (traffic) {
+      subIndexEls.forEach((el) => {
+        const nameEl = el.querySelector('.sub-index-name');
+        if (nameEl?.textContent === 'Movilidad') {
+          const valueEl = el.querySelector('.sub-index-value');
+          const detailEl = el.querySelector('.sub-index-detail');
+          if (valueEl) {
+            valueEl.textContent = String(traffic.score);
+            (valueEl as HTMLElement).style.color = traffic.score >= 70 ? '#2D6A4F' : traffic.score >= 40 ? '#E9C46A' : '#E76F51';
+          }
+          if (detailEl) {
+            detailEl.textContent = tCard('gi.trafficLiveDetail', { fluido: String(traffic.fluido), denso: String(traffic.denso), congestionado: String(traffic.congestionado) });
+          }
+        }
+      });
+    }
+
+    // Recalculate total score
+    let totalWeighted = 0;
+    subIndexEls.forEach((el) => {
+      const valueEl = el.querySelector('.sub-index-value');
+      const weightEl = el.querySelector('.sub-index-weight');
+      if (valueEl && weightEl) {
+        const score = parseInt(valueEl.textContent || '50');
+        const weight = parseInt(weightEl.textContent || '0') / 100;
+        totalWeighted += score * weight;
+      }
+    });
+    const newScore = Math.round(totalWeighted);
+    if (scoreValueEl) scoreValueEl.textContent = String(newScore);
+
+    // Update tier color
+    const tierColor = newScore >= 85 ? '#2D6A4F' : newScore >= 70 ? '#52B788' : newScore >= 55 ? '#E9C46A' : newScore >= 40 ? '#F4A261' : '#E76F51';
+    const tierKey = newScore >= 85 ? 'tier.excellent' : newScore >= 70 ? 'tier.good' : newScore >= 55 ? 'tier.acceptable' : newScore >= 40 ? 'tier.improvable' : 'tier.critical';
+    const tierName = tCard(tierKey);
+    if (scoreCardEl) (scoreCardEl as HTMLElement).style.background = tierColor;
+    const tierEl = document.querySelector('.score-tier');
+    if (tierEl) tierEl.textContent = tierName;
+
+    console.log('[MadridVerde] Scorecard hydrated with live air + traffic data');
+  });
+
+  // BiciMAD per-district
+  const districtBounds = document.getElementById('bicimad-district');
+  if (districtBounds) {
+    fetchBiciMAD().then((stations) => {
+      if (stations.length === 0) {
+        districtBounds.innerHTML = '';
+        return;
+      }
+
+      // Get district name from the h1
+      const h1 = document.querySelector('.district-title h1');
+      const distName = h1?.textContent || '';
+
+      // Use TopoJSON to find stations in this district via bounding box
+      // Simpler: filter by proximity to district center using the map bounds
+      // For now, use a name-based approach with the station addresses
+      // Or just show the nearest 10 stations
+      const mapEl = document.getElementById('map');
+
+      // Get approximate district center from the page URL
+      const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+
+      // Fetch district bounds from the districts index
+      const lat0 = 40.42, lon0 = -3.70; // Madrid center fallback
+      const DISTRICT_CENTERS: Record<string, [number, number]> = {
+        'centro': [40.415, -3.704], 'arganzuela': [40.393, -3.695],
+        'retiro': [40.409, -3.678], 'salamanca': [40.429, -3.681],
+        'chamartin': [40.457, -3.677], 'tetuan': [40.461, -3.699],
+        'chamberi': [40.434, -3.705], 'fuencarral-el-pardo': [40.512, -3.726],
+        'moncloa-aravaca': [40.438, -3.752], 'latina': [40.385, -3.746],
+        'carabanchel': [40.378, -3.732], 'usera': [40.381, -3.705],
+        'puente-de-vallecas': [40.392, -3.660], 'moratalaz': [40.408, -3.642],
+        'ciudad-lineal': [40.441, -3.650], 'hortaleza': [40.474, -3.639],
+        'villaverde': [40.348, -3.697], 'villa-de-vallecas': [40.371, -3.619],
+        'vicalvaro': [40.405, -3.608], 'san-blas-canillejas': [40.437, -3.613],
+        'barajas': [40.465, -3.580],
+      };
+
+      const center = DISTRICT_CENTERS[slug] || [lat0, lon0];
+      const R = 0.025; // ~2.5km radius
+
+      const nearby = stations
+        .filter(s => s.inService && Math.abs(s.lat - center[0]) < R && Math.abs(s.lon - center[1]) < R)
+        .sort((a, b) => {
+          const da = Math.abs(a.lat - center[0]) + Math.abs(a.lon - center[1]);
+          const db = Math.abs(b.lat - center[0]) + Math.abs(b.lon - center[1]);
+          return da - db;
+        })
+        .slice(0, 8);
+
+      if (nearby.length === 0) {
+        districtBounds.innerHTML = `<h2>BiciMAD</h2><p style="color:#6C757D;font-style:italic">${tCard('scorecard.bicimadNone')}</p>`;
+        return;
+      }
+
+      const totalBikes = nearby.reduce((s, st) => s + st.bikesAvailable, 0);
+      const totalDocks = nearby.reduce((s, st) => s + st.docksAvailable, 0);
+
+      districtBounds.innerHTML = `
+        <h2>${tCard('scorecard.bicimadTitle')} ${distName}</h2>
+        <div class="bici-district-summary">
+          <span class="bds-item"><strong>${nearby.length}</strong> ${tCard('scorecard.bicimadNearby')}</span>
+          <span class="bds-item"><strong>${totalBikes}</strong> ${tCard('scorecard.bicimadBikes')}</span>
+          <span class="bds-item"><strong>${totalDocks}</strong> ${tCard('scorecard.bicimadDocks')}</span>
+        </div>
+        <div class="bici-district-list">
+          ${nearby.map(s => {
+            const pct = s.capacity > 0 ? Math.round((s.bikesAvailable / s.capacity) * 100) : 0;
+            const color = pct > 50 ? '#2D6A4F' : pct > 20 ? '#E9C46A' : '#E76F51';
+            return `<div class="bdi-row">
+              <span class="bdi-name">${s.name}</span>
+              <div class="bdi-bar"><div class="bdi-fill" style="width:${pct}%;background:${color}"></div></div>
+              <span class="bdi-count" style="color:${color}">${s.bikesAvailable}/${s.capacity}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <p class="bici-live-note">${tCard('scorecard.bicimadLiveNote')}</p>
+      `;
+    });
+  }
+
+  // --- district_viewed (direct access) + page_viewed ---
+  {
+    const h1El = document.querySelector('.district-title h1');
+    const districtName = h1El?.textContent || '';
+    if (window.__mvAnalytics) {
+      window.__mvAnalytics('district_viewed', { district_name: districtName, source: 'direct' });
+      window.__mvAnalytics('page_viewed', { page_type: 'district', district_name: districtName });
+    }
+  }
+
+  const btn = document.getElementById('share-btn');
+  if (btn) {
+    btn.addEventListener('click', async () => {
+      const text = btn.getAttribute('data-text') || '';
+      const url = btn.getAttribute('data-url') || '';
+      const h1El = document.querySelector('.district-title h1');
+      const districtName = h1El?.textContent || '';
+      let shareMethod = 'clipboard';
+      if (navigator.share) {
+        try {
+          await navigator.share({ text, url });
+          shareMethod = 'webshare';
+        } catch {}
+      } else {
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+        btn.textContent = tCard('scorecard.shareCopied');
+        setTimeout(() => { btn.textContent = tCard('scorecard.shareButton'); }, 2000);
+      }
+      if (window.__mvAnalytics) {
+        window.__mvAnalytics('district_shared', { district_name: districtName, method: shareMethod });
+      }
+    });
+  }
+
+  // CSV export for single district
+  const csvBtn = document.getElementById('export-district-csv');
+  if (csvBtn) {
+    csvBtn.addEventListener('click', async () => {
+      const { computeGreenIndex } = await import('../../lib/green-index');
+      const { exportSingleDistrictCSV } = await import('../../lib/export-csv');
+
+      const districtCode = csvBtn.getAttribute('data-district-code') || '';
+      const allDistricts = computeGreenIndex();
+      const district = allDistricts.find((d) => d.code === districtCode);
+      if (district) {
+        exportSingleDistrictCSV(district);
+        const h1El = document.querySelector('.district-title h1');
+        const dName = h1El?.textContent || '';
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('csv_exported', { type: 'district', district_name: dName });
+        }
+      }
+    });
+  }
+
+  // --- EMT line detail: click badge → show route, frequency, incidents ---
+  const lineDetailEl = document.getElementById('emt-line-detail');
+  const lineBadges = document.querySelectorAll('.emt-line-badge[data-line]');
+
+  // Fetch alerts once, cache
+  let emtAlerts: any[] | null = null;
+  async function getAlerts() {
+    if (emtAlerts !== null) return emtAlerts;
+    try {
+      const { transit_realtime } = await import('gtfs-realtime-bindings');
+      const res = await fetch('https://openapi.emtmadrid.es/v1/bus/servicealerts/proto');
+      const buf = await res.arrayBuffer();
+      const feed = transit_realtime.FeedMessage.decode(new Uint8Array(buf));
+      emtAlerts = feed.entity.map((e: any) => e.alert).filter(Boolean);
+    } catch {
+      emtAlerts = [];
+    }
+    return emtAlerts!;
+  }
+
+  lineBadges.forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const line = btn.getAttribute('data-line') || '';
+      const route = btn.getAttribute('data-route') || '';
+      const freq = btn.getAttribute('data-freq') || '';
+
+      // Highlight active badge
+      lineBadges.forEach((b) => b.classList.remove('emt-line-badge--active'));
+      btn.classList.add('emt-line-badge--active');
+
+      if (!lineDetailEl) return;
+
+      // Build detail
+      let html = `<div class="emt-ld-header"><strong>${tCard('scorecard.emtLineLabel', { line })}</strong>`;
+      if (route) html += ` <span class="emt-ld-route">${route}</span>`;
+      html += `</div>`;
+
+      if (freq) {
+        html += `<p class="emt-ld-freq">${tCard('scorecard.emtFreqLabel', { freq })}</p>`;
+      }
+
+      // Show loading for alerts
+      html += `<p class="emt-ld-loading">${tCard('scorecard.emtAlertLoading')}</p>`;
+      lineDetailEl.innerHTML = html;
+      lineDetailEl.style.display = '';
+
+      // Fetch and filter alerts for this line
+      const alerts = await getAlerts();
+      const padLine = line.padStart(3, '0');
+      const seen = new Set<string>();
+      const lineAlerts = alerts.filter((a: any) => {
+        const matchEntity = a.informedEntity?.some((ie: any) => {
+          const rid = ie.routeId || '';
+          return rid === line || rid === padLine;
+        });
+        if (!matchEntity) {
+          const header = a.headerText?.translation?.[0]?.text || '';
+          const desc = a.descriptionText?.translation?.[0]?.text || '';
+          const re = new RegExp(`\\b0*${line}\\b`);
+          if (!re.test(header) && !re.test(desc)) return false;
+        }
+        // Deduplicate by header text
+        const key = a.headerText?.translation?.[0]?.text || '';
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      // Replace loading with results
+      let alertsHtml = '';
+      if (lineAlerts.length > 0) {
+        alertsHtml = `<div class="emt-ld-alerts">
+          <p class="emt-ld-alerts-title">${tCard('scorecard.emtLineAlerts', { count: String(lineAlerts.length) })}</p>
+          ${lineAlerts.slice(0, 5).map((a: any) => {
+            const h = a.headerText?.translation?.[0]?.text || '';
+            const d = a.descriptionText?.translation?.[0]?.text || '';
+            return `<details class="emt-ld-alert-item"><summary>${h}</summary><p>${d}</p></details>`;
+          }).join('')}
+        </div>`;
+      } else {
+        alertsHtml = `<p class="emt-ld-no-alerts">${tCard('scorecard.emtNoLineAlerts')}</p>`;
+      }
+
+      // Remove loading, append alerts
+      const loadingEl = lineDetailEl.querySelector('.emt-ld-loading');
+      if (loadingEl) loadingEl.remove();
+      lineDetailEl.insertAdjacentHTML('beforeend', alertsHtml);
+    });
+  });
+</script>
+
+</BaseLayout>
+
+<style>
+  .scorecard {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--color-hoja);
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-bosque);
+  }
+
+  .scorecard-header {
+    margin-bottom: 2rem;
+  }
+
+  .district-title {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .district-code {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-hoja);
+    opacity: 0.6;
+  }
+
+  .district-title h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--color-bosque);
+  }
+
+  .district-pop {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--color-piedra);
+  }
+
+  .scorecard-grid {
+    margin-bottom: 2rem;
+  }
+
+  .score-card--main {
+    color: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .score-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+
+  .score-value {
+    font-family: var(--font-display);
+    font-size: 6rem;
+    line-height: 1;
+    margin: 0.25rem 0;
+  }
+
+  .score-tier {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .score-context {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-style: italic;
+  }
+
+  .sub-indices {
+    margin-top: 2rem;
+  }
+
+  .sub-indices h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .sub-indices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+  }
+
+  .sub-index {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sub-index-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .sub-index-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-tinta);
+  }
+
+  .sub-index-weight {
+    font-size: 0.7rem;
+    color: var(--color-piedra);
+    opacity: 0.6;
+  }
+
+  .sub-index-value {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+
+  .sub-index-detail {
+    font-size: 0.8rem;
+    color: var(--color-piedra);
+    line-height: 1.3;
+  }
+
+  /* Share + Narrative */
+  .score-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .share-btn,
+  .export-district-btn {
+    padding: 0.5rem 1.5rem;
+    background: var(--color-bosque, #2D6A4F);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .share-btn:hover,
+  .export-district-btn:hover {
+    background: var(--color-hoja, #52B788);
+  }
+
+  .export-district-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+  }
+
+  .export-district-btn svg {
+    flex-shrink: 0;
+  }
+
+  .narrative {
+    margin-top: 2rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-radius: 12px;
+  }
+
+  .narrative h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-bosque);
+  }
+
+  .narrative p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    color: var(--color-tinta);
+  }
+
+  .narrative p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* EMT Bus section */
+  .emt-section {
+    margin-top: 3rem;
+  }
+
+  .emt-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .emt-summary {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .emt-stat {
+    font-size: 0.9rem;
+    color: #264653;
+  }
+
+  .emt-stat strong {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: #0178BC;
+    margin-right: 0.25rem;
+  }
+
+  :global(.emt-lines) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  :global(.emt-line-badge) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    padding: 0.25rem 0.5rem;
+    background: #0178BC;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  :global(.emt-line-badge:hover) {
+    background: #015f96;
+    transform: translateY(-1px);
+  }
+
+  :global(.emt-line-badge--active) {
+    background: var(--color-bosque, #2D6A4F);
+    box-shadow: 0 0 0 2px rgba(45,106,79,0.3);
+  }
+
+  :global(.emt-line-detail) {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-arena, #F5F1EB);
+    border-radius: 8px;
+  }
+
+  :global(.emt-ld-header) {
+    font-size: 0.95rem;
+    color: var(--color-tinta, #264653);
+  }
+
+  :global(.emt-ld-header strong) {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+  }
+
+  :global(.emt-ld-route) {
+    color: var(--color-piedra, #6C757D);
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+
+  :global(.emt-ld-freq) {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--color-tinta, #264653);
+  }
+
+  :global(.emt-ld-alerts) {
+    margin-top: 0.75rem;
+  }
+
+  :global(.emt-ld-alerts-title) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #E76F51;
+    margin-bottom: 0.35rem;
+  }
+
+  :global(.emt-ld-alert-item) {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  :global(.emt-ld-alert-item summary) {
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    color: var(--color-tinta, #264653);
+    cursor: pointer;
+    list-style: none;
+    line-height: 1.35;
+  }
+
+  :global(.emt-ld-alert-item summary::-webkit-details-marker) { display: none; }
+
+  :global(.emt-ld-alert-item summary::before) {
+    content: '+';
+    display: inline-block;
+    width: 1rem;
+    font-weight: 600;
+    color: var(--color-piedra, #6C757D);
+  }
+
+  :global(.emt-ld-alert-item[open] summary::before) { content: '−'; }
+
+  :global(.emt-ld-alert-item p) {
+    padding: 0 0 0.6rem 1rem;
+    font-size: 0.78rem;
+    color: var(--color-piedra, #6C757D);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  :global(.emt-ld-no-alerts) {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-hoja, #52B788);
+    font-style: italic;
+  }
+
+  :global(.emt-ld-loading) {
+    font-size: 0.8rem;
+    color: var(--color-piedra, #6C757D);
+    font-style: italic;
+    margin-top: 0.35rem;
+  }
+
+  .emt-source {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #6C757D;
+    font-style: italic;
+  }
+
+  /* BiciMAD district */
+  .bicimad-district {
+    margin-top: 3rem;
+  }
+
+  .bicimad-district h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .bicimad-loading-d {
+    color: var(--color-piedra);
+    font-style: italic;
+  }
+
+  :global(.bici-district-summary) {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  :global(.bds-item) {
+    font-size: 0.9rem;
+    color: #264653;
+  }
+
+  :global(.bds-item strong) {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: #2D6A4F;
+    margin-right: 0.25rem;
+  }
+
+  :global(.bdi-row) {
+    display: grid;
+    grid-template-columns: 1fr 150px 60px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  :global(.bdi-name) { color: #264653; font-weight: 500; }
+
+  :global(.bdi-bar) {
+    height: 8px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  :global(.bdi-fill) {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  :global(.bdi-count) {
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  :global(.bici-live-note) {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #6C757D;
+    font-style: italic;
+  }
+
+  /* Data details */
+  .data-details {
+    margin-top: 3rem;
+  }
+
+  .data-details h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .detail-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .detail-icon {
+    font-size: 1.5rem;
+  }
+
+  .detail-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--color-tinta);
+    line-height: 1.1;
+  }
+
+  .detail-label {
+    font-size: 0.75rem;
+    color: var(--color-piedra);
+  }
+
+  .species-section, .recycling-section {
+    margin-top: 2rem;
+  }
+
+  .species-section h3, .recycling-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .species-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .species-item {
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+
+  .species-count {
+    font-weight: 600;
+    color: var(--color-bosque);
+  }
+
+  .recycling-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .recycling-bar-item {
+    display: grid;
+    grid-template-columns: 150px 1fr 60px;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .recycling-type {
+    text-transform: capitalize;
+  }
+
+  .recycling-bar-track {
+    height: 8px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .recycling-bar-fill {
+    height: 100%;
+    background: var(--color-bosque);
+    border-radius: 4px;
+  }
+
+  .recycling-count {
+    text-align: right;
+    font-weight: 600;
+    color: var(--color-tinta);
+  }
+
+  @media (max-width: 768px) {
+    .scorecard {
+      padding: 1.5rem 1rem;
+    }
+    .score-value {
+      font-size: 4rem;
+    }
+    .sub-indices-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .details-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .recycling-bar-item {
+      grid-template-columns: 100px 1fr 50px;
+      font-size: 0.8rem;
+    }
+  }
+</style>

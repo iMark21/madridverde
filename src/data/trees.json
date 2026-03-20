@@ -1,0 +1,611 @@
+[
+  {
+    "code": "01",
+    "name": "CENTRO",
+    "totalTrees": 14188,
+    "greenM2": 304499.69,
+    "greenHa": 30.45,
+    "topSpecies": [
+      {
+        "name": "Ligustro japones",
+        "count": 2677
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 1850
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 1634
+      },
+      {
+        "name": "Aligustre",
+        "count": 603
+      },
+      {
+        "name": "Palmera",
+        "count": 523
+      }
+    ]
+  },
+  {
+    "code": "02",
+    "name": "ARGANZUELA",
+    "totalTrees": 29281,
+    "greenM2": 903031.21,
+    "greenHa": 90.3,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 3931
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 2444
+      },
+      {
+        "name": "Cedro",
+        "count": 2062
+      },
+      {
+        "name": "Morera",
+        "count": 1677
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 1492
+      }
+    ]
+  },
+  {
+    "code": "03",
+    "name": "RETIRO",
+    "totalTrees": 31090,
+    "greenM2": 367055.33,
+    "greenHa": 36.71,
+    "topSpecies": [
+      {
+        "name": "Aligustre",
+        "count": 5970
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 3555
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 2715
+      },
+      {
+        "name": "Olmo",
+        "count": 2121
+      },
+      {
+        "name": "Ligustro japones",
+        "count": 1298
+      }
+    ]
+  },
+  {
+    "code": "04",
+    "name": "SALAMANCA",
+    "totalTrees": 20672,
+    "greenM2": 357211.07,
+    "greenHa": 35.72,
+    "topSpecies": [
+      {
+        "name": "Sophora japonica",
+        "count": 5820
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 2449
+      },
+      {
+        "name": "Ligustro japones",
+        "count": 1751
+      },
+      {
+        "name": "Olmo",
+        "count": 832
+      },
+      {
+        "name": "Aligustre",
+        "count": 720
+      }
+    ]
+  },
+  {
+    "code": "05",
+    "name": "CHAMARTIN",
+    "totalTrees": 25784,
+    "greenM2": 560941.81,
+    "greenHa": 56.09,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 5991
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 3615
+      },
+      {
+        "name": "Olmo",
+        "count": 2401
+      },
+      {
+        "name": "Cedro",
+        "count": 1292
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 1077
+      }
+    ]
+  },
+  {
+    "code": "06",
+    "name": "TETUAN",
+    "totalTrees": 15172,
+    "greenM2": 630953.32,
+    "greenHa": 63.1,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 4774
+      },
+      {
+        "name": "Ligustro japones",
+        "count": 890
+      },
+      {
+        "name": "Olmo",
+        "count": 729
+      },
+      {
+        "name": "Ciruelo",
+        "count": 575
+      },
+      {
+        "name": "Morera",
+        "count": 566
+      }
+    ]
+  },
+  {
+    "code": "07",
+    "name": "CHAMBERI",
+    "totalTrees": 13748,
+    "greenM2": 99944.98,
+    "greenHa": 9.99,
+    "topSpecies": [
+      {
+        "name": "Sophora japonica",
+        "count": 5689
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 1754
+      },
+      {
+        "name": "Cedro",
+        "count": 817
+      },
+      {
+        "name": "Olmo",
+        "count": 759
+      },
+      {
+        "name": "Ligustro japones",
+        "count": 605
+      }
+    ]
+  },
+  {
+    "code": "08",
+    "name": "FUENCARRAL-EL PARDO",
+    "totalTrees": 60369,
+    "greenM2": 3745002.14,
+    "greenHa": 374.5,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 9529
+      },
+      {
+        "name": "Cedro",
+        "count": 4780
+      },
+      {
+        "name": "Olmo",
+        "count": 4649
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 3454
+      },
+      {
+        "name": "Morera",
+        "count": 2467
+      }
+    ]
+  },
+  {
+    "code": "09",
+    "name": "MONCLOA-ARAVACA",
+    "totalTrees": 55487,
+    "greenM2": 1891038.42,
+    "greenHa": 189.1,
+    "topSpecies": [
+      {
+        "name": "Pino pinonero",
+        "count": 8304
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 6180
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 3559
+      },
+      {
+        "name": "Olmo",
+        "count": 2578
+      },
+      {
+        "name": "Acacia negra",
+        "count": 1886
+      }
+    ]
+  },
+  {
+    "code": "10",
+    "name": "LATINA",
+    "totalTrees": 38049,
+    "greenM2": 2608854.39,
+    "greenHa": 260.89,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 5530
+      },
+      {
+        "name": "Olmo",
+        "count": 3727
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 2718
+      },
+      {
+        "name": "Cedro",
+        "count": 2076
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 1806
+      }
+    ]
+  },
+  {
+    "code": "11",
+    "name": "CARABANCHEL",
+    "totalTrees": 44339,
+    "greenM2": 2557571.96,
+    "greenHa": 255.76,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 7499
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 5057
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 2714
+      },
+      {
+        "name": "Olmo",
+        "count": 2571
+      },
+      {
+        "name": "Cedro",
+        "count": 2352
+      }
+    ]
+  },
+  {
+    "code": "12",
+    "name": "USERA",
+    "totalTrees": 36286,
+    "greenM2": 1678026.79,
+    "greenHa": 167.8,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 5442
+      },
+      {
+        "name": "Olmo",
+        "count": 3703
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 3495
+      },
+      {
+        "name": "Robinia",
+        "count": 1950
+      },
+      {
+        "name": "Cedro",
+        "count": 1803
+      }
+    ]
+  },
+  {
+    "code": "13",
+    "name": "PUENTE DE VALLECAS",
+    "totalTrees": 51025,
+    "greenM2": 2806838.37,
+    "greenHa": 280.68,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 4643
+      },
+      {
+        "name": "Populus",
+        "count": 4255
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 3542
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 3539
+      },
+      {
+        "name": "Robinia",
+        "count": 3239
+      }
+    ]
+  },
+  {
+    "code": "14",
+    "name": "MORATALAZ",
+    "totalTrees": 38061,
+    "greenM2": 1175935.2,
+    "greenHa": 117.59,
+    "topSpecies": [
+      {
+        "name": "Olmo",
+        "count": 6207
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 4510
+      },
+      {
+        "name": "Pino carrasco",
+        "count": 3165
+      },
+      {
+        "name": "Cedro",
+        "count": 3030
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 2162
+      }
+    ]
+  },
+  {
+    "code": "15",
+    "name": "CIUDAD LINEAL",
+    "totalTrees": 37369,
+    "greenM2": 1349618.59,
+    "greenHa": 134.96,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 4517
+      },
+      {
+        "name": "Olmo",
+        "count": 4084
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 3462
+      },
+      {
+        "name": "Cedro",
+        "count": 1600
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 1578
+      }
+    ]
+  },
+  {
+    "code": "16",
+    "name": "HORTALEZA",
+    "totalTrees": 73228,
+    "greenM2": 3248233.34,
+    "greenHa": 324.82,
+    "topSpecies": [
+      {
+        "name": "Cedro",
+        "count": 5721
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 5219
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 4554
+      },
+      {
+        "name": "Sophora japonica",
+        "count": 2916
+      },
+      {
+        "name": "Encina",
+        "count": 2513
+      }
+    ]
+  },
+  {
+    "code": "17",
+    "name": "VILLAVERDE",
+    "totalTrees": 47297,
+    "greenM2": 2165847.32,
+    "greenHa": 216.58,
+    "topSpecies": [
+      {
+        "name": "Cedro",
+        "count": 5531
+      },
+      {
+        "name": "Olmo",
+        "count": 5230
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 3091
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 2735
+      },
+      {
+        "name": "Pino nigra",
+        "count": 2283
+      }
+    ]
+  },
+  {
+    "code": "18",
+    "name": "VILLA DE VALLECAS",
+    "totalTrees": 40226,
+    "greenM2": 3008407.88,
+    "greenHa": 300.84,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 5014
+      },
+      {
+        "name": "Cedro",
+        "count": 3312
+      },
+      {
+        "name": "Pino carrasco",
+        "count": 2720
+      },
+      {
+        "name": "Acacia negra",
+        "count": 1966
+      },
+      {
+        "name": "Olmo",
+        "count": 1954
+      }
+    ]
+  },
+  {
+    "code": "19",
+    "name": "VICALVARO",
+    "totalTrees": 31780,
+    "greenM2": 1974128.36,
+    "greenHa": 197.41,
+    "topSpecies": [
+      {
+        "name": "Cedro",
+        "count": 2482
+      },
+      {
+        "name": "Prunus cerezo",
+        "count": 2111
+      },
+      {
+        "name": "Platano de sombra",
+        "count": 1900
+      },
+      {
+        "name": "Ligustro japones",
+        "count": 1818
+      },
+      {
+        "name": "Populus",
+        "count": 1733
+      }
+    ]
+  },
+  {
+    "code": "20",
+    "name": "SAN BLAS-CANILLEJAS",
+    "totalTrees": 54724,
+    "greenM2": 1804470.86,
+    "greenHa": 180.45,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 8193
+      },
+      {
+        "name": "Pino carrasco",
+        "count": 5734
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 4314
+      },
+      {
+        "name": "Cedro",
+        "count": 3268
+      },
+      {
+        "name": "Acacia negra",
+        "count": 1712
+      }
+    ]
+  },
+  {
+    "code": "21",
+    "name": "BARAJAS",
+    "totalTrees": 34838,
+    "greenM2": 1063570.63,
+    "greenHa": 106.36,
+    "topSpecies": [
+      {
+        "name": "Platano de sombra",
+        "count": 3956
+      },
+      {
+        "name": "Olivo",
+        "count": 2584
+      },
+      {
+        "name": "Pino pinonero",
+        "count": 1817
+      },
+      {
+        "name": "Catalpa",
+        "count": 1560
+      },
+      {
+        "name": "Castano de Indias",
+        "count": 1466
+      }
+    ]
+  }
+]

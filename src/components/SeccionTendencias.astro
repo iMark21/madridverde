@@ -1,0 +1,346 @@
+---
+import noiseData from '../data/noise-monthly.json';
+import airStationsData from '../data/air-stations.json';
+
+// Build station list for the selector (only those with LAeq data)
+const stationsWithData = (noiseData as any[])
+  .filter(s => s.data.some((d: any) => d.laeq != null && d.year >= 2000))
+  .map(s => ({ id: s.id, name: s.name }))
+  .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
+---
+
+<div class="trends-content">
+  <!-- Noise chart -->
+  <div class="chart-block">
+    <h3 data-i18n="trends.noiseTitle">Ruido ambiental (LAeq dB)</h3>
+    <p class="chart-description"><span data-i18n="trends.noiseDesc">Selecciona estaciones para comparar su evolucion. OMS recomienda no superar 55 dB.</span> <em data-i18n="trends.noiseDataNote">Datos SIVCA, ultima actualizacion: febrero 2026.</em></p>
+
+    <div class="station-selector" id="noise-station-selector">
+      {stationsWithData.map(s => (
+        <button
+          data-id={s.id}
+          data-name={s.name}
+          class:list={['station-chip', { selected: defaultStations.includes(s.id) }]}
+        >
+          {s.name}
+        </button>
+      ))}
+    </div>
+
+    <div class="chart-container">
+      <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
+    </div>
+  </div>
+
+  <!-- Air chart -->
+  <div class="chart-block">
+    <h3 data-i18n="trends.airTitle">Calidad del aire (NO2 ug/m3)</h3>
+    <p class="chart-description"><span data-i18n="trends.airDesc">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 ug/m3.</span> <em data-i18n="trends.airDataNote">Datos horarios agregados, hasta febrero 2026.</em></p>
+
+    <div class="station-selector" id="air-station-selector">
+      {(airStationsData as any[]).map(s => (
+        <button
+          data-id={s.code}
+          data-name={s.name}
+          class:list={['station-chip', { selected: ['4', '8', '49', '47', '17'].includes(s.code) }]}
+        >
+          {s.name}
+        </button>
+      ))}
+    </div>
+
+    <div class="chart-container">
+      <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { Chart } from '../lib/chart-setup';
+  import noiseData from '../data/noise-monthly.json';
+  import airData from '../data/air-monthly.json';
+  import airStations from '../data/air-stations.json';
+  import { t as tTrend } from '../i18n/i18n.js';
+
+  const CHART_COLORS = ['#2D6A4F', '#52B788', '#E9C46A', '#F4A261', '#264653', '#E76F51', '#40916C', '#6C757D'];
+
+  const POLICIES = [
+    { year: 2005, label: tTrend('trends.policyNoiseLaw'), color: '#264653' },
+    { year: 2014, label: tTrend('trends.policyAPR'), color: '#40916C' },
+    { year: 2018, label: tTrend('trends.policyMadridCentral'), color: '#2D6A4F' },
+    { year: 2020, label: tTrend('trends.policyCovid'), color: '#E76F51' },
+    { year: 2022, label: tTrend('trends.policyZBE'), color: '#2D6A4F' },
+  ];
+
+  // --- Noise chart with selectable stations ---
+
+  function getNoiseYearlyAverages(stationId: string) {
+    const station = (noiseData as any[]).find((s) => s.id === stationId);
+    if (!station) return [];
+    const years: Record<number, { sum: number; count: number }> = {};
+    for (const d of station.data) {
+      if (d.laeq == null || d.year < 2000) continue;
+      if (!years[d.year]) years[d.year] = { sum: 0, count: 0 };
+      years[d.year].sum += d.laeq;
+      years[d.year].count++;
+    }
+    return Object.entries(years)
+      .map(([y, v]) => ({ year: Number(y), laeq: Math.round((v.sum / v.count) * 10) / 10 }))
+      .sort((a, b) => a.year - b.year);
+  }
+
+  const allYears: number[] = [];
+  for (let y = 2000; y <= 2025; y++) allYears.push(y);
+
+  let noiseChart: Chart | null = null;
+
+  function renderNoiseChart(selectedIds: string[]) {
+    const datasets = selectedIds.map((id, i) => {
+      const station = (noiseData as any[]).find((s) => s.id === id);
+      const yearly = getNoiseYearlyAverages(id);
+      const yearMap = new Map(yearly.map((d) => [d.year, d.laeq]));
+      return {
+        label: station?.name || id,
+        data: allYears.map((y) => yearMap.get(y) ?? null),
+        borderColor: CHART_COLORS[i % CHART_COLORS.length],
+        backgroundColor: CHART_COLORS[i % CHART_COLORS.length] + '20',
+        borderWidth: 2, pointRadius: 3, pointHoverRadius: 6, tension: 0.3, spanGaps: true,
+      };
+    });
+
+    datasets.push({
+      label: tTrend('trends.whoNoiseLimit'),
+      data: allYears.map(() => 55),
+      borderColor: '#E76F51', backgroundColor: 'transparent',
+      borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0, tension: 0, spanGaps: true,
+      // @ts-ignore
+      borderDash: [6, 4],
+    });
+
+    if (noiseChart) noiseChart.destroy();
+    const canvas = document.getElementById('noise-chart') as HTMLCanvasElement;
+    noiseChart = new Chart(canvas, {
+      type: 'line',
+      data: { labels: allYears.map(String), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true, padding: 12 } },
+          tooltip: {
+            backgroundColor: '#264653',
+            callbacks: {
+              title: (items) => {
+                const year = Number(items[0].label);
+                const policy = POLICIES.find((p) => p.year === year);
+                return policy ? `${year} — ${policy.label}` : String(year);
+              },
+              label: (item) => item.raw === null ? '' : `${item.dataset.label}: ${item.raw} dB`,
+            },
+          },
+          annotation: {
+            annotations: Object.fromEntries(POLICIES.map((p, i) => [
+              `p${i}`, {
+                type: 'line' as const, xMin: String(p.year), xMax: String(p.year),
+                borderColor: p.color + '80', borderWidth: 2, borderDash: [4, 4],
+                label: { display: true, content: p.label, position: 'start' as const, backgroundColor: p.color, color: 'white', font: { family: 'Inter', size: 10, weight: 'bold' as const }, padding: { top: 3, bottom: 3, left: 6, right: 6 }, borderRadius: 4 },
+              },
+            ])),
+          },
+        },
+        scales: {
+          y: { min: 50, max: 75, title: { display: true, text: 'LAeq (dB)', font: { family: 'Inter', size: 12 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+          x: { ticks: { font: { family: 'Inter', size: 10 }, maxRotation: 0 }, grid: { color: 'transparent' } },
+        },
+      },
+    });
+  }
+
+  // Noise station selector
+  const noiseSelector = document.getElementById('noise-station-selector')!;
+  const noiseChips = noiseSelector?.querySelectorAll('.station-chip') || [];
+  let selectedNoiseStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
+
+  noiseChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const id = chip.getAttribute('data-id')!;
+      const stationName = chip.getAttribute('data-name') || id;
+      const idx = selectedNoiseStations.indexOf(id);
+      if (idx >= 0) {
+        selectedNoiseStations.splice(idx, 1);
+        chip.classList.remove('selected');
+      } else if (selectedNoiseStations.length < 8) {
+        selectedNoiseStations.push(id);
+        chip.classList.add('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('trend_station_selected', { station_name: stationName, chart_type: 'noise' });
+        }
+      }
+      if (selectedNoiseStations.length > 0) renderNoiseChart(selectedNoiseStations);
+    });
+  });
+
+  // Defer initial render to ensure canvas has dimensions
+  setTimeout(() => renderNoiseChart(selectedNoiseStations), 50);
+
+  // --- Air chart with selectable stations ---
+
+  let airChart: Chart | null = null;
+
+  function renderAirChart(selectedIds: string[]) {
+    const allMonths: string[] = [];
+    for (const s of airData as any[]) {
+      const no2 = s.contaminants?.NO2 || [];
+      for (const e of no2) { if (!allMonths.includes(e.month)) allMonths.push(e.month); }
+    }
+    allMonths.sort();
+
+    const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const monthLabels = allMonths.map(m => { const [y, mo] = m.split('-'); return `${MONTH_NAMES[parseInt(mo)-1]} ${y.slice(2)}`; });
+
+    const datasets = selectedIds.map((id, i) => {
+      const s = (airData as any[]).find((x) => x.station === id);
+      if (!s) return null;
+      const no2 = s.contaminants?.NO2 || [];
+      const monthMap = new Map(no2.map((e: any) => [e.month, e.avg]));
+      const info = (airStations as any[]).find((x) => x.code === id);
+      return {
+        label: info?.name || `Estacion ${id}`,
+        data: allMonths.map((m) => monthMap.get(m) ?? null),
+        borderColor: CHART_COLORS[i % CHART_COLORS.length],
+        backgroundColor: CHART_COLORS[i % CHART_COLORS.length] + '20',
+        borderWidth: 2, pointRadius: 2, pointHoverRadius: 5, tension: 0.3, spanGaps: true,
+      };
+    }).filter(Boolean);
+
+    datasets.push({
+      label: tTrend('trends.whoAirLimit'),
+      data: allMonths.map(() => 40),
+      borderColor: '#E76F51', backgroundColor: 'transparent',
+      borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0, tension: 0, spanGaps: true,
+      // @ts-ignore
+      borderDash: [6, 4],
+    });
+
+    if (airChart) airChart.destroy();
+    const canvas = document.getElementById('air-chart') as HTMLCanvasElement;
+    airChart = new Chart(canvas, {
+      type: 'line',
+      data: { labels: monthLabels, datasets: datasets as any },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true, padding: 12 } },
+          tooltip: { backgroundColor: '#264653' },
+        },
+        scales: {
+          y: { min: 0, max: 80, title: { display: true, text: 'NO2 (µg/m³)', font: { family: 'Inter', size: 12 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+          x: { ticks: { font: { family: 'Inter', size: 10 }, maxRotation: 45 }, grid: { color: 'transparent' } },
+        },
+      },
+    });
+  }
+
+  const airSelector = document.getElementById('air-station-selector')!;
+  const airChips = airSelector?.querySelectorAll('.station-chip') || [];
+  let selectedAirStations = ['4', '8', '49', '47', '17'];
+
+  airChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const id = chip.getAttribute('data-id')!;
+      const stationName = chip.getAttribute('data-name') || id;
+      const idx = selectedAirStations.indexOf(id);
+      if (idx >= 0) {
+        selectedAirStations.splice(idx, 1);
+        chip.classList.remove('selected');
+      } else if (selectedAirStations.length < 8) {
+        selectedAirStations.push(id);
+        chip.classList.add('selected');
+        if (window.__mvAnalytics) {
+          window.__mvAnalytics('trend_station_selected', { station_name: stationName, chart_type: 'air' });
+        }
+      }
+      if (selectedAirStations.length > 0) renderAirChart(selectedAirStations);
+    });
+  });
+
+  setTimeout(() => renderAirChart(selectedAirStations), 100);
+
+  // Track when trend charts enter viewport (fire once each)
+  if ('IntersectionObserver' in window) {
+    const chartViewed: Record<string, boolean> = {};
+    const chartObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const chartId = entry.target.id;
+          const chartType = chartId === 'noise-chart' ? 'noise' : chartId === 'air-chart' ? 'air' : null;
+          if (chartType && !chartViewed[chartType]) {
+            chartViewed[chartType] = true;
+            if (window.__mvAnalytics) {
+              window.__mvAnalytics('trend_chart_viewed', { chart_type: chartType });
+            }
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const noiseCanvas = document.getElementById('noise-chart');
+    const airCanvas = document.getElementById('air-chart');
+    if (noiseCanvas) chartObserver.observe(noiseCanvas);
+    if (airCanvas) chartObserver.observe(airCanvas);
+  }
+</script>
+
+<style>
+  .chart-block {
+    margin-bottom: 3rem;
+  }
+
+  .chart-block h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .chart-description {
+    font-size: 0.85rem;
+    color: var(--color-piedra);
+    margin-bottom: 0.75rem;
+    max-width: 600px;
+  }
+
+  .station-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .station-chip {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 16px;
+    background: white;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-piedra);
+    transition: all 0.15s;
+  }
+
+  .station-chip:hover { border-color: var(--color-bosque); color: var(--color-bosque); }
+  .station-chip.selected { background: var(--color-tinta); color: white; border-color: var(--color-tinta); }
+
+  .chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: 380px;
+  }
+
+  @media (max-width: 768px) {
+    .chart-container { height: 280px; padding: 1rem; }
+  }
+</style>

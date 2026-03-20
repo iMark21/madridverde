@@ -1,0 +1,409 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Tendencias historicas — MadridVerde" description="Evolucion de la calidad ambiental de Madrid: ruido, aire, y el impacto de las politicas publicas">
+  <section class="trends">
+    <h1 data-i18n="historico.title">Tendencias historicas</h1>
+    <p class="trends-subtitle" data-i18n="historico.subtitle">Como ha cambiado la calidad ambiental de Madrid en las ultimas dos decadas</p>
+
+    <div class="chart-section">
+      <h2 data-i18n="historico.noiseTitle">Ruido ambiental (LAeq dB)</h2>
+      <p class="chart-description" data-i18n="historico.noiseDesc">Nivel medio de ruido equivalente en estaciones representativas de Madrid. La OMS recomienda no superar los 55 dB en zonas residenciales.</p>
+      <div class="chart-container">
+        <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
+      </div>
+      <p class="chart-sr-only" id="noise-chart-desc">
+        <!-- Screen reader alternative provided by script -->
+      </p>
+    </div>
+
+    <div class="chart-section">
+      <h2 data-i18n="historico.airTitle">Calidad del aire (NO2 ug/m3)</h2>
+      <p class="chart-description" data-i18n="historico.airDesc">Evolucion mensual del dioxido de nitrogeno en estaciones representativas. El limite anual de la OMS es 40 ug/m3. El NO2 es el contaminante mas relevante en Madrid por el trafico.</p>
+      <div class="chart-container">
+        <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  if (window.__mvAnalytics) {
+    window.__mvAnalytics('page_viewed', { page_type: 'historical' });
+  }
+</script>
+
+<script>
+  import { Chart } from '../lib/chart-setup';
+  import noiseData from '../data/noise-monthly.json';
+  import { t as tHist } from '../i18n/i18n.js';
+
+  // Policy annotations as vertical reference points
+  const POLICIES = [
+    { year: 2005, label: tHist('trends.policyNoiseLaw'), color: '#264653' },
+    { year: 2014, label: tHist('trends.policyAPR'), color: '#40916C' },
+    { year: 2018, label: tHist('trends.policyMadridCentral'), color: '#2D6A4F' },
+    { year: 2020, label: tHist('trends.policyCovid'), color: '#E76F51' },
+    { year: 2022, label: tHist('trends.policyZBE'), color: '#2D6A4F' },
+  ];
+
+  // Select representative stations with good data coverage
+  const STATION_IDS = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
+  const STATION_COLORS = ['#2D6A4F', '#52B788', '#E9C46A', '#F4A261', '#264653'];
+
+  // Compute yearly averages per station
+  interface YearlyData {
+    year: number;
+    laeq: number;
+  }
+
+  function getYearlyAverages(stationId: string): YearlyData[] {
+    const station = (noiseData as any[]).find((s) => s.id === stationId);
+    if (!station) return [];
+
+    const years: Record<number, { sum: number; count: number }> = {};
+    for (const d of station.data) {
+      if (d.laeq == null || d.year < 2000) continue;
+      if (!years[d.year]) years[d.year] = { sum: 0, count: 0 };
+      years[d.year].sum += d.laeq;
+      years[d.year].count++;
+    }
+
+    return Object.entries(years)
+      .map(([y, v]) => ({ year: Number(y), laeq: Math.round((v.sum / v.count) * 10) / 10 }))
+      .sort((a, b) => a.year - b.year);
+  }
+
+  // Build labels (all years from 2000 to latest)
+  const allYears: number[] = [];
+  for (let y = 2000; y <= 2025; y++) allYears.push(y);
+
+  // Build datasets
+  const datasets = STATION_IDS.map((id, i) => {
+    const station = (noiseData as any[]).find((s) => s.id === id);
+    const yearly = getYearlyAverages(id);
+    const yearMap = new Map(yearly.map((d) => [d.year, d.laeq]));
+
+    return {
+      label: station?.name || id,
+      data: allYears.map((y) => yearMap.get(y) ?? null),
+      borderColor: STATION_COLORS[i],
+      backgroundColor: STATION_COLORS[i] + '20',
+      borderWidth: 2,
+      pointRadius: 3,
+      pointHoverRadius: 6,
+      tension: 0.3,
+      spanGaps: true,
+    };
+  });
+
+  // WHO guideline reference line
+  datasets.push({
+    label: tHist('trends.whoNoiseLimit'),
+    data: allYears.map(() => 55),
+    borderColor: '#E76F51',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    tension: 0,
+    spanGaps: true,
+    // @ts-ignore
+    borderDash: [6, 4],
+  });
+
+  const canvas = document.getElementById('noise-chart') as HTMLCanvasElement;
+
+  const chart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: allYears.map(String),
+      datasets,
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            font: { family: 'Inter', size: 12 },
+            usePointStyle: true,
+            padding: 16,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#264653',
+          titleFont: { family: 'Inter', weight: 'bold' },
+          bodyFont: { family: 'Inter' },
+          callbacks: {
+            title: (items) => {
+              const year = Number(items[0].label);
+              const policy = POLICIES.find((p) => p.year === year);
+              return policy ? `${year} — ${policy.label}` : String(year);
+            },
+            label: (item) => {
+              if (item.raw === null) return '';
+              return `${item.dataset.label}: ${item.raw} dB`;
+            },
+          },
+        },
+        annotation: {
+          annotations: Object.fromEntries(POLICIES.map((p, i) => [
+            `policy${i}`,
+            {
+              type: 'line' as const,
+              xMin: String(p.year),
+              xMax: String(p.year),
+              borderColor: p.color + '80',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: p.label,
+                position: 'start' as const,
+                backgroundColor: p.color,
+                color: 'white',
+                font: { family: 'Inter', size: 10, weight: 'bold' as const },
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                borderRadius: 4,
+              },
+            },
+          ])),
+        },
+      },
+      scales: {
+        y: {
+          min: 50,
+          max: 75,
+          title: {
+            display: true,
+            text: 'LAeq (dB)',
+            font: { family: 'Inter', size: 13 },
+          },
+          ticks: {
+            font: { family: 'Inter', size: 11 },
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.06)',
+          },
+        },
+        x: {
+          ticks: {
+            font: { family: 'Inter', size: 11 },
+            maxRotation: 0,
+          },
+          grid: {
+            color: 'transparent',
+          },
+        },
+      },
+    },
+  });
+
+  // SR-only table
+  const srDesc = document.getElementById('noise-chart-desc');
+  if (srDesc) {
+    let tableHTML = '<table><caption>Ruido medio anual (LAeq dB) por estacion</caption><thead><tr><th>Ano</th>';
+    STATION_IDS.forEach((id) => {
+      const s = (noiseData as any[]).find((s) => s.id === id);
+      tableHTML += `<th>${s?.name || id}</th>`;
+    });
+    tableHTML += '</tr></thead><tbody>';
+    allYears.forEach((y) => {
+      const hasData = STATION_IDS.some((id) => {
+        const yearly = getYearlyAverages(id);
+        return yearly.some((d) => d.year === y);
+      });
+      if (!hasData) return;
+      tableHTML += `<tr><td>${y}</td>`;
+      STATION_IDS.forEach((id) => {
+        const yearly = getYearlyAverages(id);
+        const d = yearly.find((d) => d.year === y);
+        tableHTML += `<td>${d ? d.laeq + ' dB' : '-'}</td>`;
+      });
+      tableHTML += '</tr>';
+    });
+    tableHTML += '</tbody></table>';
+    srDesc.innerHTML = tableHTML;
+  }
+
+  // --- Air quality chart (NO2 monthly) ---
+
+  import airData from '../data/air-monthly.json';
+  import airStations from '../data/air-stations.json';
+
+  const AIR_STATIONS = ['4', '8', '49', '47', '17'];
+  const AIR_COLORS_MAP = ['#2D6A4F', '#52B788', '#264653', '#F4A261', '#E76F51'];
+
+  // Build monthly labels and datasets for NO2
+  const allMonths: string[] = [];
+  const monthLabels: string[] = [];
+
+  // Collect all months from all stations
+  for (const s of airData as any[]) {
+    const no2 = s.contaminants?.NO2 || [];
+    for (const entry of no2) {
+      if (!allMonths.includes(entry.month)) allMonths.push(entry.month);
+    }
+  }
+  allMonths.sort();
+
+  // Format labels: "2025-01" → "Ene 25"
+  const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  for (const m of allMonths) {
+    const [y, mo] = m.split('-');
+    monthLabels.push(`${MONTH_NAMES[parseInt(mo)-1]} ${y.slice(2)}`);
+  }
+
+  const airDatasets = AIR_STATIONS.map((id, i) => {
+    const s = (airData as any[]).find((x) => x.station === id);
+    if (!s) return null;
+    const no2 = s.contaminants?.NO2 || [];
+    const monthMap = new Map(no2.map((e: any) => [e.month, e.avg]));
+
+    const info = (airStations as any[]).find((x: any) => x.code === id);
+
+    return {
+      label: info?.name || `Estacion ${id}`,
+      data: allMonths.map((m) => monthMap.get(m) ?? null),
+      borderColor: AIR_COLORS_MAP[i],
+      backgroundColor: AIR_COLORS_MAP[i] + '20',
+      borderWidth: 2,
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      tension: 0.3,
+      spanGaps: true,
+    };
+  }).filter(Boolean);
+
+  // WHO limit line
+  airDatasets.push({
+    label: tHist('trends.whoAirLimit'),
+    data: allMonths.map(() => 40),
+    borderColor: '#E76F51',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    tension: 0,
+    spanGaps: true,
+    // @ts-ignore
+    borderDash: [6, 4],
+  });
+
+  const airCanvas = document.getElementById('air-chart') as HTMLCanvasElement;
+
+  new Chart(airCanvas, {
+    type: 'line',
+    data: { labels: monthLabels, datasets: airDatasets as any },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true, padding: 12 },
+        },
+        tooltip: {
+          backgroundColor: '#264653',
+          titleFont: { family: 'Inter', weight: 'bold' },
+          bodyFont: { family: 'Inter' },
+          callbacks: {
+            label: (item) => item.raw === null ? '' : `${item.dataset.label}: ${item.raw} µg/m³`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 80,
+          title: { display: true, text: 'NO2 (µg/m³)', font: { family: 'Inter', size: 13 } },
+          ticks: { font: { family: 'Inter', size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.06)' },
+        },
+        x: {
+          ticks: { font: { family: 'Inter', size: 10 }, maxRotation: 45 },
+          grid: { color: 'transparent' },
+        },
+      },
+    },
+  });
+</script>
+
+<style>
+  .trends {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .trends h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--color-bosque);
+  }
+
+  .trends-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    max-width: 600px;
+  }
+
+  .chart-section {
+    margin-top: 3rem;
+  }
+
+  .chart-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .chart-description {
+    font-size: 0.9rem;
+    color: var(--color-piedra);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+  }
+
+  .chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: 400px;
+    position: relative;
+  }
+
+  .chart-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .chart-sr-only :global(table) {
+    border-collapse: collapse;
+  }
+
+  .chart-sr-only :global(th),
+  .chart-sr-only :global(td) {
+    padding: 4px 8px;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    .trends {
+      padding: 1.5rem 1rem;
+    }
+    .chart-container {
+      height: 300px;
+      padding: 1rem;
+    }
+  }
+</style>

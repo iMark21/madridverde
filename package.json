@@ -1,0 +1,30 @@
+{
+  "name": "madridverde",
+  "type": "module",
+  "version": "0.0.4",
+  "private": true,
+  "description": "Dashboard medioambiental de Madrid — Indice Verde por distrito",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "prebuild": "node scripts/aggregate-data.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.0.6",
+    "chart.js": "^4.5.1",
+    "chartjs-plugin-annotation": "^3.1.0",
+    "leaflet": "^1.9.4",
+    "papaparse": "^5.5.3",
+    "topojson-client": "^3.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "gtfs-realtime-bindings": "^1.1.1",
+    "puppeteer": "^24.39.1"
+  }
+}

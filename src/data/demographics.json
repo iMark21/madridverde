@@ -1,0 +1,170 @@
+[
+  {
+    "code": "01",
+    "name": "Centro",
+    "population": 146349,
+    "populationYear": 2025,
+    "income": 41059,
+    "incomeYear": 2022
+  },
+  {
+    "code": "02",
+    "name": "Arganzuela",
+    "population": 158760,
+    "populationYear": 2025,
+    "income": 49236,
+    "incomeYear": 2022
+  },
+  {
+    "code": "03",
+    "name": "Retiro",
+    "population": 120447,
+    "populationYear": 2025,
+    "income": 60762,
+    "incomeYear": 2022
+  },
+  {
+    "code": "04",
+    "name": "Salamanca",
+    "population": 150796,
+    "populationYear": 2025,
+    "income": 64925,
+    "incomeYear": 2022
+  },
+  {
+    "code": "05",
+    "name": "Chamartín",
+    "population": 149654,
+    "populationYear": 2025,
+    "income": 74842,
+    "incomeYear": 2022
+  },
+  {
+    "code": "06",
+    "name": "Tetuán",
+    "population": 169479,
+    "populationYear": 2025,
+    "income": 42465,
+    "incomeYear": 2022
+  },
+  {
+    "code": "07",
+    "name": "Chamberí",
+    "population": 143807,
+    "populationYear": 2025,
+    "income": 60032,
+    "incomeYear": 2022
+  },
+  {
+    "code": "08",
+    "name": "Fuencarral-El Pardo",
+    "population": 257495,
+    "populationYear": 2025,
+    "income": 58214,
+    "incomeYear": 2022
+  },
+  {
+    "code": "09",
+    "name": "Moncloa-Aravaca",
+    "population": 126978,
+    "populationYear": 2025,
+    "income": 68238,
+    "incomeYear": 2022
+  },
+  {
+    "code": "10",
+    "name": "Latina",
+    "population": 254161,
+    "populationYear": 2025,
+    "income": 35669,
+    "incomeYear": 2022
+  },
+  {
+    "code": "11",
+    "name": "Carabanchel",
+    "population": 280685,
+    "populationYear": 2025,
+    "income": 33786,
+    "incomeYear": 2022
+  },
+  {
+    "code": "12",
+    "name": "Usera",
+    "population": 153980,
+    "populationYear": 2025,
+    "income": 31996,
+    "incomeYear": 2022
+  },
+  {
+    "code": "13",
+    "name": "Puente de Vallecas",
+    "population": 260178,
+    "populationYear": 2025,
+    "income": 30339,
+    "incomeYear": 2022
+  },
+  {
+    "code": "14",
+    "name": "Moratalaz",
+    "population": 96075,
+    "populationYear": 2025,
+    "income": 40325,
+    "incomeYear": 2022
+  },
+  {
+    "code": "15",
+    "name": "Ciudad Lineal",
+    "population": 234075,
+    "populationYear": 2025,
+    "income": 43738,
+    "incomeYear": 2022
+  },
+  {
+    "code": "16",
+    "name": "Hortaleza",
+    "population": 209541,
+    "populationYear": 2025,
+    "income": 57506,
+    "incomeYear": 2022
+  },
+  {
+    "code": "17",
+    "name": "Villaverde",
+    "population": 173183,
+    "populationYear": 2025,
+    "income": 32527,
+    "incomeYear": 2022
+  },
+  {
+    "code": "18",
+    "name": "Villa de Vallecas",
+    "population": 126519,
+    "populationYear": 2025,
+    "income": 36998,
+    "incomeYear": 2022
+  },
+  {
+    "code": "19",
+    "name": "Vicálvaro",
+    "population": 95233,
+    "populationYear": 2025,
+    "income": 39505,
+    "incomeYear": 2022
+  },
+  {
+    "code": "20",
+    "name": "San Blas-Canillejas",
+    "population": 169990,
+    "populationYear": 2025,
+    "income": 41474,
+    "incomeYear": 2022
+  },
+  {
+    "code": "21",
+    "name": "Barajas",
+    "population": 50539,
+    "populationYear": 2025,
+    "income": 54343,
+    "incomeYear": 2022
+  }
+]
