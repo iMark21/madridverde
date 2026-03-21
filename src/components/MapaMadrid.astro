@@ -16,7 +16,6 @@
   <div id="map-legend" aria-label="Leyenda del mapa">
     <div class="legend-tabs" role="tablist">
       <button class="legend-tab legend-tab--active" data-tab="indice" role="tab" aria-selected="true" data-i18n="map.legendIndiceVerde">Indice Verde</button>
-      <button class="legend-tab" data-tab="trafico" role="tab" aria-selected="false" data-i18n="map.legendTrafico">Tráfico</button>
       <button class="legend-tab" data-tab="bicimad" role="tab" aria-selected="false" data-i18n="map.legendBicimad">BiciMAD</button>
     </div>
     <div class="legend-panel" id="legend-panel-indice">
@@ -27,15 +26,6 @@
         <div class="legend-item"><span class="legend-color" style="background:#F4A261"></span> 40-54 <span data-i18n="tier.improvable">Mejorable</span></div>
         <div class="legend-item"><span class="legend-color" style="background:#E76F51"></span> 0-39 <span data-i18n="tier.critical">Critico</span></div>
       </div>
-    </div>
-    <div class="legend-panel legend-panel--hidden" id="legend-panel-trafico">
-      <div class="legend-items">
-        <div class="legend-item"><span class="legend-dot" style="background:#2D6A4F"></span> <span data-i18n="map.legendFluido">Fluido</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#E9C46A"></span> <span data-i18n="map.legendDenso">Denso</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#E76F51"></span> <span data-i18n="map.legendCongestionado">Congestionado</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#264653"></span> <span data-i18n="map.legendCortado">Cortado</span></div>
-      </div>
-      <p class="legend-footer" data-i18n="map.legendTraficoFooter">~4.000 sensores · cada 5 min</p>
     </div>
     <div class="legend-panel legend-panel--hidden" id="legend-panel-bicimad">
       <p class="legend-section-title" data-i18n="map.legendBicimadStations">Estaciones BiciMAD</p>
@@ -66,7 +56,7 @@
   import distritosTopoRaw from '../data/distritos.topo.json';
   import { computeGreenIndex, getContextPhrase, getTier } from '../lib/green-index';
   import { fetchAirQuality, aggregateByDistrict } from '../lib/air-quality';
-  import { fetchTrafficSummary, fetchTrafficData } from '../lib/traffic';
+  import { fetchTrafficSummary } from '../lib/traffic';
   import { fetchBiciMAD } from '../lib/bicimad';
   import { t as tMap } from '../i18n/i18n.js';
 
@@ -321,54 +311,11 @@
       console.log(`[MadridVerde] Bike lanes loaded`);
     });
 
-  // --- Traffic layer ---
-
-  const TRAFFIC_COLORS: Record<number, string> = { 0: '#2D6A4F', 1: '#E9C46A', 2: '#E76F51', 3: '#264653' };
-  const TRAFFIC_LABELS: Record<number, string> = { 0: 'Fluido', 1: 'Denso', 2: 'Congestionado', 3: 'Cortado' };
-  const trafficLayer = L.layerGroup();
-
-  fetchTrafficData().then((data) => {
-    if (!data) return;
-
-    for (const s of data.sensors) {
-      const color = TRAFFIC_COLORS[s.level] || '#6C757D';
-      const label = TRAFFIC_LABELS[s.level] || '?';
-      const radius = s.level >= 2 ? 5 : 3;
-
-      const circle = L.circleMarker([s.lat, s.lon], {
-        radius,
-        fillColor: color,
-        fillOpacity: s.level >= 2 ? 0.85 : 0.5,
-        color: 'white',
-        weight: 0.5,
-      });
-
-      circle.bindTooltip(
-        `<strong>${s.description}</strong><br/>` +
-        `${tMap('map.tooltipTrafficLevel')}: <span style="color:${color};font-weight:600">${label}</span><br/>` +
-        `${tMap('map.tooltipTrafficIntensity')}: ${s.intensity.toLocaleString()} veh/h · ${tMap('map.tooltipTrafficLoad')}: ${s.load}%`,
-        { className: 'mv-tooltip' }
-      );
-
-      trafficLayer.addLayer(circle);
-    }
-
-    console.log(`[MadridVerde] Traffic: ${data.sensors.length} sensors loaded`);
-
-    // Dispatch event so the traffic section can use the same data
-    window.dispatchEvent(new CustomEvent('mv-traffic-data', { detail: data }));
-  });
-
-  // --- Legend tab toggle: show/hide layers ---
-
-  const layerMap: Record<string, L.LayerGroup | null> = {
-    trafico: trafficLayer,
-  };
+  // --- Legend tab toggle ---
 
   document.querySelectorAll<HTMLButtonElement>('.legend-tab').forEach((btn) => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab') || '';
-
       document.querySelectorAll('.legend-tab').forEach((b) => {
         b.classList.toggle('legend-tab--active', b === btn);
         b.setAttribute('aria-selected', String(b === btn));
@@ -376,14 +323,6 @@
       document.querySelectorAll('.legend-panel').forEach((panel) => {
         panel.classList.toggle('legend-panel--hidden', !panel.id.endsWith(tab));
       });
-
-      // Toggle traffic layer visibility
-      if (tab === 'trafico') {
-        if (!map.hasLayer(trafficLayer)) trafficLayer.addTo(map);
-      } else {
-        if (map.hasLayer(trafficLayer)) map.removeLayer(trafficLayer);
-      }
-
       if (window.__mvAnalytics) {
         window.__mvAnalytics('map_layer_toggled', { layer_name: tab });
       }
