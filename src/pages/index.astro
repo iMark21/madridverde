@@ -959,120 +959,13 @@ function slugify(name: string): string {
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
-  /* Traffic strip (below map) */
+  /* Traffic strip — container only (content styles in global block) */
   .traffic-strip {
     margin: 1rem 2rem 0;
     background: white;
     border-radius: 12px;
     padding: 1.25rem 1.5rem;
   }
-
-  .traffic-strip-lede {
-    font-size: 1.05rem;
-    line-height: 1.5;
-    color: var(--color-tinta);
-    margin: 0 0 0.75rem;
-  }
-
-  .traffic-pulse-wrap { margin-bottom: 0; }
-
-  .traffic-pulse {
-    display: flex;
-    height: 14px;
-    border-radius: 7px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.06);
-  }
-
-  .pulse-seg {
-    height: 100%;
-    transition: width 0.6s ease;
-  }
-
-  .pulse-labels {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    font-size: 0.72rem;
-    color: var(--color-piedra);
-    margin-top: 0.4rem;
-  }
-
-  .pulse-labels span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-
-  .traffic-hotspots {
-    margin-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    padding-top: 0.6rem;
-  }
-
-  .traffic-hotspots summary {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-arcilla);
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .traffic-hotspots summary::-webkit-details-marker { display: none; }
-
-  .traffic-hotspot-list {
-    padding: 0.5rem 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .traffic-hotspot-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.6rem;
-    border-radius: 8px;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.15s;
-  }
-
-  .traffic-hotspot-row:hover {
-    background: rgba(0, 0, 0, 0.03);
-  }
-
-  .traffic-hotspot-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .traffic-hotspot-name {
-    flex: 1;
-    font-size: 0.82rem;
-    color: var(--color-tinta);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .traffic-strip-meta {
-    margin-top: 0.75rem;
-    font-size: 0.68rem;
-    color: var(--color-piedra);
-    font-style: italic;
-  }
-
-  .traffic-strip-meta a { color: var(--color-hoja); }
   .traffic-strip-loading { text-align: center; color: var(--color-piedra); font-size: 0.8rem; font-style: italic; margin: 0; }
 
   @media (max-width: 768px) {
@@ -1182,6 +1075,107 @@ function slugify(name: string): string {
     .bicimad-stats { grid-template-columns: repeat(2, 1fr); }
     .bici-row { grid-template-columns: 1fr 100px 50px; font-size: 0.8rem; }
   }
+
+  /* Traffic strip (global — rendered via innerHTML) */
+  .traffic-strip-lede {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #264653;
+    margin: 0 0 0.75rem;
+  }
+
+  .traffic-pulse {
+    display: flex;
+    height: 14px;
+    border-radius: 7px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .pulse-seg { height: 100%; }
+
+  .pulse-labels {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+    color: #6C757D;
+    margin-top: 0.4rem;
+  }
+
+  .pulse-labels span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .traffic-hotspots {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 0.6rem;
+  }
+
+  .traffic-hotspots summary {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #E76F51;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .traffic-hotspots summary::-webkit-details-marker { display: none; }
+
+  .traffic-hotspot-list {
+    padding: 0.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .traffic-hotspot-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .traffic-hotspot-row:last-child { border-bottom: none; }
+  .traffic-hotspot-row:hover { background: rgba(0, 0, 0, 0.03); }
+
+  .traffic-hotspot-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .traffic-hotspot-name {
+    flex: 1;
+    font-size: 0.85rem;
+    color: #264653;
+    font-weight: 500;
+  }
+
+  .traffic-strip-meta {
+    margin-top: 0.75rem;
+    font-size: 0.68rem;
+    color: #6C757D;
+    font-style: italic;
+  }
+
+  .traffic-strip-meta a { color: #40916C; }
 
   /* EMT Alerts (global — rendered via innerHTML) */
   .emt-alerts h3 {
