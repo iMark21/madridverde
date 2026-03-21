@@ -238,17 +238,15 @@ function slugify(name: string): string {
       <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> <span data-i18n="tier.improvable">Mejorable</span></div>
       <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> <span data-i18n="tier.critical">Critico</span></div>
     </div>
+  </section>
 
-    <div class="export-row">
-      <button class="export-btn" id="export-csv-btn">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
-        <span data-i18n="export.button">Descargar datos (CSV)</span>
-      </button>
+  <!-- SECTION: IA + DATOS -->
+  <section id="mcp" class="section">
+    <div class="section-header">
+      <h2 data-i18n="index.mcpTitle">Pregunta a tu IA sobre Madrid</h2>
+      <p class="section-subtitle" data-i18n="index.mcpSubtitle">Integra los datos de MadridVerde en Claude, ChatGPT o Cursor</p>
     </div>
-
-    <div id="mcp" class="mcp-card" style="margin-top: 2rem;">
-      <h3 data-i18n="index.mcpTitle">Pregunta a tu IA sobre Madrid</h3>
-      <p class="mcp-subtitle" data-i18n="index.mcpSubtitle" style="color:rgba(255,255,255,0.8);font-size:0.9rem;margin:0.25rem 0 1rem;">Integra los datos de MadridVerde en Claude, ChatGPT o Cursor</p>
+    <div class="mcp-card">
       <div class="mcp-content">
         <div class="mcp-demo">
           <div class="mcp-chat">
@@ -279,7 +277,13 @@ function slugify(name: string): string {
             <span class="mcp-tool-tag">get_green_areas</span>
             <span class="mcp-tool-tag">compare_districts</span>
           </div>
-          <a href="https://github.com/iMark21/madridverde-mcp" target="_blank" rel="noopener" class="mcp-cta" data-i18n="index.mcpCta">Ver en GitHub</a>
+          <div class="mcp-actions">
+            <a href="https://github.com/iMark21/madridverde-mcp" target="_blank" rel="noopener" class="mcp-cta" data-i18n="index.mcpCta">Ver en GitHub</a>
+            <button class="mcp-cta mcp-cta--csv" id="export-csv-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+              <span data-i18n="export.button">Descargar datos (CSV)</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -705,7 +709,8 @@ function slugify(name: string): string {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
-    padding: 1rem 2rem 0;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
   }
 
   .stat-card {
@@ -984,6 +989,23 @@ function slugify(name: string): string {
     font-size: 0.9rem;
     text-decoration: none;
     transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .mcp-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .mcp-cta--csv {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    font-family: var(--font-body);
   }
 
   .mcp-cta:hover {
