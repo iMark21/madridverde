@@ -250,9 +250,21 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
   </section>
 <script>
   import { fetchAirQuality, aggregateByDistrict } from '../../lib/air-quality';
-  import { fetchTrafficSummary } from '../../lib/traffic';
+  import { fetchTrafficSummary, fetchTrafficData, groupByDistrict } from '../../lib/traffic';
   import { fetchBiciMAD } from '../../lib/bicimad';
   import { t as tCard } from '../../i18n/i18n.js';
+
+  // District code from URL
+  const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+  const codeMap: Record<string, string> = {
+    'centro':'01','arganzuela':'02','retiro':'03','salamanca':'04',
+    'chamartin':'05','tetuan':'06','chamberi':'07','fuencarral-el-pardo':'08',
+    'moncloa-aravaca':'09','latina':'10','carabanchel':'11','usera':'12',
+    'puente-de-vallecas':'13','moratalaz':'14','ciudad-lineal':'15',
+    'hortaleza':'16','villaverde':'17','villa-de-vallecas':'18',
+    'vicalvaro':'19','san-blas-canillejas':'20','barajas':'21',
+  };
+  const distCode = codeMap[slug];
 
   // --- Live hydration: update Aire + Movilidad sub-indices ---
   const scoreValueEl = document.querySelector('.score-value');
@@ -261,18 +273,6 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
 
   Promise.all([fetchAirQuality(), fetchTrafficSummary()]).then(([readings, traffic]) => {
     if (readings.length === 0 && !traffic) return;
-
-    // Get district code from the URL
-    const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
-    const codeMap: Record<string, string> = {
-      'centro':'01','arganzuela':'02','retiro':'03','salamanca':'04',
-      'chamartin':'05','tetuan':'06','chamberi':'07','fuencarral-el-pardo':'08',
-      'moncloa-aravaca':'09','latina':'10','carabanchel':'11','usera':'12',
-      'puente-de-vallecas':'13','moratalaz':'14','ciudad-lineal':'15',
-      'hortaleza':'16','villaverde':'17','villa-de-vallecas':'18',
-      'vicalvaro':'19','san-blas-canillejas':'20','barajas':'21',
-    };
-    const distCode = codeMap[slug];
     if (!distCode) return;
 
     // Update Aire sub-index
@@ -566,82 +566,59 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
       lineDetailEl.insertAdjacentHTML('beforeend', alertsHtml);
     });
   });
-</script>
 
-<script>
-  import { fetchTrafficData, groupByDistrict } from '../../lib/traffic';
-  import { t as tTraffic } from '../../i18n/i18n.js';
-
+  // --- Traffic district hydration ---
   const trafficEl = document.getElementById('traffic-district');
-  if (trafficEl) {
-    const slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
-    const codeMap: Record<string, string> = {
-      'centro':'01','arganzuela':'02','retiro':'03','salamanca':'04',
-      'chamartin':'05','tetuan':'06','chamberi':'07','fuencarral-el-pardo':'08',
-      'moncloa-aravaca':'09','latina':'10','carabanchel':'11','usera':'12',
-      'puente-de-vallecas':'13','moratalaz':'14','ciudad-lineal':'15',
-      'hortaleza':'16','villaverde':'17','villa-de-vallecas':'18',
-      'vicalvaro':'19','san-blas-canillejas':'20','barajas':'21',
-    };
-    const distCode = codeMap[slug];
+  if (trafficEl && distCode) {
+    fetchTrafficData().then((data) => {
+      if (!data) { trafficEl.innerHTML = ''; return; }
+      const districts = groupByDistrict(data.sensors);
+      const dt = districts.find((d) => d.code === distCode);
+      if (!dt || dt.total === 0) { trafficEl.innerHTML = ''; return; }
 
-    if (distCode) {
-      fetchTrafficData().then((data) => {
-        if (!data) {
-          trafficEl.innerHTML = '';
-          return;
-        }
-        const districts = groupByDistrict(data.sensors);
-        const dt = districts.find((d) => d.code === distCode);
-        if (!dt || dt.total === 0) {
-          trafficEl.innerHTML = '';
-          return;
-        }
+      const pctF = Math.round((dt.fluido / dt.total) * 100);
+      const pctD = Math.round((dt.denso / dt.total) * 100);
+      const pctC = Math.round((dt.congestionado / dt.total) * 100);
+      const pctK = Math.round((dt.cortado / dt.total) * 100);
+      const scoreColor = dt.score >= 70 ? '#2D6A4F' : dt.score >= 50 ? '#E9C46A' : '#E76F51';
 
-        const pctF = Math.round((dt.fluido / dt.total) * 100);
-        const pctD = Math.round((dt.denso / dt.total) * 100);
-        const pctC = Math.round((dt.congestionado / dt.total) * 100);
-        const pctK = Math.round((dt.cortado / dt.total) * 100);
-        const scoreColor = dt.score >= 70 ? '#2D6A4F' : dt.score >= 50 ? '#E9C46A' : '#E76F51';
+      const worstHtml = dt.worstStreets.length > 0 ? `
+        <div class="traffic-d-worst">
+          <p class="traffic-d-worst-title">${tCard('scorecard.trafficWorst')}</p>
+          ${dt.worstStreets.map((s) => `
+            <div class="traffic-d-worst-row">
+              <span class="traffic-d-worst-dot" style="background:${s.level >= 3 ? '#264653' : '#E76F51'}"></span>
+              <span>${s.description}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
 
-        const worstHtml = dt.worstStreets.length > 0 ? `
-          <div class="traffic-d-worst">
-            <p class="traffic-d-worst-title">${tTraffic('scorecard.trafficWorst')}</p>
-            ${dt.worstStreets.map((s) => `
-              <div class="traffic-d-worst-row">
-                <span class="traffic-d-worst-dot" style="background:${s.level >= 3 ? '#264653' : '#E76F51'}"></span>
-                <span>${s.description}</span>
-              </div>
-            `).join('')}
-          </div>
-        ` : '';
+      const h2 = trafficEl.querySelector('h2');
+      const title = h2 ? h2.outerHTML : '';
 
-        const h2 = trafficEl.querySelector('h2');
-        const title = h2 ? h2.outerHTML : '';
-
-        trafficEl.innerHTML = `
-          ${title}
-          <div class="traffic-d-stats">
-            <span class="traffic-d-score" style="color:${scoreColor}">${dt.score}</span>
-            <span class="traffic-d-label">${tTraffic('scorecard.trafficScore')}</span>
-          </div>
-          <div class="traffic-d-bar">
-            <div style="width:${pctF}%;background:#2D6A4F;height:100%"></div>
-            <div style="width:${pctD}%;background:#E9C46A;height:100%"></div>
-            <div style="width:${Math.max(pctC,1)}%;background:#E76F51;height:100%"></div>
-            <div style="width:${Math.max(pctK,1)}%;background:#264653;height:100%"></div>
-          </div>
-          <div class="traffic-d-legend">
-            <span>${tTraffic('index.trafficFluido')} ${pctF}%</span>
-            <span>${tTraffic('index.trafficDenso')} ${pctD}%</span>
-            <span>${tTraffic('index.trafficCongestionado')} ${pctC}%</span>
-            <span>${tTraffic('index.trafficCortado')} ${pctK}%</span>
-          </div>
-          <p class="traffic-d-sensors">${dt.total} ${tTraffic('index.trafficSensorsActive')}</p>
-          ${worstHtml}
-        `;
-      });
-    }
+      trafficEl.innerHTML = `
+        ${title}
+        <div class="traffic-d-stats">
+          <span class="traffic-d-score" style="color:${scoreColor}">${dt.score}</span>
+          <span class="traffic-d-label">${tCard('scorecard.trafficScore')}</span>
+        </div>
+        <div class="traffic-d-bar">
+          <div style="width:${pctF}%;background:#2D6A4F;height:100%"></div>
+          <div style="width:${pctD}%;background:#E9C46A;height:100%"></div>
+          <div style="width:${Math.max(pctC,1)}%;background:#E76F51;height:100%"></div>
+          <div style="width:${Math.max(pctK,1)}%;background:#264653;height:100%"></div>
+        </div>
+        <div class="traffic-d-legend">
+          <span>${tCard('index.trafficFluido')} ${pctF}%</span>
+          <span>${tCard('index.trafficDenso')} ${pctD}%</span>
+          <span>${tCard('index.trafficCongestionado')} ${pctC}%</span>
+          <span>${tCard('index.trafficCortado')} ${pctK}%</span>
+        </div>
+        <p class="traffic-d-sensors">${dt.total} ${tCard('index.trafficSensorsActive')}</p>
+        ${worstHtml}
+      `;
+    });
   }
 </script>
 
