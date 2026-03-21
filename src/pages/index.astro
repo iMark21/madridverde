@@ -128,6 +128,17 @@ function slugify(name: string): string {
     </div>
   </section>
 
+  <!-- SECTION: TRAFICO -->
+  <section id="trafico" class="section">
+    <div class="section-header">
+      <h2 data-i18n="index.trafficTitle">Tráfico en tiempo real</h2>
+      <p class="section-subtitle" data-i18n="index.trafficSubtitle">~4.000 sensores de intensidad — actualizado cada 5 minutos</p>
+    </div>
+    <div class="traffic-dashboard" id="traffic-dashboard">
+      <p class="traffic-loading" data-i18n="index.trafficLoading">Cargando datos de tráfico...</p>
+    </div>
+  </section>
+
   <!-- SECTION: COMPARAR -->
   <section id="comparar" class="section">
     <div class="section-header">
@@ -478,6 +489,76 @@ function slugify(name: string): string {
       alertsEl.innerHTML = '';
     });
   }
+</script>
+
+<!-- Traffic dashboard script -->
+<script>
+  import { fetchTrafficSummary } from '../lib/traffic';
+  import { t } from '../i18n/i18n.js';
+
+  fetchTrafficSummary().then((data) => {
+    const el = document.getElementById('traffic-dashboard');
+    if (!el || !data) {
+      if (el) el.innerHTML = `<p class="traffic-error">${t('index.trafficError')}</p>`;
+      return;
+    }
+
+    const pctFluido = Math.round((data.fluido / data.totalSensors) * 100);
+    const pctDenso = Math.round((data.denso / data.totalSensors) * 100);
+    const pctCongest = Math.round((data.congestionado / data.totalSensors) * 100);
+    const pctCortado = Math.round((data.cortado / data.totalSensors) * 100);
+
+    const scoreColor = data.score >= 70 ? '#2D6A4F' : data.score >= 50 ? '#E9C46A' : '#E76F51';
+
+    el.innerHTML = `
+      <div class="traffic-score-row">
+        <div class="traffic-score" style="border-color:${scoreColor}">
+          <span class="traffic-score-value" style="color:${scoreColor}">${data.score}</span>
+          <span class="traffic-score-label">${t('index.trafficScoreLabel')}</span>
+        </div>
+        <div class="traffic-meta">
+          <p class="traffic-sensors">${data.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')}</p>
+          <p class="traffic-intensity">${t('index.trafficAvgIntensity')}: ${data.avgIntensity.toLocaleString()} ${t('index.trafficVehHour')}</p>
+          <p class="traffic-occupancy">${t('index.trafficAvgOccupancy')}: ${data.avgOccupancy}%</p>
+        </div>
+      </div>
+      <div class="traffic-bar-wrapper">
+        <div class="traffic-bar">
+          <div class="traffic-bar-seg traffic-bar--fluido" style="width:${pctFluido}%" title="${t('index.trafficFluido')} ${pctFluido}%"></div>
+          <div class="traffic-bar-seg traffic-bar--denso" style="width:${pctDenso}%" title="${t('index.trafficDenso')} ${pctDenso}%"></div>
+          <div class="traffic-bar-seg traffic-bar--congestionado" style="width:${pctCongest}%" title="${t('index.trafficCongestionado')} ${pctCongest}%"></div>
+          <div class="traffic-bar-seg traffic-bar--cortado" style="width:${pctCortado}%" title="${t('index.trafficCortado')} ${pctCortado}%"></div>
+        </div>
+      </div>
+      <div class="traffic-stats">
+        <div class="traffic-stat">
+          <span class="traffic-stat-dot" style="background:#2D6A4F"></span>
+          <span class="traffic-stat-label">${t('index.trafficFluido')}</span>
+          <span class="traffic-stat-value">${pctFluido}%</span>
+          <span class="traffic-stat-count">${data.fluido.toLocaleString()}</span>
+        </div>
+        <div class="traffic-stat">
+          <span class="traffic-stat-dot" style="background:#E9C46A"></span>
+          <span class="traffic-stat-label">${t('index.trafficDenso')}</span>
+          <span class="traffic-stat-value">${pctDenso}%</span>
+          <span class="traffic-stat-count">${data.denso.toLocaleString()}</span>
+        </div>
+        <div class="traffic-stat">
+          <span class="traffic-stat-dot" style="background:#E76F51"></span>
+          <span class="traffic-stat-label">${t('index.trafficCongestionado')}</span>
+          <span class="traffic-stat-value">${pctCongest}%</span>
+          <span class="traffic-stat-count">${data.congestionado.toLocaleString()}</span>
+        </div>
+        <div class="traffic-stat">
+          <span class="traffic-stat-dot" style="background:#264653"></span>
+          <span class="traffic-stat-label">${t('index.trafficCortado')}</span>
+          <span class="traffic-stat-value">${pctCortado}%</span>
+          <span class="traffic-stat-count">${data.cortado.toLocaleString()}</span>
+        </div>
+      </div>
+      <p class="traffic-source">${t('index.trafficSource')}</p>
+    `;
+  });
 </script>
 
 <style>
@@ -849,6 +930,29 @@ function slugify(name: string): string {
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
+  /* Traffic section */
+  .traffic-score-row { display: flex; align-items: center; gap: 2rem; margin-bottom: 1.5rem; }
+  .traffic-score { flex-shrink: 0; width: 100px; height: 100px; border-radius: 50%; border: 4px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; }
+  .traffic-score-value { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; }
+  .traffic-score-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-piedra); margin-top: 2px; }
+  .traffic-meta p { font-size: 0.9rem; color: var(--color-tinta); margin: 0.15rem 0; }
+  .traffic-sensors { font-weight: 600; }
+  .traffic-bar-wrapper { margin-bottom: 1.25rem; }
+  .traffic-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.06); }
+  .traffic-bar-seg { transition: width 0.5s ease; }
+  .traffic-bar--fluido { background: #2D6A4F; }
+  .traffic-bar--denso { background: #E9C46A; }
+  .traffic-bar--congestionado { background: #E76F51; }
+  .traffic-bar--cortado { background: #264653; }
+  .traffic-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .traffic-stat { background: white; border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; text-align: center; }
+  .traffic-stat-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .traffic-stat-label { font-size: 0.75rem; color: var(--color-piedra); font-weight: 500; }
+  .traffic-stat-value { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-tinta); line-height: 1; }
+  .traffic-stat-count { font-size: 0.7rem; color: var(--color-piedra); }
+  .traffic-source { margin-top: 1rem; font-size: 0.75rem; color: var(--color-piedra); font-style: italic; }
+  .traffic-loading, .traffic-error { text-align: center; color: var(--color-piedra); font-style: italic; padding: 2rem; }
+
   @media (max-width: 768px) {
     .section { padding: 2.5rem 1.25rem 1.5rem; }
     .section:first-child { padding-top: 1rem; }
@@ -866,6 +970,10 @@ function slugify(name: string): string {
     .mcp-card { padding: 1.5rem; }
     .emt-district-table { max-height: 350px; overflow-y: auto; }
     .emt-district-table th { position: sticky; top: 0; background: var(--color-arena); z-index: 1; }
+    .traffic-stats { grid-template-columns: repeat(2, 1fr); }
+    .traffic-score-row { gap: 1.25rem; }
+    .traffic-score { width: 80px; height: 80px; }
+    .traffic-score-value { font-size: 1.8rem; }
   }
 
   @media (max-width: 380px) {

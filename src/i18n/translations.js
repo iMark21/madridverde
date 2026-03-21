@@ -103,6 +103,23 @@ export const translations = {
     'index.mcpCta': 'Ver en GitHub',
     'nav.mcp': 'IA',
 
+    // --- Index: Traffic ---
+    'nav.traffic': 'Tráfico',
+    'index.trafficTitle': 'Tráfico en tiempo real',
+    'index.trafficSubtitle': '~4.000 sensores de intensidad — actualizado cada 5 minutos',
+    'index.trafficLoading': 'Cargando datos de tráfico...',
+    'index.trafficError': 'No se pudieron cargar los datos de tráfico',
+    'index.trafficScoreLabel': 'Movilidad',
+    'index.trafficSensorsActive': 'sensores activos',
+    'index.trafficAvgIntensity': 'Intensidad media',
+    'index.trafficVehHour': 'veh/h',
+    'index.trafficAvgOccupancy': 'Ocupación media',
+    'index.trafficFluido': 'Fluido',
+    'index.trafficDenso': 'Denso',
+    'index.trafficCongestionado': 'Congestionado',
+    'index.trafficCortado': 'Cortado',
+    'index.trafficSource': 'Fuente: informo.madrid.es — Ayuntamiento de Madrid',
+
     // --- Index: Compare ---
     'index.compareTitle': 'Comparar distritos',
     'index.compareSubtitle': 'Selecciona 2 a 4 distritos para comparar sus sub-índices',
@@ -472,6 +489,23 @@ export const translations = {
     'index.mcpHowDesc': 'MadridVerde MCP is a server that lets any AI assistant query Madrid environmental data in natural language. 8 tools, real-time data, no API key required.',
     'index.mcpCta': 'View on GitHub',
     'nav.mcp': 'AI',
+
+    // --- Index: Traffic ---
+    'nav.traffic': 'Traffic',
+    'index.trafficTitle': 'Real-time traffic',
+    'index.trafficSubtitle': '~4,000 intensity sensors — updated every 5 minutes',
+    'index.trafficLoading': 'Loading traffic data...',
+    'index.trafficError': 'Could not load traffic data',
+    'index.trafficScoreLabel': 'Mobility',
+    'index.trafficSensorsActive': 'active sensors',
+    'index.trafficAvgIntensity': 'Avg. intensity',
+    'index.trafficVehHour': 'veh/h',
+    'index.trafficAvgOccupancy': 'Avg. occupancy',
+    'index.trafficFluido': 'Free flow',
+    'index.trafficDenso': 'Dense',
+    'index.trafficCongestionado': 'Congested',
+    'index.trafficCortado': 'Blocked',
+    'index.trafficSource': 'Source: informo.madrid.es — Madrid City Council',
 
     // --- Index: Compare ---
     'index.compareTitle': 'Compare districts',
