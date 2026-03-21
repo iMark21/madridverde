@@ -498,19 +498,18 @@ function slugify(name: string): string {
   });
 
   function cleanStreet(raw: string): string {
-    // Strip technical prefixes and codes
     let s = raw
-      .replace(/^\((?:MICRO|AFOROS)\)\s*/i, '')
-      .replace(/\s*\([^)]*(?:P\.M\.|Delante|JUNTO)[^)]*\)/gi, '');
-    // Extract just the street name (before direction markers and tramo)
-    const parts = s.split(/\s+(?=[NSEO]-[NSEO]\b)/);
-    s = parts[0].trim();
-    // Title case
-    s = s.toLowerCase().replace(/(^|\s|\.)\S/g, (c) => c.toUpperCase());
-    // Clean up abbreviations
-    s = s.replace(/\bPº\b/gi, 'Paseo').replace(/\bAvda?\b\.?/gi, 'Av.').replace(/\bGta\b\.?/gi, 'Glorieta')
-      .replace(/\bPl\b\.?/gi, 'Plaza').replace(/\bPso\b\.?/gi, 'Paseo');
-    return s.trim();
+      .replace(/^\((?:MICRO|AFOROS|TACTICO)\)\s*/i, '')  // strip prefixes
+      .replace(/\s*\((?:Delante|GIRO|Entrada)[^)]*\)/gi, '')  // strip technical parentheticals
+      .replace(/\s*\d+\s*(?=[NSEO]-[NSEO])/, ' ')  // strip number before direction
+      .trim();
+    // Light title case: only if ALL CAPS
+    if (s === s.toUpperCase()) {
+      s = s.toLowerCase().replace(/(^|[\s.(])\S/g, (c) => c.toUpperCase());
+    }
+    // Clean direction separators for readability
+    s = s.replace(/\s*-\s*/g, ' - ');
+    return s;
   }
 
   fetchTrafficData().then((data) => {
