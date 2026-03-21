@@ -486,7 +486,7 @@ function slugify(name: string): string {
     padding: 4rem 2rem 2rem;
     max-width: 960px;
     margin: 0 auto;
-    scroll-margin-top: 60px;
+    scroll-margin-top: 56px;
   }
 
   .section:first-child {
@@ -850,16 +850,27 @@ function slugify(name: string): string {
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
   @media (max-width: 768px) {
-    .section { padding: 3rem 1rem 1.5rem; }
+    .section { padding: 2.5rem 1.25rem 1.5rem; }
     .section:first-child { padding-top: 1rem; }
+    .section-header--hero { padding: 0 0.5rem; }
+    .section-subtitle { font-size: 0.9rem; }
     .map-wrapper { margin: 0; }
     .stats { grid-template-columns: repeat(2, 1fr); padding: 1rem 1rem 0; }
     .ranking { padding: 1.5rem 1rem 0; }
+    .ranking-item { padding: 0.75rem 1rem; min-height: 44px; }
     .export-row { padding: 1rem 1rem 0; }
     .search-box { max-width: 100%; }
     .subindex-grid { grid-template-columns: 1fr; }
     .tiers { flex-direction: column; }
     .mcp-content { grid-template-columns: 1fr; gap: 1.5rem; }
+    .mcp-card { padding: 1.5rem; }
+    .emt-district-table { max-height: 350px; overflow-y: auto; }
+    .emt-district-table th { position: sticky; top: 0; background: var(--color-arena); z-index: 1; }
+  }
+
+  @media (max-width: 380px) {
+    .stats { grid-template-columns: 1fr; }
+    .stat-value { font-size: 1.8rem; }
   }
 </style>
 
@@ -867,7 +878,7 @@ function slugify(name: string): string {
   .search-results {
     position: absolute; top: 100%; left: 0; right: 0;
     background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    list-style: none; padding: 0.25rem 0; margin: 6px 0 0; z-index: 1000;
+    list-style: none; padding: 0.25rem 0; margin: 6px 0 0; z-index: 1100;
     display: none; max-height: 220px; overflow-y: auto;
   }
   .search-results.visible { display: block; }
