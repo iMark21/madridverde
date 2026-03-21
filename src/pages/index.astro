@@ -132,9 +132,8 @@ function slugify(name: string): string {
   <section id="trafico" class="section">
     <div class="section-header">
       <h2 data-i18n="index.trafficTitle">Tráfico en tiempo real</h2>
-      <p class="section-subtitle" data-i18n="index.trafficSubtitle">~4.000 sensores de intensidad — actualizado cada 5 minutos</p>
     </div>
-    <div class="traffic-dashboard" id="traffic-dashboard">
+    <div class="traffic-card" id="traffic-dashboard">
       <p class="traffic-loading" data-i18n="index.trafficLoading">Cargando datos de tráfico...</p>
     </div>
   </section>
@@ -491,30 +490,15 @@ function slugify(name: string): string {
   }
 </script>
 
-<!-- Traffic dashboard script -->
+<!-- Traffic "Pulse" script -->
 <script>
-  import { fetchTrafficData, groupByDistrict } from '../lib/traffic';
+  import { fetchTrafficData } from '../lib/traffic';
   import { t } from '../i18n/i18n.js';
-  import { computeGreenIndex } from '../lib/green-index';
-
-  const DISTRICT_NAMES: Record<string, string> = {};
-  computeGreenIndex().forEach((d) => {
-    const tc = d.name.toLowerCase().split(' ')
-      .map((w: string, i: number) => {
-        const minor = new Set(['de', 'del', 'el', 'la', 'las', 'los', 'y', 'e']);
-        return (i === 0 || !minor.has(w)) ? w.charAt(0).toUpperCase() + w.slice(1) : w;
-      }).join(' ');
-    DISTRICT_NAMES[d.code] = tc;
-  });
-
-  function slugify(name: string): string {
-    return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
 
   fetchTrafficData().then((data) => {
     const el = document.getElementById('traffic-dashboard');
     if (!el || !data) {
-      if (el) el.innerHTML = `<p class="traffic-error">${t('index.trafficError')}</p>`;
+      if (el) el.innerHTML = `<p class="traffic-loading">${t('index.trafficError')}</p>`;
       return;
     }
 
@@ -523,89 +507,68 @@ function slugify(name: string): string {
     const pctDenso = Math.round((s.denso / s.totalSensors) * 100);
     const pctCongest = Math.round((s.congestionado / s.totalSensors) * 100);
     const pctCortado = Math.round((s.cortado / s.totalSensors) * 100);
-    const scoreColor = s.score >= 70 ? '#2D6A4F' : s.score >= 50 ? '#E9C46A' : '#E76F51';
+    const pctOk = pctFluido + pctDenso;
 
-    // District breakdown
-    const districts = groupByDistrict(data.sensors);
+    // Dynamic lede
+    const congestedCount = s.congestionado + s.cortado;
+    let ledeColor = '#2D6A4F';
+    let lede = '';
+    if (pctCongest + pctCortado >= 20) {
+      ledeColor = '#E76F51';
+      lede = t('index.trafficLedeHigh').replace('{pct}', String(pctCongest + pctCortado));
+    } else if (pctCongest + pctCortado >= 5) {
+      ledeColor = '#E9C46A';
+      lede = t('index.trafficLedeMedium').replace('{pct}', String(pctOk));
+    } else if (congestedCount === 0) {
+      lede = t('index.trafficLedePerfect');
+    } else {
+      lede = t('index.trafficLedeGood').replace('{pct}', String(pctOk));
+    }
+    const ledeDetail = t('index.trafficLedeDetail')
+      .replace('{congested}', String(congestedCount))
+      .replace('{total}', s.totalSensors.toLocaleString());
 
-    // Worst streets across all districts
-    const worstStreets = data.sensors
+    // Hotspots: only congested/blocked
+    const hotspots = data.sensors
       .filter((sen) => sen.level >= 2)
       .sort((a, b) => b.load - a.load)
-      .slice(0, 8);
+      .slice(0, 5);
 
-    const levelLabel = (l: number) => [t('index.trafficFluido'), t('index.trafficDenso'), t('index.trafficCongestionado'), t('index.trafficCortado')][l] || '?';
+    const levelLabel = (l: number) => [t('index.trafficFluido'), t('index.trafficDenso'), t('index.trafficCongestionado'), t('index.trafficCortado')][l] || '';
     const levelColor = (l: number) => ['#2D6A4F', '#E9C46A', '#E76F51', '#264653'][l] || '#6C757D';
 
-    const worstHtml = worstStreets.length > 0 ? `
-      <div class="traffic-worst">
-        <h3 data-i18n="index.trafficWorstTitle">${t('index.trafficWorstTitle')}</h3>
-        <div class="traffic-worst-list">
-          ${worstStreets.map((st) => `
-            <div class="traffic-worst-item">
-              <span class="traffic-worst-dot" style="background:${levelColor(st.level)}"></span>
-              <span class="traffic-worst-name">${st.description}</span>
-              <span class="traffic-worst-level" style="color:${levelColor(st.level)}">${levelLabel(st.level)}</span>
-              <span class="traffic-worst-load">${st.load}%</span>
-            </div>
+    const hotspotsHtml = hotspots.length > 0 ? `
+      <details class="traffic-hotspots">
+        <summary>${hotspots.length} ${t('index.trafficHotspotsSummary')}</summary>
+        <ul class="traffic-hotspot-list">
+          ${hotspots.map((h) => `
+            <li>
+              <span class="traffic-hotspot-dot" style="background:${levelColor(h.level)}"></span>
+              <span class="traffic-hotspot-name">${h.description}</span>
+              <strong style="color:${levelColor(h.level)}">${levelLabel(h.level)}</strong>
+            </li>
           `).join('')}
-        </div>
-      </div>
-    ` : '';
-
-    // District ranking (worst first)
-    const districtHtml = districts.length > 0 ? `
-      <div class="traffic-districts">
-        <h3 data-i18n="index.trafficDistrictsTitle">${t('index.trafficDistrictsTitle')}</h3>
-        <div class="traffic-district-list">
-          ${districts.slice(0, 10).map((d) => {
-            const name = DISTRICT_NAMES[d.code] || d.code;
-            const dColor = d.score >= 70 ? '#2D6A4F' : d.score >= 50 ? '#E9C46A' : '#E76F51';
-            const pctC = d.total > 0 ? Math.round(((d.congestionado + d.cortado) / d.total) * 100) : 0;
-            return `
-              <a href="/barrio/${slugify(name)}" class="traffic-district-item">
-                <span class="traffic-district-name">${name}</span>
-                <span class="traffic-district-bar-track">
-                  <span class="traffic-district-bar-fill" style="width:${100 - d.score}%;background:${dColor}"></span>
-                </span>
-                <span class="traffic-district-score" style="color:${dColor}">${d.score}</span>
-                <span class="traffic-district-pct">${pctC}% ${t('index.trafficCongestedPct')}</span>
-              </a>
-            `;
-          }).join('')}
-        </div>
-      </div>
+        </ul>
+      </details>
     ` : '';
 
     el.innerHTML = `
-      <div class="traffic-score-row">
-        <div class="traffic-score" style="border-color:${scoreColor}">
-          <span class="traffic-score-value" style="color:${scoreColor}">${s.score}</span>
-          <span class="traffic-score-label">${t('index.trafficScoreLabel')}</span>
-        </div>
-        <div class="traffic-meta">
-          <p class="traffic-sensors">${s.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')}</p>
-          <p class="traffic-intensity">${t('index.trafficAvgIntensity')}: ${s.avgIntensity.toLocaleString()} ${t('index.trafficVehHour')}</p>
-          <p class="traffic-timestamp">${data.timestamp}</p>
-        </div>
+      <p class="traffic-lede">${lede.replace('{color}', ledeColor)}</p>
+      <span class="traffic-lede-detail">${ledeDetail}</span>
+      <div class="traffic-pulse">
+        <div class="pulse-seg" style="width:${pctFluido}%;background:#2D6A4F"></div>
+        <div class="pulse-seg" style="width:${pctDenso}%;background:#E9C46A"></div>
+        <div class="pulse-seg" style="width:${pctCongest}%;background:#E76F51"></div>
+        <div class="pulse-seg" style="width:${pctCortado}%;background:#264653"></div>
       </div>
-      <div class="traffic-bar-wrapper">
-        <div class="traffic-bar">
-          <div class="traffic-bar-seg traffic-bar--fluido" style="width:${pctFluido}%"></div>
-          <div class="traffic-bar-seg traffic-bar--denso" style="width:${pctDenso}%"></div>
-          <div class="traffic-bar-seg traffic-bar--congestionado" style="width:${pctCongest}%"></div>
-          <div class="traffic-bar-seg traffic-bar--cortado" style="width:${pctCortado}%"></div>
-        </div>
-        <div class="traffic-bar-labels">
-          <span><span class="traffic-stat-dot" style="background:#2D6A4F"></span> ${t('index.trafficFluido')} ${pctFluido}%</span>
-          <span><span class="traffic-stat-dot" style="background:#E9C46A"></span> ${t('index.trafficDenso')} ${pctDenso}%</span>
-          <span><span class="traffic-stat-dot" style="background:#E76F51"></span> ${t('index.trafficCongestionado')} ${pctCongest}%</span>
-          <span><span class="traffic-stat-dot" style="background:#264653"></span> ${t('index.trafficCortado')} ${pctCortado}%</span>
-        </div>
+      <div class="pulse-labels">
+        <span>${t('index.trafficFluido')}</span>
+        <span>${t('index.trafficDenso')}</span>
+        <span>${t('index.trafficCongestionado')}</span>
+        <span>${t('index.trafficCortado')}</span>
       </div>
-      ${worstHtml}
-      ${districtHtml}
-      <p class="traffic-source">${t('index.trafficSource')}</p>
+      ${hotspotsHtml}
+      <p class="traffic-meta">${s.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')} · ${data.timestamp} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
     `;
   });
 </script>
@@ -979,44 +942,23 @@ function slugify(name: string): string {
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
-  /* Traffic section */
-  .traffic-score-row { display: flex; align-items: center; gap: 2rem; margin-bottom: 1.5rem; }
-  .traffic-score { flex-shrink: 0; width: 100px; height: 100px; border-radius: 50%; border: 4px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; }
-  .traffic-score-value { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; }
-  .traffic-score-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-piedra); margin-top: 2px; }
-  .traffic-meta p { font-size: 0.9rem; color: var(--color-tinta); margin: 0.15rem 0; }
-  .traffic-sensors { font-weight: 600; }
-  .traffic-bar-wrapper { margin-bottom: 1.25rem; }
-  .traffic-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.06); }
-  .traffic-bar-seg { transition: width 0.5s ease; }
-  .traffic-bar--fluido { background: #2D6A4F; }
-  .traffic-bar--denso { background: #E9C46A; }
-  .traffic-bar--congestionado { background: #E76F51; }
-  .traffic-bar--cortado { background: #264653; }
-  .traffic-bar-labels { display: flex; gap: 1.25rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-piedra); flex-wrap: wrap; }
-  .traffic-bar-labels span { display: flex; align-items: center; gap: 0.3rem; }
-  .traffic-stat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-  .traffic-timestamp { font-size: 0.75rem !important; color: var(--color-piedra) !important; }
-  .traffic-worst { margin-top: 1.5rem; }
-  .traffic-worst h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-  .traffic-worst-list { display: flex; flex-direction: column; gap: 0.3rem; }
-  .traffic-worst-item { display: grid; grid-template-columns: 10px 1fr auto auto; gap: 0.6rem; align-items: center; padding: 0.5rem 0.75rem; background: white; border-radius: 8px; font-size: 0.85rem; }
-  .traffic-worst-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .traffic-worst-name { color: var(--color-tinta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .traffic-worst-level { font-weight: 600; font-size: 0.75rem; }
-  .traffic-worst-load { font-family: var(--font-display); font-size: 1rem; color: var(--color-tinta); }
-  .traffic-districts { margin-top: 1.5rem; }
-  .traffic-districts h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-  .traffic-district-list { display: flex; flex-direction: column; gap: 0.3rem; }
-  .traffic-district-item { display: grid; grid-template-columns: 140px 1fr auto auto; gap: 0.6rem; align-items: center; padding: 0.5rem 0.75rem; background: white; border-radius: 8px; font-size: 0.85rem; text-decoration: none; color: inherit; transition: transform 0.1s; }
-  .traffic-district-item:hover { transform: translateX(4px); }
-  .traffic-district-name { font-weight: 500; color: var(--color-tinta); }
-  .traffic-district-bar-track { height: 6px; background: rgba(0,0,0,0.06); border-radius: 3px; overflow: hidden; }
-  .traffic-district-bar-fill { height: 100%; border-radius: 3px; }
-  .traffic-district-score { font-family: var(--font-display); font-size: 1.2rem; }
-  .traffic-district-pct { font-size: 0.7rem; color: var(--color-piedra); min-width: 80px; text-align: right; }
-  .traffic-source { margin-top: 1rem; font-size: 0.75rem; color: var(--color-piedra); font-style: italic; }
-  .traffic-loading, .traffic-error { text-align: center; color: var(--color-piedra); font-style: italic; padding: 2rem; }
+  /* Traffic "Pulse" */
+  .traffic-card { background: white; border-radius: 16px; padding: 2rem 2.5rem; }
+  .traffic-lede { font-size: clamp(1.2rem, 3vw, 1.6rem); line-height: 1.5; color: var(--color-tinta); margin: 0; }
+  .traffic-lede-detail { display: block; font-size: 0.85rem; color: var(--color-piedra); margin-top: 0.25rem; margin-bottom: 1.5rem; }
+  .traffic-pulse { display: flex; height: 32px; border-radius: 16px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+  .pulse-seg { transition: width 0.6s ease; min-width: 2px; }
+  .pulse-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-piedra); margin-top: 0.5rem; padding: 0 0.25rem; }
+  .traffic-hotspots { margin-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1rem; }
+  .traffic-hotspots summary { font-size: 0.9rem; font-weight: 600; color: var(--color-arcilla); cursor: pointer; list-style: none; }
+  .traffic-hotspots summary::-webkit-details-marker { display: none; }
+  .traffic-hotspot-list { list-style: none; padding: 0.75rem 0 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .traffic-hotspot-list li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .traffic-hotspot-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .traffic-hotspot-name { color: var(--color-tinta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .traffic-meta { margin-top: 1.25rem; font-size: 0.72rem; color: var(--color-piedra); font-style: italic; }
+  .traffic-meta a { color: var(--color-hoja); }
+  .traffic-loading { text-align: center; color: var(--color-piedra); font-style: italic; padding: 2rem; }
 
   @media (max-width: 768px) {
     .section { padding: 2.5rem 1.25rem 1.5rem; }
@@ -1035,14 +977,7 @@ function slugify(name: string): string {
     .mcp-card { padding: 1.5rem; }
     .emt-district-table { max-height: 350px; overflow-y: auto; }
     .emt-district-table th { position: sticky; top: 0; background: var(--color-arena); z-index: 1; }
-    .traffic-score-row { gap: 1.25rem; }
-    .traffic-score { width: 80px; height: 80px; }
-    .traffic-score-value { font-size: 1.8rem; }
-    .traffic-worst-item { grid-template-columns: 8px 1fr auto; }
-    .traffic-worst-load { display: none; }
-    .traffic-district-item { grid-template-columns: 1fr auto auto; }
-    .traffic-district-bar-track { display: none; }
-    .traffic-district-pct { min-width: auto; }
+    .traffic-card { padding: 1.5rem; }
   }
 
   @media (max-width: 380px) {
