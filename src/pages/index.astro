@@ -498,18 +498,56 @@ function slugify(name: string): string {
   });
 
   function cleanStreet(raw: string): string {
-    let s = raw
-      .replace(/^\((?:MICRO|AFOROS|TACTICO)\)\s*/i, '')  // strip prefixes
-      .replace(/\s*\((?:Delante|GIRO|Entrada)[^)]*\)/gi, '')  // strip technical parentheticals
-      .replace(/\s*\d+\s*(?=[NSEO]-[NSEO])/, ' ')  // strip number before direction
-      .trim();
-    // Light title case: only if ALL CAPS
-    if (s === s.toUpperCase()) {
-      s = s.toLowerCase().replace(/(^|[\s.(])\S/g, (c) => c.toUpperCase());
+    let s = raw.trim();
+    // 1. Strip prefixes
+    s = s.replace(/^\((?:MICRO|AFOROS|TACTICO|TACTICA|TÁCTICO)\)\s*/i, '');
+    // 2. Sensor-only IDs
+    if (/^PM\d+$/.test(s)) return '';
+    // 3. Strip technical codes
+    s = s.replace(/\s*Ø\d+/g, '');
+    // 4. Strip number before direction: "O'Donnell, 21 E-O" → "O'Donnell E-O"
+    s = s.replace(/[,\s]+\d+\s+(?=[NSEO]-[NSEO])/g, ' ');
+    // 5. Strip giro/delante/entrada parentheticals
+    s = s.replace(/\s*\((?:Delante|GIRO|Entrada|giro)[^)]*\)/gi, '');
+
+    // 6. Parse: STREET DIR(FROM-TO) or STREET DIR - FROM-TO or STREET DIR
+    let street = '', tramo = '';
+    let m = s.match(/^(.+?)\s+[NSEO]-[NSEO]\s*\((.+)\)\s*$/);
+    if (!m) m = s.match(/^(.+?)\s+[NSEO]-[NSEO]\s+-\s*(.+)$/);
+    if (m) {
+      street = m[1].trim().replace(/,\s*$/, '');
+      tramo = m[2].trim().replace(/\)\s*$/, '');
+    } else {
+      const m2 = s.match(/^(.+?)\s+[NSEO]-[NSEO]\s*$/);
+      street = m2 ? m2[1].trim().replace(/,\s*$/, '') : s.split(/\s+-\s+/)[0].trim();
     }
-    // Clean direction separators for readability
-    s = s.replace(/\s*-\s*/g, ' - ');
-    return s;
+
+    // 7. Title case (only for ALL CAPS)
+    function tc(text: string): string {
+      const minor = new Set(['de','del','el','la','las','los','y','e','a']);
+      // Fix missing spaces after dots/commas
+      text = text.replace(/\.(?=[A-Za-z])/g, '. ').replace(/,(?=[A-Za-z])/g, ', ');
+      return text.toLowerCase().split(/\s+/).map((w, i) => {
+        if (i > 0 && minor.has(w)) return w;
+        // Handle O'donnell → O'Donnell
+        w = w.replace(/([´'])\w/, (m) => m[0] + m[1].toUpperCase());
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      }).join(' ');
+    }
+
+    street = street === street.toUpperCase() ? tc(street) : street;
+    // 8. Replace ´ with '
+    street = street.replace(/´/g, "'");
+
+    // 9. Format: "Street (From → To)" or just "Street"
+    if (tramo) {
+      const parts = tramo.split('-').map(p => p.trim()).filter(Boolean);
+      const formattedParts = parts.map(p => p === p.toUpperCase() ? tc(p) : p).map(p => p.replace(/´/g, "'"));
+      if (formattedParts.length >= 2) {
+        street += ` (${formattedParts[0]} → ${formattedParts[formattedParts.length - 1]})`;
+      }
+    }
+    return street;
   }
 
   fetchTrafficData().then((data) => {
@@ -550,17 +588,21 @@ function slugify(name: string): string {
     const levelLabel = (l: number) => [t('index.trafficFluido'), t('index.trafficDenso'), t('index.trafficCongestionado'), t('index.trafficCortado')][l] || '';
     const levelColor = (l: number) => ['#2D6A4F', '#E9C46A', '#E76F51', '#264653'][l] || '#6C757D';
 
-    const hotspotsHtml = hotspots.length > 0 ? `
+    const cleanedHotspots = hotspots
+      .map((h) => ({ ...h, cleanName: cleanStreet(h.description) }))
+      .filter((h) => h.cleanName.length > 0);
+
+    const hotspotsHtml = cleanedHotspots.length > 0 ? `
       <details class="traffic-hotspots" open>
-        <summary>${hotspots.length} ${t('index.trafficHotspotsSummary')}</summary>
+        <summary>${cleanedHotspots.length} ${t('index.trafficHotspotsSummary')}</summary>
         <div class="traffic-hotspot-list">
-          ${hotspots.map((h) => {
+          ${cleanedHotspots.map((h) => {
             const slug = districtSlugs[h.districtCode] || '';
             const href = slug ? `/barrio/${slug}` : '#';
             return `
             <a href="${href}" class="traffic-hotspot-row">
               <span class="traffic-hotspot-dot" style="background:${levelColor(h.level)}"></span>
-              <span class="traffic-hotspot-name">${cleanStreet(h.description)}</span>
+              <span class="traffic-hotspot-name">${h.cleanName}</span>
             </a>`;
           }).join('')}
         </div>
