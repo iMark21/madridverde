@@ -35,14 +35,6 @@ function slugify(name: string): string {
       </div>
     </div>
 
-    <div class="map-wrapper">
-      <MapaMadrid />
-    </div>
-
-    <div class="traffic-strip" id="traffic-strip">
-      <p class="traffic-strip-loading" data-i18n="index.trafficLoading">Cargando tráfico...</p>
-    </div>
-
     <div class="stats">
       <div class="stat-card">
         <span class="stat-value">{avgScore}</span>
@@ -64,11 +56,12 @@ function slugify(name: string): string {
       </div>
     </div>
 
-    <div class="export-row">
-      <button class="export-btn" id="export-csv-btn">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
-        <span data-i18n="export.button">Descargar datos (CSV)</span>
-      </button>
+    <div class="map-wrapper">
+      <MapaMadrid />
+    </div>
+
+    <div class="traffic-strip" id="traffic-strip">
+      <p class="traffic-strip-loading" data-i18n="index.trafficLoading">Cargando tráfico...</p>
     </div>
 
     <div class="ranking">
@@ -150,50 +143,7 @@ function slugify(name: string): string {
     <SeccionTendencias />
   </section>
 
-  <!-- SECTION: MCP / PREGUNTA A TU IA -->
-  <section id="mcp" class="section">
-    <div class="section-header">
-      <h2 data-i18n="index.mcpTitle">Pregunta a tu IA sobre Madrid</h2>
-      <p class="section-subtitle" data-i18n="index.mcpSubtitle">Integra los datos de MadridVerde en Claude, ChatGPT o Cursor</p>
-    </div>
-    <div class="mcp-card">
-    <div class="mcp-content">
-      <div class="mcp-demo">
-        <div class="mcp-chat">
-          <div class="mcp-msg mcp-msg--user">
-            <p data-i18n="index.mcpQ1">Como esta la calidad del aire en Chamberi ahora mismo?</p>
-          </div>
-          <div class="mcp-msg mcp-msg--ai">
-            <p data-i18n="index.mcpA1">Chamberi tiene un nivel de NO2 de 28 ug/m3 (por debajo del limite UE de 40). La estacion mas cercana es Cuatro Caminos. Indice Verde del distrito: 67/100 (Aceptable).</p>
-          </div>
-          <div class="mcp-msg mcp-msg--user">
-            <p data-i18n="index.mcpQ2">Hay incidencias en la linea 27?</p>
-          </div>
-          <div class="mcp-msg mcp-msg--ai">
-            <p data-i18n="index.mcpA2">Si, hay 2 alertas activas en la linea 27: una concentracion en paseo del Prado y un evento en el Estadio Santiago Bernabeu que afectan al itinerario.</p>
-          </div>
-        </div>
-      </div>
-      <div class="mcp-info">
-        <h3 data-i18n="index.mcpHowTitle">Como funciona</h3>
-        <p data-i18n="index.mcpHowDesc">MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 8 herramientas, datos en tiempo real, sin API key.</p>
-        <div class="mcp-tools-list">
-          <span class="mcp-tool-tag">get_air_quality</span>
-          <span class="mcp-tool-tag">get_noise_levels</span>
-          <span class="mcp-tool-tag">get_green_index</span>
-          <span class="mcp-tool-tag">get_bicimad</span>
-          <span class="mcp-tool-tag">get_traffic</span>
-          <span class="mcp-tool-tag">get_emt_alerts</span>
-          <span class="mcp-tool-tag">get_green_areas</span>
-          <span class="mcp-tool-tag">compare_districts</span>
-        </div>
-        <a href="https://github.com/iMark21/madridverde-mcp" target="_blank" rel="noopener" class="mcp-cta" data-i18n="index.mcpCta">Ver en GitHub</a>
-      </div>
-    </div>
-    </div>
-  </section>
-
-  <!-- SECTION: METODOLOGIA -->
+  <!-- SECTION: METODOLOGIA + IA + DATOS -->
   <section id="metodologia" class="section">
     <div class="section-header">
       <h2 data-i18n="index.methodologyTitle">Metodologia</h2>
@@ -287,6 +237,51 @@ function slugify(name: string): string {
       <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span> <span data-i18n="tier.acceptable">Aceptable</span></div>
       <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> <span data-i18n="tier.improvable">Mejorable</span></div>
       <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> <span data-i18n="tier.critical">Critico</span></div>
+    </div>
+
+    <div class="export-row">
+      <button class="export-btn" id="export-csv-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+        <span data-i18n="export.button">Descargar datos (CSV)</span>
+      </button>
+    </div>
+
+    <div id="mcp" class="mcp-card" style="margin-top: 2rem;">
+      <h3 data-i18n="index.mcpTitle">Pregunta a tu IA sobre Madrid</h3>
+      <p class="mcp-subtitle" data-i18n="index.mcpSubtitle" style="color:rgba(255,255,255,0.8);font-size:0.9rem;margin:0.25rem 0 1rem;">Integra los datos de MadridVerde en Claude, ChatGPT o Cursor</p>
+      <div class="mcp-content">
+        <div class="mcp-demo">
+          <div class="mcp-chat">
+            <div class="mcp-msg mcp-msg--user">
+              <p data-i18n="index.mcpQ1">Como esta la calidad del aire en Chamberi ahora mismo?</p>
+            </div>
+            <div class="mcp-msg mcp-msg--ai">
+              <p data-i18n="index.mcpA1">Chamberi tiene un nivel de NO2 de 28 ug/m3 (por debajo del limite UE de 40). La estacion mas cercana es Cuatro Caminos. Indice Verde del distrito: 67/100 (Aceptable).</p>
+            </div>
+            <div class="mcp-msg mcp-msg--user">
+              <p data-i18n="index.mcpQ2">Hay incidencias en la linea 27?</p>
+            </div>
+            <div class="mcp-msg mcp-msg--ai">
+              <p data-i18n="index.mcpA2">Si, hay 2 alertas activas en la linea 27: una concentracion en paseo del Prado y un evento en el Estadio Santiago Bernabeu que afectan al itinerario.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mcp-info">
+          <h3 data-i18n="index.mcpHowTitle">Como funciona</h3>
+          <p data-i18n="index.mcpHowDesc">MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 8 herramientas, datos en tiempo real, sin API key.</p>
+          <div class="mcp-tools-list">
+            <span class="mcp-tool-tag">get_air_quality</span>
+            <span class="mcp-tool-tag">get_noise_levels</span>
+            <span class="mcp-tool-tag">get_green_index</span>
+            <span class="mcp-tool-tag">get_bicimad</span>
+            <span class="mcp-tool-tag">get_traffic</span>
+            <span class="mcp-tool-tag">get_emt_alerts</span>
+            <span class="mcp-tool-tag">get_green_areas</span>
+            <span class="mcp-tool-tag">compare_districts</span>
+          </div>
+          <a href="https://github.com/iMark21/madridverde-mcp" target="_blank" rel="noopener" class="mcp-cta" data-i18n="index.mcpCta">Ver en GitHub</a>
+        </div>
+      </div>
     </div>
   </section>
 
