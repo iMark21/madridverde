@@ -279,12 +279,12 @@
       const dotColor = pct >= 80 ? '#2D6A4F' : pct >= 20 ? '#E9C46A' : '#E76F51';
       const availLabel = pct >= 80 ? tMap('map.legendHighAvail') : pct >= 20 ? tMap('map.legendMedAvail') : tMap('map.legendLowAvail');
 
-      const bikeSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="${dotColor}" stroke="white" stroke-width="1.2" paint-order="stroke"><path d="M5 18a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm14 2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-7-9h3l2.5 5h-2.2l-1.8-3.5L12 13H8.5l-1-2H5v-2h3.5l1-2H10zm1-2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>`;
+      const bikeSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="22" height="22"><circle cx="16" cy="16" r="15" fill="white" stroke="${dotColor}" stroke-width="1.5"/><g transform="translate(4,4)" fill="${dotColor}"><path d="M5 18a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm14 2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-7-9h3l2.5 5h-2.2l-1.8-3.5L12 13H8.5l-1-2H5v-2h3.5l1-2H10zm1-2a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></g></svg>`;
       const bikeIcon = L.divIcon({
         className: 'mv-bike-marker',
         html: bikeSvg,
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
       });
 
       const marker = L.marker([s.lat, s.lon], { icon: bikeIcon });
