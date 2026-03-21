@@ -39,6 +39,10 @@ function slugify(name: string): string {
       <MapaMadrid />
     </div>
 
+    <div class="traffic-strip" id="traffic-strip">
+      <p class="traffic-strip-loading" data-i18n="index.trafficLoading">Cargando tráfico...</p>
+    </div>
+
     <div class="stats">
       <div class="stat-card">
         <span class="stat-value">{avgScore}</span>
@@ -125,16 +129,6 @@ function slugify(name: string): string {
         </table>
       </div>
       <p class="emt-source-note" data-i18n="index.emtSourceNote">Fuente: EMT Madrid — datos.emtmadrid.es (GTFS) + openapi.emtmadrid.es (alertas en tiempo real)</p>
-    </div>
-  </section>
-
-  <!-- SECTION: TRAFICO -->
-  <section id="trafico" class="section">
-    <div class="section-header">
-      <h2 data-i18n="index.trafficTitle">Tráfico en tiempo real</h2>
-    </div>
-    <div class="traffic-card" id="traffic-dashboard">
-      <p class="traffic-loading" data-i18n="index.trafficLoading">Cargando datos de tráfico...</p>
     </div>
   </section>
 
@@ -490,15 +484,15 @@ function slugify(name: string): string {
   }
 </script>
 
-<!-- Traffic "Pulse" script -->
+<!-- Traffic strip below map -->
 <script>
   import { fetchTrafficData } from '../lib/traffic';
   import { t } from '../i18n/i18n.js';
 
   fetchTrafficData().then((data) => {
-    const el = document.getElementById('traffic-dashboard');
+    const el = document.getElementById('traffic-strip');
     if (!el || !data) {
-      if (el) el.innerHTML = `<p class="traffic-loading">${t('index.trafficError')}</p>`;
+      if (el) el.innerHTML = '';
       return;
     }
 
@@ -509,7 +503,6 @@ function slugify(name: string): string {
     const pctCortado = Math.round((s.cortado / s.totalSensors) * 100);
     const pctOk = pctFluido + pctDenso;
 
-    // Dynamic lede
     const congestedCount = s.congestionado + s.cortado;
     let ledeColor = '#2D6A4F';
     let lede = '';
@@ -524,9 +517,6 @@ function slugify(name: string): string {
     } else {
       lede = t('index.trafficLedeGood').replace('{pct}', String(pctOk));
     }
-    const ledeDetail = t('index.trafficLedeDetail')
-      .replace('{congested}', String(congestedCount))
-      .replace('{total}', s.totalSensors.toLocaleString());
 
     // Hotspots: only congested/blocked
     const hotspots = data.sensors
@@ -553,8 +543,7 @@ function slugify(name: string): string {
     ` : '';
 
     el.innerHTML = `
-      <p class="traffic-lede">${lede.replace('{color}', ledeColor)}</p>
-      <span class="traffic-lede-detail">${ledeDetail}</span>
+      <p class="traffic-strip-lede">${lede.replace('{color}', ledeColor)}</p>
       <div class="traffic-pulse">
         <div class="pulse-seg" style="width:${pctFluido}%;background:#2D6A4F"></div>
         <div class="pulse-seg" style="width:${pctDenso}%;background:#E9C46A"></div>
@@ -568,7 +557,7 @@ function slugify(name: string): string {
         <span>${t('index.trafficCortado')}</span>
       </div>
       ${hotspotsHtml}
-      <p class="traffic-meta">${s.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')} · ${data.timestamp} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
+      <p class="traffic-strip-meta">${data.timestamp} · ${s.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
     `;
   });
 </script>
@@ -942,23 +931,22 @@ function slugify(name: string): string {
   .tier { flex: 1; min-width: 120px; background: white; border-radius: 8px; padding: 0.75rem; text-align: center; font-size: 0.8rem; }
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
-  /* Traffic "Pulse" */
-  .traffic-card { background: white; border-radius: 16px; padding: 2rem 2.5rem; }
-  .traffic-lede { font-size: clamp(1.2rem, 3vw, 1.6rem); line-height: 1.5; color: var(--color-tinta); margin: 0; }
-  .traffic-lede-detail { display: block; font-size: 0.85rem; color: var(--color-piedra); margin-top: 0.25rem; margin-bottom: 1.5rem; }
-  .traffic-pulse { display: flex; height: 32px; border-radius: 16px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+  /* Traffic strip (below map) */
+  .traffic-strip { margin: 1rem 2rem 0; background: white; border-radius: 12px; padding: 1.25rem 1.5rem; }
+  .traffic-strip-lede { font-size: 1.05rem; line-height: 1.5; color: var(--color-tinta); margin: 0 0 1rem; }
+  .traffic-pulse { display: flex; height: 24px; border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); }
   .pulse-seg { transition: width 0.6s ease; min-width: 2px; }
-  .pulse-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-piedra); margin-top: 0.5rem; padding: 0 0.25rem; }
-  .traffic-hotspots { margin-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1rem; }
-  .traffic-hotspots summary { font-size: 0.9rem; font-weight: 600; color: var(--color-arcilla); cursor: pointer; list-style: none; }
+  .pulse-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--color-piedra); margin-top: 0.4rem; }
+  .traffic-hotspots { margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.75rem; }
+  .traffic-hotspots summary { font-size: 0.85rem; font-weight: 600; color: var(--color-arcilla); cursor: pointer; list-style: none; }
   .traffic-hotspots summary::-webkit-details-marker { display: none; }
-  .traffic-hotspot-list { list-style: none; padding: 0.75rem 0 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .traffic-hotspot-list li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
-  .traffic-hotspot-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .traffic-hotspot-list { list-style: none; padding: 0.5rem 0 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .traffic-hotspot-list li { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .traffic-hotspot-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .traffic-hotspot-name { color: var(--color-tinta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .traffic-meta { margin-top: 1.25rem; font-size: 0.72rem; color: var(--color-piedra); font-style: italic; }
-  .traffic-meta a { color: var(--color-hoja); }
-  .traffic-loading { text-align: center; color: var(--color-piedra); font-style: italic; padding: 2rem; }
+  .traffic-strip-meta { margin-top: 0.75rem; font-size: 0.68rem; color: var(--color-piedra); font-style: italic; }
+  .traffic-strip-meta a { color: var(--color-hoja); }
+  .traffic-strip-loading { text-align: center; color: var(--color-piedra); font-size: 0.8rem; font-style: italic; margin: 0; }
 
   @media (max-width: 768px) {
     .section { padding: 2.5rem 1.25rem 1.5rem; }
@@ -977,7 +965,7 @@ function slugify(name: string): string {
     .mcp-card { padding: 1.5rem; }
     .emt-district-table { max-height: 350px; overflow-y: auto; }
     .emt-district-table th { position: sticky; top: 0; background: var(--color-arena); z-index: 1; }
-    .traffic-card { padding: 1.5rem; }
+    .traffic-strip { margin: 0.75rem 0 0; border-radius: 0; padding: 1rem; }
   }
 
   @media (max-width: 380px) {
