@@ -487,7 +487,31 @@ function slugify(name: string): string {
 <!-- Traffic strip below map -->
 <script>
   import { fetchTrafficData } from '../lib/traffic';
+  import { computeGreenIndex } from '../lib/green-index';
   import { t } from '../i18n/i18n.js';
+
+  // Build district code → slug map
+  const districtSlugs: Record<string, string> = {};
+  computeGreenIndex().forEach((d) => {
+    districtSlugs[d.code] = d.name.toLowerCase().normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  });
+
+  function cleanStreet(raw: string): string {
+    // Strip technical prefixes and codes
+    let s = raw
+      .replace(/^\((?:MICRO|AFOROS)\)\s*/i, '')
+      .replace(/\s*\([^)]*(?:P\.M\.|Delante|JUNTO)[^)]*\)/gi, '');
+    // Extract just the street name (before direction markers and tramo)
+    const parts = s.split(/\s+(?=[NSEO]-[NSEO]\b)/);
+    s = parts[0].trim();
+    // Title case
+    s = s.toLowerCase().replace(/(^|\s|\.)\S/g, (c) => c.toUpperCase());
+    // Clean up abbreviations
+    s = s.replace(/\bPº\b/gi, 'Paseo').replace(/\bAvda?\b\.?/gi, 'Av.').replace(/\bGta\b\.?/gi, 'Glorieta')
+      .replace(/\bPl\b\.?/gi, 'Plaza').replace(/\bPso\b\.?/gi, 'Paseo');
+    return s.trim();
+  }
 
   fetchTrafficData().then((data) => {
     const el = document.getElementById('traffic-strip');
@@ -518,22 +542,7 @@ function slugify(name: string): string {
       lede = t('index.trafficLedeGood').replace('{pct}', String(pctOk));
     }
 
-    // Clean street name: title case, remove technical prefixes
-    function cleanStreet(raw: string): string {
-      return raw
-        .replace(/^\(MICRO\)\s*/i, '')
-        .replace(/^\(AFOROS\)\s*/i, '')
-        .replace(/\s*\(P\.M\.\d+\)/gi, '')
-        .replace(/\s*\(Delante G\.\s*\d+\)/gi, '')
-        .replace(/\s*\(JUNTO [A-Z]+\)/gi, '')
-        .toLowerCase()
-        .replace(/(^|\s|\.)\S/g, (c) => c.toUpperCase())
-        .replace(/\bN-s\b/gi, 'N-S').replace(/\bS-n\b/gi, 'S-N')
-        .replace(/\bE-o\b/gi, 'E-O').replace(/\bO-e\b/gi, 'O-E')
-        .replace(/\s*-\s*/g, ' — ');
-    }
-
-    // Hotspots: only congested/blocked
+    // Hotspots: only congested/blocked, with links
     const hotspots = data.sensors
       .filter((sen) => sen.level >= 2)
       .sort((a, b) => b.load - a.load)
@@ -543,33 +552,37 @@ function slugify(name: string): string {
     const levelColor = (l: number) => ['#2D6A4F', '#E9C46A', '#E76F51', '#264653'][l] || '#6C757D';
 
     const hotspotsHtml = hotspots.length > 0 ? `
-      <details class="traffic-hotspots">
+      <details class="traffic-hotspots" open>
         <summary>${hotspots.length} ${t('index.trafficHotspotsSummary')}</summary>
         <div class="traffic-hotspot-list">
-          ${hotspots.map((h) => `
-            <div class="traffic-hotspot-row">
-              <span class="traffic-hotspot-dot" style="background:${levelColor(h.level)}"></span>
+          ${hotspots.map((h) => {
+            const slug = districtSlugs[h.districtCode] || '';
+            const href = slug ? `/barrio/${slug}` : '#';
+            return `
+            <a href="${href}" class="traffic-hotspot-row">
               <span class="traffic-hotspot-name">${cleanStreet(h.description)}</span>
               <span class="traffic-hotspot-tag" style="background:${levelColor(h.level)}">${levelLabel(h.level)}</span>
-            </div>
-          `).join('')}
+            </a>`;
+          }).join('')}
         </div>
       </details>
     ` : '';
 
     el.innerHTML = `
       <p class="traffic-strip-lede">${lede.replace('{color}', ledeColor)}</p>
-      <div class="traffic-pulse">
-        <div class="pulse-seg" style="flex:${pctFluido};background:#2D6A4F"></div>
-        <div class="pulse-seg" style="flex:${pctDenso};background:#E9C46A"></div>
-        <div class="pulse-seg" style="flex:${Math.max(pctCongest, 1)};background:#E76F51"></div>
-        <div class="pulse-seg" style="flex:${Math.max(pctCortado, 1)};background:#264653"></div>
-      </div>
-      <div class="pulse-labels">
-        <span><span class="pulse-dot" style="background:#2D6A4F"></span>${t('index.trafficFluido')} ${pctFluido}%</span>
-        <span><span class="pulse-dot" style="background:#E9C46A"></span>${t('index.trafficDenso')} ${pctDenso}%</span>
-        <span><span class="pulse-dot" style="background:#E76F51"></span>${t('index.trafficCongestionado')} ${pctCongest}%</span>
-        <span><span class="pulse-dot" style="background:#264653"></span>${t('index.trafficCortado')} ${pctCortado}%</span>
+      <div class="traffic-pulse-wrap">
+        <div class="traffic-pulse">
+          <div class="pulse-seg" style="width:${pctFluido}%;background:#2D6A4F"></div>
+          <div class="pulse-seg" style="width:${pctDenso}%;background:#E9C46A"></div>
+          <div class="pulse-seg" style="width:${Math.max(pctCongest, 1)}%;background:#E76F51"></div>
+          <div class="pulse-seg" style="width:${Math.max(pctCortado, 1)}%;background:#264653"></div>
+        </div>
+        <div class="pulse-labels">
+          <span><span class="pulse-dot" style="background:#2D6A4F"></span> ${t('index.trafficFluido')} ${pctFluido}%</span>
+          <span><span class="pulse-dot" style="background:#E9C46A"></span> ${t('index.trafficDenso')} ${pctDenso}%</span>
+          <span><span class="pulse-dot" style="background:#E76F51"></span> ${t('index.trafficCongestionado')} ${pctCongest}%</span>
+          <span><span class="pulse-dot" style="background:#264653"></span> ${t('index.trafficCortado')} ${pctCortado}%</span>
+        </div>
       </div>
       ${hotspotsHtml}
       <p class="traffic-strip-meta">${data.timestamp} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
@@ -958,53 +971,54 @@ function slugify(name: string): string {
     font-size: 1.05rem;
     line-height: 1.5;
     color: var(--color-tinta);
-    margin: 0 0 1rem;
+    margin: 0 0 0.75rem;
   }
+
+  .traffic-pulse-wrap { margin-bottom: 0; }
 
   .traffic-pulse {
     display: flex;
-    height: 28px;
-    border-radius: 14px;
+    height: 14px;
+    border-radius: 7px;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.06);
   }
 
   .pulse-seg {
-    transition: flex 0.6s ease;
-    min-width: 0;
+    height: 100%;
+    transition: width 0.6s ease;
   }
 
   .pulse-labels {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--color-piedra);
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
   }
 
   .pulse-labels span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 4px;
   }
 
   .pulse-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    flex-shrink: 0;
     display: inline-block;
   }
 
   .traffic-hotspots {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
-    padding-top: 0.75rem;
+    padding-top: 0.6rem;
   }
 
   .traffic-hotspots summary {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--color-arcilla);
     cursor: pointer;
@@ -1014,24 +1028,25 @@ function slugify(name: string): string {
   .traffic-hotspots summary::-webkit-details-marker { display: none; }
 
   .traffic-hotspot-list {
-    padding: 0.6rem 0 0;
+    padding: 0.5rem 0 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.25rem;
   }
 
   .traffic-hotspot-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.35rem 0;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
   }
 
-  .traffic-hotspot-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  .traffic-hotspot-row:hover {
+    background: rgba(0, 0, 0, 0.03);
   }
 
   .traffic-hotspot-name {
@@ -1044,14 +1059,14 @@ function slugify(name: string): string {
   }
 
   .traffic-hotspot-tag {
-    font-size: 0.65rem;
-    font-weight: 600;
+    font-size: 0.6rem;
+    font-weight: 700;
     color: white;
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.55rem;
     border-radius: 10px;
     flex-shrink: 0;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
   }
 
   .traffic-strip-meta {
