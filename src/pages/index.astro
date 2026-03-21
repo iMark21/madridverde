@@ -518,6 +518,21 @@ function slugify(name: string): string {
       lede = t('index.trafficLedeGood').replace('{pct}', String(pctOk));
     }
 
+    // Clean street name: title case, remove technical prefixes
+    function cleanStreet(raw: string): string {
+      return raw
+        .replace(/^\(MICRO\)\s*/i, '')
+        .replace(/^\(AFOROS\)\s*/i, '')
+        .replace(/\s*\(P\.M\.\d+\)/gi, '')
+        .replace(/\s*\(Delante G\.\s*\d+\)/gi, '')
+        .replace(/\s*\(JUNTO [A-Z]+\)/gi, '')
+        .toLowerCase()
+        .replace(/(^|\s|\.)\S/g, (c) => c.toUpperCase())
+        .replace(/\bN-s\b/gi, 'N-S').replace(/\bS-n\b/gi, 'S-N')
+        .replace(/\bE-o\b/gi, 'E-O').replace(/\bO-e\b/gi, 'O-E')
+        .replace(/\s*-\s*/g, ' — ');
+    }
+
     // Hotspots: only congested/blocked
     const hotspots = data.sensors
       .filter((sen) => sen.level >= 2)
@@ -530,34 +545,34 @@ function slugify(name: string): string {
     const hotspotsHtml = hotspots.length > 0 ? `
       <details class="traffic-hotspots">
         <summary>${hotspots.length} ${t('index.trafficHotspotsSummary')}</summary>
-        <ul class="traffic-hotspot-list">
+        <div class="traffic-hotspot-list">
           ${hotspots.map((h) => `
-            <li>
+            <div class="traffic-hotspot-row">
               <span class="traffic-hotspot-dot" style="background:${levelColor(h.level)}"></span>
-              <span class="traffic-hotspot-name">${h.description}</span>
-              <strong style="color:${levelColor(h.level)}">${levelLabel(h.level)}</strong>
-            </li>
+              <span class="traffic-hotspot-name">${cleanStreet(h.description)}</span>
+              <span class="traffic-hotspot-tag" style="background:${levelColor(h.level)}">${levelLabel(h.level)}</span>
+            </div>
           `).join('')}
-        </ul>
+        </div>
       </details>
     ` : '';
 
     el.innerHTML = `
       <p class="traffic-strip-lede">${lede.replace('{color}', ledeColor)}</p>
       <div class="traffic-pulse">
-        <div class="pulse-seg" style="width:${pctFluido}%;background:#2D6A4F"></div>
-        <div class="pulse-seg" style="width:${pctDenso}%;background:#E9C46A"></div>
-        <div class="pulse-seg" style="width:${pctCongest}%;background:#E76F51"></div>
-        <div class="pulse-seg" style="width:${pctCortado}%;background:#264653"></div>
+        <div class="pulse-seg" style="flex:${pctFluido};background:#2D6A4F"></div>
+        <div class="pulse-seg" style="flex:${pctDenso};background:#E9C46A"></div>
+        <div class="pulse-seg" style="flex:${Math.max(pctCongest, 1)};background:#E76F51"></div>
+        <div class="pulse-seg" style="flex:${Math.max(pctCortado, 1)};background:#264653"></div>
       </div>
       <div class="pulse-labels">
-        <span>${t('index.trafficFluido')}</span>
-        <span>${t('index.trafficDenso')}</span>
-        <span>${t('index.trafficCongestionado')}</span>
-        <span>${t('index.trafficCortado')}</span>
+        <span><span class="pulse-dot" style="background:#2D6A4F"></span>${t('index.trafficFluido')} ${pctFluido}%</span>
+        <span><span class="pulse-dot" style="background:#E9C46A"></span>${t('index.trafficDenso')} ${pctDenso}%</span>
+        <span><span class="pulse-dot" style="background:#E76F51"></span>${t('index.trafficCongestionado')} ${pctCongest}%</span>
+        <span><span class="pulse-dot" style="background:#264653"></span>${t('index.trafficCortado')} ${pctCortado}%</span>
       </div>
       ${hotspotsHtml}
-      <p class="traffic-strip-meta">${data.timestamp} · ${s.totalSensors.toLocaleString()} ${t('index.trafficSensorsActive')} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
+      <p class="traffic-strip-meta">${data.timestamp} · <a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener">${t('index.trafficSourceLink')}</a></p>
     `;
   });
 </script>
@@ -932,19 +947,120 @@ function slugify(name: string): string {
   .tier-range { font-family: var(--font-display); font-size: 1.2rem; color: var(--tier-color); display: block; }
 
   /* Traffic strip (below map) */
-  .traffic-strip { margin: 1rem 2rem 0; background: white; border-radius: 12px; padding: 1.25rem 1.5rem; }
-  .traffic-strip-lede { font-size: 1.05rem; line-height: 1.5; color: var(--color-tinta); margin: 0 0 1rem; }
-  .traffic-pulse { display: flex; height: 24px; border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); }
-  .pulse-seg { transition: width 0.6s ease; min-width: 2px; }
-  .pulse-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--color-piedra); margin-top: 0.4rem; }
-  .traffic-hotspots { margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.75rem; }
-  .traffic-hotspots summary { font-size: 0.85rem; font-weight: 600; color: var(--color-arcilla); cursor: pointer; list-style: none; }
+  .traffic-strip {
+    margin: 1rem 2rem 0;
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .traffic-strip-lede {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--color-tinta);
+    margin: 0 0 1rem;
+  }
+
+  .traffic-pulse {
+    display: flex;
+    height: 28px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .pulse-seg {
+    transition: flex 0.6s ease;
+    min-width: 0;
+  }
+
+  .pulse-labels {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: var(--color-piedra);
+    margin-top: 0.6rem;
+  }
+
+  .pulse-labels span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .traffic-hotspots {
+    margin-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 0.75rem;
+  }
+
+  .traffic-hotspots summary {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-arcilla);
+    cursor: pointer;
+    list-style: none;
+  }
+
   .traffic-hotspots summary::-webkit-details-marker { display: none; }
-  .traffic-hotspot-list { list-style: none; padding: 0.5rem 0 0; display: flex; flex-direction: column; gap: 0.4rem; }
-  .traffic-hotspot-list li { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
-  .traffic-hotspot-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .traffic-hotspot-name { color: var(--color-tinta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .traffic-strip-meta { margin-top: 0.75rem; font-size: 0.68rem; color: var(--color-piedra); font-style: italic; }
+
+  .traffic-hotspot-list {
+    padding: 0.6rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .traffic-hotspot-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+  }
+
+  .traffic-hotspot-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .traffic-hotspot-name {
+    flex: 1;
+    font-size: 0.82rem;
+    color: var(--color-tinta);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .traffic-hotspot-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .traffic-strip-meta {
+    margin-top: 0.75rem;
+    font-size: 0.68rem;
+    color: var(--color-piedra);
+    font-style: italic;
+  }
+
   .traffic-strip-meta a { color: var(--color-hoja); }
   .traffic-strip-loading { text-align: center; color: var(--color-piedra); font-size: 0.8rem; font-style: italic; margin: 0; }
 
