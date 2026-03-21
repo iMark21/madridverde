@@ -95,7 +95,6 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
           <li><a href="/#mapa" data-i18n="nav.map">Mapa</a></li>
           <li><a href="/#bicimad" data-i18n="nav.bicimad">BiciMAD</a></li>
           <li><a href="/#emt" data-i18n="nav.emt">EMT</a></li>
-          <li><a href="/#trafico" data-i18n="nav.traffic">Tráfico</a></li>
           <li><a href="/#comparar" data-i18n="nav.compare">Comparar</a></li>
           <li><a href="/#tendencias" data-i18n="nav.trends">Tendencias</a></li>
           <li><a href="/#mcp" data-i18n="nav.mcp">IA</a></li>
@@ -258,7 +257,7 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
         }
 
         // --- section_viewed: fire once per section when it enters viewport ---
-        var sectionIds = ['mapa', 'bicimad', 'emt', 'trafico', 'comparar', 'tendencias', 'mcp', 'metodologia'];
+        var sectionIds = ['mapa', 'bicimad', 'emt', 'comparar', 'tendencias', 'mcp', 'metodologia'];
         var sectionSeen = {};
 
         if ('IntersectionObserver' in window) {
