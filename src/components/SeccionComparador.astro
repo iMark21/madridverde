@@ -237,5 +237,8 @@ const districtOptions = allDistricts.map(d => ({
   @media (max-width: 768px) {
     .chart-area { grid-template-columns: 1fr; }
     .radar-container { height: 280px; }
+    .selector-chip { padding: 0.6rem 1rem; font-size: 0.9rem; min-height: 44px; }
+    .comparison-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .comparison-table :global(table) { min-width: 400px; }
   }
 </style>
