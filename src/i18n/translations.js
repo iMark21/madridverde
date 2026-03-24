@@ -99,7 +99,7 @@ export const translations = {
     'index.mcpQ2': '¿Hay incidencias en la línea 27?',
     'index.mcpA2': 'Sí, hay 2 alertas activas en la línea 27: una concentración en paseo del Prado y un evento en el Estadio Santiago Bernabéu que afectan al itinerario.',
     'index.mcpHowTitle': 'Cómo funciona',
-    'index.mcpHowDesc': 'MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 8 herramientas, datos en tiempo real, sin API key.',
+    'index.mcpHowDesc': 'MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 10 herramientas, datos en tiempo real, sin API key.',
     'index.mcpCta': 'Ver en GitHub',
     'nav.mcp': 'IA',
 
@@ -496,7 +496,7 @@ export const translations = {
     'index.mcpQ2': 'Any service alerts on bus line 27?',
     'index.mcpA2': 'Yes, there are 2 active alerts on line 27: a demonstration on Paseo del Prado and an event at Santiago Bernabeu Stadium affecting the route.',
     'index.mcpHowTitle': 'How it works',
-    'index.mcpHowDesc': 'MadridVerde MCP is a server that lets any AI assistant query Madrid environmental data in natural language. 8 tools, real-time data, no API key required.',
+    'index.mcpHowDesc': 'MadridVerde MCP is a server that lets any AI assistant query Madrid environmental data in natural language. 10 tools, real-time data, no API key required.',
     'index.mcpCta': 'View on GitHub',
     'nav.mcp': 'AI',
 
