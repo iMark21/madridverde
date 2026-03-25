@@ -1,0 +1,130 @@
+# PitchReel — MadridVerde (v2.1)
+# II Premios Datos Abiertos Madrid 2026 — Deadline: 4 mayo 2026
+# Ejecutar: bash scripts/pipeline.sh --config configs/madrid-verde.yaml --no-subs
+#
+# PRINCIPIO: setup minimo (20s), demo maximo (140s), cierre rapido (20s).
+# 7 escenas demo cubren TODAS las features: mapa, trafico, BiciMAD, EMT,
+# scorecard, comparador+tendencias, MCP.
+#
+# TARGET TIMING (AlvaroNeural ~14.8 chars/seg, pero medir siempre):
+#   Intro      5s →  ~60 chars
+#   Problem    5s →  ~60 chars
+#   Solution  10s → ~120 chars
+#   Demo     140s → 7 escenas (20+15+15+15+20+25+30)
+#   Impact    10s → ~100 chars
+#   Outro     10s → ~100 chars
+#
+# GRABACIONES REQUERIDAS (7):
+#   demo-mapa.mp4          → Mapa choropleth + hover distritos + busqueda (20s)
+#   demo-trafico.mp4       → Traffic strip debajo del mapa, expand detalles (15s)
+#   demo-bicimad.mp4       → BiciMAD dashboard: estaciones, bicis live (15s)
+#   demo-emt.mp4           → EMT: paradas, lineas, alertas (15s)
+#   demo-scorecard.mp4     → Click Retiro → scorecard completo + sub-indices (20s)
+#   demo-comparador.mp4    → Comparador radar + tendencias historicas (25s)
+#   demo-mcp.mp4           → Claude: indice verde + BiciMAD nearby (30s)
+#     (o dos separados: demo-mcp-indice.mp4 15s + demo-mcp-bicimad.mp4 15s)
+
+project:
+  name: "MadridVerde"
+  tagline: "Porque respirar no debería ser cuestión de código postal"
+  url: "madrid-verde.web.app"
+  color_primary: "#2D6A4F"
+  color_secondary: "#52B788"
+
+contest:
+  name: "II Premios Datos Abiertos Madrid 2026"
+  organizer: "Ayuntamiento de Madrid"
+  template: contest-standard
+
+narration:
+  language: es
+  voice: "es-ES-AlvaroNeural"
+  description: ""
+
+  chapters:
+    # ── INTRO (5s) ───────────────────────────────────────────────
+    # Gancho conversacional — la visual muestra titulo + tagline, la voz habla
+    intro:
+      - "¿Sabes cómo respira tu barrio? MadridVerde."
+
+    # ── PROBLEMA (5s) ────────────────────────────────────────────
+    # Continuación fluida del intro — misma visual, un dato + carencia
+    problem:
+      - "Miles de datos. Y ningún vecino puede usarlos."
+
+    # ── SOLUCIÓN (10s) ───────────────────────────────────────────
+    # Qué hace, rápido.
+    solution:
+      - "MadridVerde integra diecisiete datasets abiertos del Ayuntamiento en un único indicador por distrito: el Índice Verde. De cero a cien."
+
+    # ── DEMO (140s) — 7 escenas ──────────────────────────────────
+    # Cada narración debe llenar ~90% del slot. Sin silencios muertos.
+    demo:
+      # Escena 1 (20s): Mapa choropleth + stats + búsqueda
+      - "El mapa muestra los veintiún distritos coloreados por su Índice Verde. Cuatro indicadores resumen la ciudad: la media, el mejor distrito, el peor y los diecisiete datasets integrados. El buscador localiza cualquier dirección y lleva directo a su distrito."
+      # Escena 2 (15s): Tráfico en tiempo real
+      - "Bajo el mapa, el panel de tráfico se alimenta de más de cuatro mil sensores del Ayuntamiento, actualizados cada cinco minutos. Los puntos de color indican el estado: fluido, denso o congestionado, calle a calle."
+      # Escena 3 (15s): BiciMAD dashboard
+      - "La sección BiciMAD conecta con las seiscientas treinta y cinco estaciones públicas. Bicis disponibles, anclajes libres, las diez estaciones con más disponibilidad. Todo en tiempo real, actualizado cada catorce segundos."
+      # Escena 4 (15s): EMT
+      - "EMT completa la movilidad: casi cinco mil paradas, doscientas treinta y cinco líneas, alertas en tiempo real, y la frecuencia media por distrito en hora punta. Todo desde la API abierta del Ayuntamiento."
+      # Escena 5 (20s): Scorecard distrito (Retiro)
+      - "Al seleccionar un distrito se abre su scorecard. Retiro: Índice Verde cuarenta y tres. Cinco sub-índices, desde calidad del aire hasta reciclaje. Árboles, zonas verdes por habitante, y la historia del barrio contada con datos."
+      # Escena 6 (25s): Comparador radar + Tendencias históricas
+      - "El comparador enfrenta hasta cuatro distritos en las cinco dimensiones del Índice Verde. Centro con treinta y cuatro puntos, Moncloa-Aravaca con cincuenta y cinco. El radar y la tabla muestran la brecha exacta. Las tendencias cubren veinticinco años de ruido y calidad del aire, con las políticas que los cambiaron: Madrid Central, COVID, la Zona de Bajas Emisiones."
+      # Escena 7 (30s): MCP — Claude con Índice Verde + BiciMAD
+      - "MadridVerde incluye un servidor MCP de código abierto con diez herramientas. Le preguntamos a Claude cuál es el distrito más verde y responde con el ranking completo desde los datos del Ayuntamiento. También le preguntamos por bicis cerca de la Puerta del Sol: cinco estaciones, distancias exactas, disponibilidad en tiempo real. Publicado en npm. Sin configuración. Sin clave de API."
+
+    # ── IMPACTO (10s) ────────────────────────────────────────────
+    impact:
+      - "Diecisiete datasets. Ciento treinta y un barrios. Datos en tiempo real. Bilingüe y abierto a cualquier IA."
+
+    # ── OUTRO (10s) ──────────────────────────────────────────────
+    outro:
+      - "MadridVerde. Datos abiertos al servicio de cada vecino de Madrid. madrid-verde.web.app."
+
+impact:
+  metrics:
+    - label: "Datasets integrados"
+      value: "17"
+    - label: "Barrios cubiertos"
+      value: "131"
+    - label: "Herramientas MCP"
+      value: "10"
+    - label: "Carga"
+      value: "< 2s"
+
+# Timestamps: demo empieza en 0:20 (intro 5s + problem 5s + solution 10s)
+#   Escena 1 mapa          → 00:20 (20s)
+#   Escena 2 trafico       → 00:40 (15s)
+#   Escena 3 bicimad       → 00:55 (15s)
+#   Escena 4 emt           → 01:10 (15s)
+#   Escena 5 scorecard     → 01:25 (20s)
+#   Escena 6 comparador    → 01:45 (25s)
+#   Escena 7 mcp-indice    → 02:10 (15s)
+#   Escena 7 mcp-bicimad   → 02:25 (15s → hasta 02:40)
+recordings:
+  - timestamp: "00:20"
+    file: "recordings/demo-mapa.mp4"
+    caption: "Mapa interactivo — Indice Verde por distrito"
+  - timestamp: "00:40"
+    file: "recordings/demo-trafico.mp4"
+    caption: "Trafico en tiempo real — 4.000 sensores"
+  - timestamp: "00:55"
+    file: "recordings/demo-bicimad.mp4"
+    caption: "BiciMAD — 635 estaciones en directo"
+  - timestamp: "01:10"
+    file: "recordings/demo-emt.mp4"
+    caption: "EMT — paradas, lineas y alertas"
+  - timestamp: "01:25"
+    file: "recordings/demo-scorecard.mp4"
+    caption: "Scorecard de distrito — Retiro"
+  - timestamp: "01:45"
+    file: "recordings/demo-comparador.mp4"
+    caption: "Comparador + tendencias historicas"
+  - timestamp: "02:10"
+    file: "recordings/demo-mcp-indice.mp4"
+    caption: "MCP — Indice Verde por distrito"
+  - timestamp: "02:25"
+    file: "recordings/demo-mcp-bicimad.mp4"
+    caption: "MCP — BiciMAD en tiempo real"
