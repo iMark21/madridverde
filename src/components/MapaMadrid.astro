@@ -223,6 +223,7 @@
     });
 
     console.log('[MadridVerde] Air quality data loaded, map updated');
+    window.dispatchEvent(new CustomEvent('mv-index-updated', { detail: greenIndex }));
   });
 
   // --- Geocoding: listen for address search events ---
