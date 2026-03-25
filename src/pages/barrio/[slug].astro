@@ -330,6 +330,12 @@ const shareUrl = `https://madridverde-web.web.app/barrio/${slug}`;
     const newScore = Math.round(totalWeighted);
     if (scoreValueEl) scoreValueEl.textContent = String(newScore);
 
+    // Update context phrase (replace leading score number, keep the rest)
+    const contextEl = document.querySelector('.score-context');
+    if (contextEl && contextEl.textContent) {
+      contextEl.textContent = contextEl.textContent.replace(/^\d+/, String(newScore));
+    }
+
     // Update tier color
     const tierColor = newScore >= 85 ? '#2D6A4F' : newScore >= 70 ? '#52B788' : newScore >= 55 ? '#E9C46A' : newScore >= 40 ? '#F4A261' : '#E76F51';
     const tierKey = newScore >= 85 ? 'tier.excellent' : newScore >= 70 ? 'tier.good' : newScore >= 55 ? 'tier.acceptable' : newScore >= 40 ? 'tier.improvable' : 'tier.critical';

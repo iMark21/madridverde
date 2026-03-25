@@ -68,7 +68,7 @@ function slugify(name: string): string {
       <h2 data-i18n="index.rankingTitle">Ranking de distritos</h2>
       <div class="ranking-list">
         {districts.sort((a, b) => b.score - a.score).map((d, i) => (
-          <a href={`/barrio/${slugify(d.name)}`} class="ranking-item" data-analytics="district_viewed" data-analytics-district_name={titleCase(d.name)} data-analytics-source="ranking">
+          <a href={`/barrio/${slugify(d.name)}`} class="ranking-item" data-code={d.code} data-analytics="district_viewed" data-analytics-district_name={titleCase(d.name)} data-analytics-source="ranking">
             <span class="ranking-pos">#{i + 1}</span>
             <span class="ranking-bar" style={`width: ${d.score}%; background: ${d.tierColor}`}></span>
             <span class="ranking-name">{titleCase(d.name)}</span>
@@ -298,6 +298,37 @@ function slugify(name: string): string {
   if (window.__mvAnalytics) {
     window.__mvAnalytics('page_viewed', { page_type: 'home' });
   }
+</script>
+
+<!-- Sync ranking with real-time scores emitted by MapaMadrid -->
+<script>
+  window.addEventListener('mv-index-updated', (e: any) => {
+    const updated: any[] = e.detail;
+    const rankingList = document.querySelector('.ranking-list');
+    if (!rankingList) return;
+
+    const items = Array.from(rankingList.querySelectorAll('.ranking-item[data-code]')) as HTMLElement[];
+    items.forEach((el) => {
+      const d = updated.find((x: any) => x.code === el.dataset.code);
+      if (!d) return;
+      const scoreEl = el.querySelector('.ranking-score') as HTMLElement;
+      const barEl = el.querySelector('.ranking-bar') as HTMLElement;
+      if (scoreEl) { scoreEl.textContent = String(d.score); scoreEl.style.color = d.tierColor; }
+      if (barEl) { barEl.style.width = `${d.score}%`; barEl.style.background = d.tierColor; }
+    });
+
+    // Re-sort by updated score
+    const sorted = [...items].sort((a, b) => {
+      const aS = parseInt((a.querySelector('.ranking-score') as HTMLElement)?.textContent || '0');
+      const bS = parseInt((b.querySelector('.ranking-score') as HTMLElement)?.textContent || '0');
+      return bS - aS;
+    });
+    sorted.forEach((item, i) => {
+      const posEl = item.querySelector('.ranking-pos') as HTMLElement;
+      if (posEl) posEl.textContent = `#${i + 1}`;
+      rankingList.appendChild(item);
+    });
+  });
 </script>
 
 <!-- BiciMAD dashboard script -->
