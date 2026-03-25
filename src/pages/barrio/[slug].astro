@@ -82,9 +82,9 @@ function generateNarrative(): string[] {
 
   const gm2 = Number(greenM2PerCap);
   if (gm2 < 9) {
-    lines.push(`Con ${greenM2PerCap} m² de zonas verdes por habitante, ${displayName} esta por debajo del minimo recomendado por la OMS (9 m²/hab). ${treeInfo.totalTrees.toLocaleString('es-ES')} arboles censados dan sombra a sus calles.`);
+    lines.push(`Con ${greenM2PerCap} m² de zonas verdes por habitante, ${displayName} está por debajo del mínimo recomendado por la OMS (9 m²/hab). ${treeInfo.totalTrees.toLocaleString('es-ES')} árboles censados dan sombra a sus calles.`);
   } else if (gm2 > 15) {
-    lines.push(`${displayName} es uno de los distritos mas verdes de Madrid: ${greenM2PerCap} m² por habitante y ${treeInfo.totalTrees.toLocaleString('es-ES')} arboles censados.`);
+    lines.push(`${displayName} es uno de los distritos más verdes de Madrid: ${greenM2PerCap} m² por habitante y ${treeInfo.totalTrees.toLocaleString('es-ES')} árboles censados.`);
   }
 
   if (reciclaje && Number(containersPer1000) > 15) {

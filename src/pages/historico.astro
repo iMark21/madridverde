@@ -2,16 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Tendencias historicas — MadridVerde" description="Evolucion de la calidad ambiental de Madrid: ruido, aire, y el impacto de las politicas publicas">
+<BaseLayout title="Tendencias históricas — MadridVerde" description="Evolución de la calidad ambiental de Madrid: ruido, aire, y el impacto de las políticas públicas">
   <section class="trends">
-    <h1 data-i18n="historico.title">Tendencias historicas</h1>
-    <p class="trends-subtitle" data-i18n="historico.subtitle">Como ha cambiado la calidad ambiental de Madrid en las ultimas dos decadas</p>
+    <h1 data-i18n="historico.title">Tendencias históricas</h1>
+    <p class="trends-subtitle" data-i18n="historico.subtitle">Cómo ha cambiado la calidad ambiental de Madrid en las últimas dos décadas</p>
 
     <div class="chart-section">
       <h2 data-i18n="historico.noiseTitle">Ruido ambiental (LAeq dB)</h2>
       <p class="chart-description" data-i18n="historico.noiseDesc">Nivel medio de ruido equivalente en estaciones representativas de Madrid. La OMS recomienda no superar los 55 dB en zonas residenciales.</p>
       <div class="chart-container">
-        <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
+        <canvas id="noise-chart" aria-label="Gráfico de evolución del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
       </div>
       <p class="chart-sr-only" id="noise-chart-desc">
         <!-- Screen reader alternative provided by script -->
@@ -20,7 +20,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <div class="chart-section">
       <h2 data-i18n="historico.airTitle">Calidad del aire (NO2 ug/m3)</h2>
-      <p class="chart-description" data-i18n="historico.airDesc">Evolucion mensual del dioxido de nitrogeno en estaciones representativas. El limite anual de la OMS es 40 ug/m3. El NO2 es el contaminante mas relevante en Madrid por el trafico.</p>
+      <p class="chart-description" data-i18n="historico.airDesc">Evolución mensual del dióxido de nitrógeno en estaciones representativas. El límite anual de la OMS es 40 ug/m3. El NO2 es el contaminante más relevante en Madrid por el tráfico.</p>
       <div class="chart-container">
         <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
       </div>

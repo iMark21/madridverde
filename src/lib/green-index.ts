@@ -86,11 +86,11 @@ function calcVerde(distCode: string, population: number): SubIndex {
 
   let detail: string;
   if (m2PerCap < 9) {
-    detail = `Solo ${m2PerCap.toFixed(1)} m²/hab de zonas verdes — la OMS recomienda minimo 9 (censo municipal 2024)`;
+    detail = `Solo ${m2PerCap.toFixed(1)} m²/hab de zonas verdes — la OMS recomienda mínimo 9 (censo municipal 2024)`;
   } else if (m2PerCap < 15) {
-    detail = `${m2PerCap.toFixed(1)} m²/hab — cumple el minimo de la OMS (censo municipal 2024)`;
+    detail = `${m2PerCap.toFixed(1)} m²/hab — cumple el mínimo de la OMS (censo municipal 2024)`;
   } else {
-    detail = `${m2PerCap.toFixed(1)} m²/hab de zonas verdes — bien por encima del minimo de la OMS (censo 2024)`;
+    detail = `${m2PerCap.toFixed(1)} m²/hab de zonas verdes — bien por encima del mínimo de la OMS (censo 2024)`;
   }
 
   return { name: 'Verde', score, weight: 0.25, detail };
@@ -157,7 +157,7 @@ function calcRuido(distCode: string): SubIndex {
   } else if (avgLaeq > 55) {
     detail = `${avgLaeq.toFixed(1)} dB — por encima de la recomendacion OMS (media SIVCA hasta feb. 2026)`;
   } else {
-    detail = `${avgLaeq.toFixed(1)} dB — dentro de los limites OMS (media SIVCA hasta feb. 2026)`;
+    detail = `${avgLaeq.toFixed(1)} dB — dentro de los límites OMS (media SIVCA hasta feb. 2026)`;
   }
 
   return { name: 'Ruido', score, weight: 0.20, detail };
@@ -199,11 +199,11 @@ function calcMovilidad(trafficScore?: number): SubIndex {
   if (trafficScore != null) {
     let detail: string;
     if (trafficScore >= 80) {
-      detail = 'Trafico fluido en la mayoria de sensores';
+      detail = 'Tráfico fluido en la mayoría de sensores';
     } else if (trafficScore >= 50) {
-      detail = 'Trafico denso en algunas vias principales';
+      detail = 'Tráfico denso en algunas vías principales';
     } else {
-      detail = 'Alta congestion — afecta la calidad ambiental';
+      detail = 'Alta congestión — afecta la calidad ambiental';
     }
     return { name: 'Movilidad', score: trafficScore, weight: 0.15, detail };
   }
@@ -211,7 +211,7 @@ function calcMovilidad(trafficScore?: number): SubIndex {
     name: 'Movilidad',
     score: 50,
     weight: 0.15,
-    detail: 'Cargando datos de trafico en tiempo real...',
+    detail: 'Cargando datos de tráfico en tiempo real...',
   };
 }
 
@@ -289,7 +289,7 @@ export function getContextPhrase(district: DistrictIndex): string {
   if (percentile >= 70) return `${score} — mejor que el ${percentile}% de los distritos`;
   if (percentile >= 40) return `${score} — en la media de Madrid`;
   if (percentile >= 15) return `${score} — por debajo de la media`;
-  return `${score} — necesita atencion urgente`;
+  return `${score} — necesita atención urgente`;
 }
 
 export { getTier };
