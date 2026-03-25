@@ -5,6 +5,16 @@ interface Props {
 }
 
 const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets abiertos, un Índice Verde por distrito' } = Astro.props;
+
+const fbConfig = {
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+  measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
+};
 ---
 
 <!DOCTYPE html>
@@ -37,19 +47,14 @@ const { title, description = 'Dashboard medioambiental de Madrid — 17 datasets
     <title>{title}</title>
 
     <!-- Firebase Analytics -->
+    <script is:inline define:vars={{ fbConfig }}>
+      window.__fbConfig = fbConfig;
+    </script>
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
       import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js';
 
-      const app = initializeApp({
-        apiKey: 'FIREBASE_API_KEY',
-        authDomain: 'madrid-verde.firebaseapp.com',
-        projectId: 'madrid-verde',
-        storageBucket: 'madrid-verde.firebasestorage.app',
-        messagingSenderId: 'FIREBASE_SENDER_ID',
-        appId: 'FIREBASE_APP_ID',
-        measurementId: 'FIREBASE_MEASUREMENT_ID',
-      });
+      const app = initializeApp(window.__fbConfig);
 
       try {
         const analytics = getAnalytics(app);
