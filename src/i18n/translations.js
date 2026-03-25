@@ -83,7 +83,7 @@ export const translations = {
     'scorecard.emtLinesLabel': 'líneas',
     'scorecard.emtStopsPer1000': 'paradas/1.000 hab',
     'scorecard.emtSource': 'Fuente: EMT Madrid — datos.emtmadrid.es (GTFS)',
-    'scorecard.busStops': 'paradas de autobus EMT',
+    'scorecard.busStops': 'paradas de autobús EMT',
     'scorecard.busLines': 'líneas EMT',
     'scorecard.emtLineLabel': 'Línea {line}',
     'scorecard.emtFreqLabel': 'Frecuencia en hora punta: cada {freq} minutos',
@@ -199,7 +199,7 @@ export const translations = {
     'scorecard.treesCounted': 'árboles censados',
     'scorecard.greenM2PerHab': 'm2 de zonas verdes por habitante',
     'scorecard.containersPerHab': 'contenedores por 1.000 hab',
-    'scorecard.populationLabel': 'habitantes (padron 2025)',
+    'scorecard.populationLabel': 'habitantes (padrón 2025)',
     'scorecard.topSpecies': 'Especies más frecuentes',
     'scorecard.containersByType': 'Contenedores por tipo',
     'scorecard.bicimadTitle': 'BiciMAD en',
@@ -229,7 +229,7 @@ export const translations = {
     'trends.subtitle': 'Cómo ha cambiado la calidad ambiental de Madrid en las últimas dos décadas',
     'trends.noiseTitle': 'Ruido ambiental (LAeq dB)',
     'trends.noiseDesc': 'Selecciona estaciones para comparar su evolución. OMS recomienda no superar 55 dB.',
-    'trends.noiseDataNote': 'Datos SIVCA, ultima actualizacion: febrero 2026.',
+    'trends.noiseDataNote': 'Datos SIVCA, última actualización: febrero 2026.',
     'trends.airTitle': 'Calidad del aire (NO2 ug/m3)',
     'trends.airDesc': 'Evolución mensual del NO2 en estaciones de Madrid. Límite OMS: 40 ug/m3.',
     'trends.airDataNote': 'Datos horarios agregados, hasta febrero 2026.',
@@ -254,12 +254,12 @@ export const translations = {
     'map.legendLowAvail': 'Baja disponibilidad',
     'map.legendBikeLanes': 'Carriles ciclistas',
     'map.legendAnilloVerde': 'Anillo Verde',
-    'map.legendExclusive': 'Via Exclusiva',
-    'map.legendPreferred': 'Via Preferente',
+    'map.legendExclusive': 'Vía Exclusiva',
+    'map.legendPreferred': 'Vía Preferente',
     'map.legendShared': 'Uso Compartido',
     'map.legendLiveFooter': 'Datos en vivo · actualizado cada 14s',
     'map.tapToInteract': 'Toca para interactuar con el mapa',
-    'map.ariaLabel': 'Mapa interactivo de distritos de Madrid coloreados por puntuacion ambiental',
+    'map.ariaLabel': 'Mapa interactivo de distritos de Madrid coloreados por puntuación ambiental',
     'map.tooltipGreenIndex': 'Índice Verde',
     'map.tooltipAvailability': 'Disponibilidad',
 
@@ -271,7 +271,7 @@ export const translations = {
     'methodology.formulaNote': 'Cada sub-índice está normalizado a escala 0-100. Mayor puntuación = mejor calidad ambiental.',
 
     'methodology.aireTitle': 'Aire',
-    'methodology.aireMethod': 'Media inversa de ratios contaminante/limite para NO2, PM2.5, PM10 y O3. Datos en tiempo real cada 20 minutos.',
+    'methodology.aireMethod': 'Media inversa de ratios contaminante/límite para NO2, PM2.5, PM10 y O3. Datos en tiempo real cada 20 minutos.',
     'methodology.aireBadge1': 'API ciudadesabiertas',
     'methodology.aireBadge2': '24 estaciones',
     'methodology.aireBadge3': '4 contaminantes',
@@ -281,7 +281,7 @@ export const translations = {
     'methodology.verdeMethod': 'Combinación de m2 de zonas verdes por habitante (70%) y árboles por 1.000 habitantes (30%). OMS recomienda mínimo 9 m2/hab.',
     'methodology.verdeBadge1': 'Arbolado XLSX (793K árboles)',
     'methodology.verdeBadge2': 'Zonas verdes por distrito',
-    'methodology.verdeBadge3': 'Padron 2025',
+    'methodology.verdeBadge3': 'Padrón 2025',
 
     'methodology.ruidoTitle': 'Ruido',
     'methodology.ruidoMethod': 'Escala inversa del nivel LAeq medio de las estaciones acústicas SIVCA del distrito. OMS recomienda no superar 55 dB en zonas residenciales.',
@@ -306,7 +306,7 @@ export const translations = {
 
     // Data flow source items
     'methodology.dfAirRealtime': 'Calidad aire real-time (JSON)',
-    'methodology.dfAir30Days': 'Calidad aire 30 dias (JSON)',
+    'methodology.dfAir30Days': 'Calidad aire 30 días (JSON)',
     'methodology.dfAirStationsCSV': 'Estaciones calidad aire (CSV)',
     'methodology.dfTrafficRealtime': 'Tráfico real-time (XML)',
     'methodology.dfTrafficSensors': 'Puntos medida tráfico (CSV)',
@@ -318,11 +318,11 @@ export const translations = {
     'methodology.dfTreesXLSX': 'Arbolado 793K árboles (XLSX)',
     'methodology.dfTreesAreaCSV': 'Arbolado superficie (CSV)',
     'methodology.dfNoiseHistorical': 'Ruido histórico 1998+ (CSV)',
-    'methodology.dfDemographicsCSV': 'Indicadores sociodemograficos (CSV)',
+    'methodology.dfDemographicsCSV': 'Indicadores sociodemográficos (CSV)',
 
     // Data flow processing items
     'methodology.dfBuildTime': 'Build-time:',
-    'methodology.dfBuildTimeDesc': 'XLSX/CSV pesados → JSON pequenos',
+    'methodology.dfBuildTimeDesc': 'XLSX/CSV pesados → JSON pequeños',
     'methodology.dfRuntime': 'Runtime:',
     'methodology.dfRuntimeDesc': 'APIs real-time → cache 20 min',
     'methodology.dfNormalization': 'Normalización:',
@@ -375,13 +375,13 @@ export const translations = {
     // Sub-index detail strings
     'gi.verdeBelow': 'Solo {m2} m2/hab de zonas verdes — la OMS recomienda mínimo 9 (censo municipal 2024)',
     'gi.verdeMeets': '{m2} m2/hab — cumple el mínimo de la OMS (censo municipal 2024)',
-    'gi.verdeAbove': '{m2} m2/hab de zonas verdes — bien por encima del minimo de la OMS (censo 2024)',
+    'gi.verdeAbove': '{m2} m2/hab de zonas verdes — bien por encima del mínimo de la OMS (censo 2024)',
     'gi.verdeNoData': 'Sin datos',
 
-    'gi.ruidoHigh': '{db} dB — supera la recomendacion OMS de 55 dB (media SIVCA hasta feb. 2026)',
-    'gi.ruidoAbove': '{db} dB — por encima de la recomendacion OMS (media SIVCA hasta feb. 2026)',
+    'gi.ruidoHigh': '{db} dB — supera la recomendación OMS de 55 dB (media SIVCA hasta feb. 2026)',
+    'gi.ruidoAbove': '{db} dB — por encima de la recomendación OMS (media SIVCA hasta feb. 2026)',
     'gi.ruidoOk': '{db} dB — dentro de los límites OMS (media SIVCA hasta feb. 2026)',
-    'gi.ruidoNoData': 'Sin datos de estacion',
+    'gi.ruidoNoData': 'Sin datos de estación',
 
     'gi.reciclajeLow': 'Solo {n} contenedores/1.000 hab — infraestructura limitada (censo 2024)',
     'gi.reciclajeMid': '{n} contenedores/1.000 hab — cobertura aceptable (censo 2024)',
@@ -390,7 +390,7 @@ export const translations = {
 
     'gi.movilidadFluido': 'Tráfico fluido en la mayoría de sensores',
     'gi.movilidadDenso': 'Tráfico denso en algunas vías principales',
-    'gi.movilidadCongestion': 'Alta congestion — afecta la calidad ambiental',
+    'gi.movilidadCongestion': 'Alta congestión — afecta la calidad ambiental',
     'gi.movilidadLoading': 'Cargando datos de tráfico en tiempo real...',
 
     'gi.aireLive': 'NO2, PM2.5, PM10, O3 en tiempo real — actualizado hace minutos',

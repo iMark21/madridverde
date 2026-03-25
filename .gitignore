@@ -30,3 +30,12 @@ pnpm-debug.log*
 # Raw data cache (downloaded by scripts, never committed)
 scripts/.cache/
 scripts/raw/
+
+# Pitch / concurso — outputs generados (binarios grandes)
+pitch/*.mp4
+pitch/*.pdf
+pitch/*.png
+pitch/*.jpg
+pitch/*.mp3
+pitch/*.srt
+pitch/*.txt

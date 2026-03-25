@@ -22,10 +22,10 @@ const districtOptions = allDistricts.map(d => ({
 }));
 ---
 
-<BaseLayout title="Comparar distritos — MadridVerde" description="Compara el Indice Verde de hasta 4 distritos de Madrid con un radar chart interactivo">
+<BaseLayout title="Comparar distritos — MadridVerde" description="Compara el Índice Verde de hasta 4 distritos de Madrid con un radar chart interactivo">
   <section class="comparator">
     <h1 data-i18n="comparePage.title">Comparar distritos</h1>
-    <p class="comparator-subtitle" data-i18n="comparePage.subtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
+    <p class="comparator-subtitle" data-i18n="comparePage.subtitle">Selecciona 2 a 4 distritos para comparar sus sub-índices</p>
 
     <div class="selector" id="district-selector">
       {districtOptions.map(d => (
@@ -44,7 +44,7 @@ const districtOptions = allDistricts.map(d => ({
 
     <div class="chart-area" id="chart-area" style="display:none">
       <div class="radar-container">
-        <canvas id="radar-chart" aria-label="Radar chart comparando sub-indices de distritos seleccionados"></canvas>
+        <canvas id="radar-chart" aria-label="Radar chart comparando sub-índices de distritos seleccionados"></canvas>
       </div>
       <div class="comparison-table" id="comparison-table"></div>
     </div>

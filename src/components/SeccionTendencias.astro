@@ -15,7 +15,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
   <!-- Noise chart -->
   <div class="chart-block">
     <h3 data-i18n="trends.noiseTitle">Ruido ambiental (LAeq dB)</h3>
-    <p class="chart-description"><span data-i18n="trends.noiseDesc">Selecciona estaciones para comparar su evolucion. OMS recomienda no superar 55 dB.</span> <em data-i18n="trends.noiseDataNote">Datos SIVCA, ultima actualizacion: febrero 2026.</em></p>
+    <p class="chart-description"><span data-i18n="trends.noiseDesc">Selecciona estaciones para comparar su evolución. OMS recomienda no superar 55 dB.</span> <em data-i18n="trends.noiseDataNote">Datos SIVCA, última actualización: febrero 2026.</em></p>
 
     <div class="station-selector" id="noise-station-selector">
       {stationsWithData.map(s => (
@@ -30,14 +30,14 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     </div>
 
     <div class="chart-container">
-      <canvas id="noise-chart" aria-label="Grafico de evolucion del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
+      <canvas id="noise-chart" aria-label="Gráfico de evolución del ruido ambiental en Madrid" data-i18n-aria="trends.noiseChartAriaLabel"></canvas>
     </div>
   </div>
 
   <!-- Air chart -->
   <div class="chart-block">
     <h3 data-i18n="trends.airTitle">Calidad del aire (NO2 ug/m3)</h3>
-    <p class="chart-description"><span data-i18n="trends.airDesc">Evolucion mensual del NO2 en estaciones de Madrid. Limite OMS: 40 ug/m3.</span> <em data-i18n="trends.airDataNote">Datos horarios agregados, hasta febrero 2026.</em></p>
+    <p class="chart-description"><span data-i18n="trends.airDesc">Evolución mensual del NO2 en estaciones de Madrid. Límite OMS: 40 ug/m3.</span> <em data-i18n="trends.airDataNote">Datos horarios agregados, hasta febrero 2026.</em></p>
 
     <div class="station-selector" id="air-station-selector">
       {(airStationsData as any[]).map(s => (
@@ -52,7 +52,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
     </div>
 
     <div class="chart-container">
-      <canvas id="air-chart" aria-label="Grafico de evolucion del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
+      <canvas id="air-chart" aria-label="Gráfico de evolución del NO2 en Madrid" data-i18n-aria="trends.airChartAriaLabel"></canvas>
     </div>
   </div>
 </div>
@@ -207,7 +207,7 @@ const defaultStations = ['RF-04', 'RF-03', 'RF-10', 'RF-14', 'RF-01'];
       const monthMap = new Map(no2.map((e: any) => [e.month, e.avg]));
       const info = (airStations as any[]).find((x) => x.code === id);
       return {
-        label: info?.name || `Estacion ${id}`,
+        label: info?.name || `Estación ${id}`,
         data: allMonths.map((m) => monthMap.get(m) ?? null),
         borderColor: CHART_COLORS[i % CHART_COLORS.length],
         backgroundColor: CHART_COLORS[i % CHART_COLORS.length] + '20',

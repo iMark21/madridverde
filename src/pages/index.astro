@@ -27,11 +27,11 @@ function slugify(name: string): string {
   <!-- SECTION: MAPA -->
   <section id="mapa" class="section">
     <div class="section-header section-header--hero">
-      <h1 data-i18n="index.title">Indice Verde de Madrid</h1>
+      <h1 data-i18n="index.title">Índice Verde de Madrid</h1>
       <p class="section-subtitle" data-i18n="index.subtitle">17 datasets abiertos, un solo score por distrito</p>
       <div class="search-box">
-        <input type="text" id="address-search" placeholder="Busca tu direccion en Madrid..." aria-label="Buscar direccion" data-i18n-placeholder="index.searchPlaceholder" data-i18n-aria="index.searchAriaLabel" autocomplete="off" />
-        <ul id="search-results" class="search-results" role="listbox" aria-label="Resultados de busqueda"></ul>
+        <input type="text" id="address-search" placeholder="Busca tu dirección en Madrid..." aria-label="Buscar dirección" data-i18n-placeholder="index.searchPlaceholder" data-i18n-aria="index.searchAriaLabel" autocomplete="off" />
+        <ul id="search-results" class="search-results" role="listbox" aria-label="Resultados de búsqueda"></ul>
       </div>
     </div>
 
@@ -48,7 +48,7 @@ function slugify(name: string): string {
       <div class="stat-card stat-card--worst">
         <span class="stat-value">{worst.score}</span>
         <span class="stat-label">{titleCase(worst.name)}</span>
-        <span class="stat-badge" data-i18n="index.statWorstBadge">Necesita atencion</span>
+        <span class="stat-badge" data-i18n="index.statWorstBadge">Necesita atención</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">14</span>
@@ -83,7 +83,7 @@ function slugify(name: string): string {
   <section id="bicimad" class="section">
     <div class="section-header">
       <h2 data-i18n="index.bicimadTitle">BiciMAD en tiempo real</h2>
-      <p class="section-subtitle" data-i18n="index.bicimadSubtitle">635 estaciones de bicicleta publica — disponibilidad actualizada cada 14 segundos</p>
+      <p class="section-subtitle" data-i18n="index.bicimadSubtitle">635 estaciones de bicicleta pública — disponibilidad actualizada cada 14 segundos</p>
     </div>
     <div class="bicimad-dashboard" id="bicimad-dashboard">
       <div class="bicimad-stats" id="bicimad-stats">
@@ -97,12 +97,12 @@ function slugify(name: string): string {
   <section id="emt" class="section">
     <div class="section-header">
       <h2 data-i18n="index.emtTitle">Autobuses EMT</h2>
-      <p class="section-subtitle" data-i18n="index.emtSubtitle">4.910 paradas y 235 lineas — frecuencia media en hora punta y alertas en tiempo real</p>
+      <p class="section-subtitle" data-i18n="index.emtSubtitle">4.910 paradas y 235 líneas — frecuencia media en hora punta y alertas en tiempo real</p>
     </div>
     <div class="emt-dashboard">
       <div class="emt-global-stats">
         <div class="emt-gstat"><strong>4.910</strong> <span data-i18n="index.emtParadas">paradas</span></div>
-        <div class="emt-gstat"><strong>235</strong> <span data-i18n="index.emtLineas">lineas</span></div>
+        <div class="emt-gstat"><strong>235</strong> <span data-i18n="index.emtLineas">líneas</span></div>
         <div class="emt-gstat"><strong>21</strong> <span data-i18n="index.emtDistritos">distritos cubiertos</span></div>
       </div>
       <div class="emt-alerts" id="emt-alerts">
@@ -114,7 +114,7 @@ function slugify(name: string): string {
             <tr>
               <th data-i18n="index.emtThDistrito">Distrito</th>
               <th data-i18n="index.emtThParadas">Paradas</th>
-              <th data-i18n="index.emtThLineas">Lineas</th>
+              <th data-i18n="index.emtThLineas">Líneas</th>
               <th data-i18n="index.emtThFreq">Freq. media (min)</th>
             </tr>
           </thead>
@@ -129,7 +129,7 @@ function slugify(name: string): string {
   <section id="comparar" class="section">
     <div class="section-header">
       <h2 data-i18n="index.compareTitle">Comparar distritos</h2>
-      <p class="section-subtitle" data-i18n="index.compareSubtitle">Selecciona 2 a 4 distritos para comparar sus sub-indices</p>
+      <p class="section-subtitle" data-i18n="index.compareSubtitle">Selecciona 2 a 4 distritos para comparar sus sub-índices</p>
     </div>
     <SeccionComparador />
   </section>
@@ -137,8 +137,8 @@ function slugify(name: string): string {
   <!-- SECTION: TENDENCIAS -->
   <section id="tendencias" class="section">
     <div class="section-header">
-      <h2 data-i18n="index.trendsTitle">Tendencias historicas</h2>
-      <p class="section-subtitle" data-i18n="index.trendsSubtitle">Como ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
+      <h2 data-i18n="index.trendsTitle">Tendencias históricas</h2>
+      <p class="section-subtitle" data-i18n="index.trendsSubtitle">Cómo ha cambiado la calidad ambiental de Madrid. Selecciona estaciones para comparar</p>
     </div>
     <SeccionTendencias />
   </section>
@@ -146,35 +146,35 @@ function slugify(name: string): string {
   <!-- SECTION: METODOLOGIA + IA + DATOS -->
   <section id="metodologia" class="section">
     <div class="section-header">
-      <h2 data-i18n="index.methodologyTitle">Metodologia</h2>
-      <p class="section-subtitle" data-i18n="index.methodologySubtitle">Transparencia total: como se calcula el Indice Verde</p>
+      <h2 data-i18n="index.methodologyTitle">Metodología</h2>
+      <p class="section-subtitle" data-i18n="index.methodologySubtitle">Transparencia total: cómo se calcula el Índice Verde</p>
     </div>
 
     <div class="formula-card">
-      <p class="formula-title" data-i18n="index.formulaTitle">Indice Verde (0-100)</p>
+      <p class="formula-title" data-i18n="index.formulaTitle">Índice Verde (0-100)</p>
       <p class="formula" data-i18n="index.formula">IV = Aire x 0.30 + Verde x 0.25 + Ruido x 0.20 + Movilidad x 0.15 + Reciclaje x 0.10</p>
     </div>
 
     <div class="subindex-grid">
       <div class="subindex-card">
         <h3><span data-i18n="index.subAire">Aire</span> <span class="sw">30%</span></h3>
-        <p data-i18n="index.subAireDesc">NO2, PM2.5, PM10, O3 en tiempo real. 24 estaciones, 4 contaminantes. Limites OMS.</p>
+        <p data-i18n="index.subAireDesc">NO2, PM2.5, PM10, O3 en tiempo real. 24 estaciones, 4 contaminantes. Límites OMS.</p>
       </div>
       <div class="subindex-card">
         <h3><span data-i18n="index.subVerde">Verde</span> <span class="sw">25%</span></h3>
-        <p data-i18n="index.subVerdeDesc">793.000 arboles censados + m2 zonas verdes por habitante. OMS recomienda minimo 9 m2/hab.</p>
+        <p data-i18n="index.subVerdeDesc">793.000 árboles censados + m2 zonas verdes por habitante. OMS recomienda mínimo 9 m2/hab.</p>
       </div>
       <div class="subindex-card">
         <h3><span data-i18n="index.subRuido">Ruido</span> <span class="sw">20%</span></h3>
-        <p data-i18n="index.subRuidoDesc">37 estaciones acusticas SIVCA. Series desde 1998. OMS recomienda maximo 55 dB.</p>
+        <p data-i18n="index.subRuidoDesc">37 estaciones acústicas SIVCA. Series desde 1998. OMS recomienda máximo 55 dB.</p>
       </div>
       <div class="subindex-card">
         <h3><span data-i18n="index.subMovilidad">Movilidad</span> <span class="sw">15%</span></h3>
-        <p data-i18n="index.subMovilidadDesc">~4.000 sensores de trafico en tiempo real. Nivel de servicio: fluido, denso, congestionado.</p>
+        <p data-i18n="index.subMovilidadDesc">~4.000 sensores de tráfico en tiempo real. Nivel de servicio: fluido, denso, congestionado.</p>
       </div>
       <div class="subindex-card">
         <h3><span data-i18n="index.subReciclaje">Reciclaje</span> <span class="sw">10%</span></h3>
-        <p data-i18n="index.subReciclajeDesc">44.251 contenedores por tipo (papel, vidrio, organica, envases) per capita.</p>
+        <p data-i18n="index.subReciclajeDesc">44.251 contenedores por tipo (papel, vidrio, orgánica, envases) per cápita.</p>
       </div>
     </div>
 
@@ -185,15 +185,15 @@ function slugify(name: string): string {
           <h4 data-i18n="index.dsRealtime">Tiempo real</h4>
           <ul>
             <li><a href="https://datos.madrid.es/dataset/201200-0-calidad-aire-horario" target="_blank" rel="noopener" data-i18n="index.dsAirHourly">Calidad del aire — datos horarios</a></li>
-            <li><a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener" data-i18n="index.dsTrafficRealtime">Trafico — intensidad en tiempo real</a></li>
+            <li><a href="https://datos.madrid.es/dataset/202087-0-trafico-intensidad" target="_blank" rel="noopener" data-i18n="index.dsTrafficRealtime">Tráfico — intensidad en tiempo real</a></li>
           </ul>
         </div>
         <div class="dataset-group">
           <h4 data-i18n="index.dsStations">Estaciones y sensores</h4>
           <ul>
             <li><a href="https://datos.madrid.es/dataset/212629-0-estaciones-control-aire" target="_blank" rel="noopener" data-i18n="index.dsAirStations">Estaciones de control de calidad del aire</a></li>
-            <li><a href="https://datos.madrid.es/dataset/211346-0-estaciones-acusticas" target="_blank" rel="noopener" data-i18n="index.dsNoiseStations">Estaciones acusticas — contaminacion</a></li>
-            <li><a href="https://datos.madrid.es/dataset/202468-0-intensidad-trafico" target="_blank" rel="noopener" data-i18n="index.dsTrafficSensors">Puntos de medida de trafico</a></li>
+            <li><a href="https://datos.madrid.es/dataset/211346-0-estaciones-acusticas" target="_blank" rel="noopener" data-i18n="index.dsNoiseStations">Estaciones acústicas — contaminación</a></li>
+            <li><a href="https://datos.madrid.es/dataset/202468-0-intensidad-trafico" target="_blank" rel="noopener" data-i18n="index.dsTrafficSensors">Puntos de medida de tráfico</a></li>
           </ul>
         </div>
         <div class="dataset-group">
@@ -206,10 +206,10 @@ function slugify(name: string): string {
           </ul>
         </div>
         <div class="dataset-group">
-          <h4 data-i18n="index.dsHistorical">Historico y sociodemografico</h4>
+          <h4 data-i18n="index.dsHistorical">Histórico y sociodemográfico</h4>
           <ul>
             <li><a href="https://datos.madrid.es/dataset/201410-0-calidad-aire-diario" target="_blank" rel="noopener" data-i18n="index.dsAirDaily">Calidad del aire — datos diarios desde 2001</a></li>
-            <li><a href="https://datos.madrid.es/dataset/215885-0-contaminacion-ruido" target="_blank" rel="noopener" data-i18n="index.dsNoiseDaily">Contaminacion acustica — datos diarios</a></li>
+            <li><a href="https://datos.madrid.es/dataset/215885-0-contaminacion-ruido" target="_blank" rel="noopener" data-i18n="index.dsNoiseDaily">Contaminación acústica — datos diarios</a></li>
             <li><a href="https://datos.madrid.es/dataset/300087-0-indicadores-distritos" target="_blank" rel="noopener" data-i18n="index.dsDistrictIndicators">Indicadores de distritos y barrios</a></li>
           </ul>
         </div>
@@ -222,10 +222,10 @@ function slugify(name: string): string {
           </ul>
         </div>
         <div class="dataset-group">
-          <h4 data-i18n="index.dsGeographic">Limites geograficos</h4>
+          <h4 data-i18n="index.dsGeographic">Límites geográficos</h4>
           <ul>
-            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=541f4ef6-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsDistrictBoundaries">Limites administrativos — distritos</a></li>
-            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=422fa235-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsNeighborhoodBoundaries">Limites administrativos — barrios</a></li>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=541f4ef6-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsDistrictBoundaries">Límites administrativos — distritos</a></li>
+            <li><a href="https://geoportal.madrid.es/IDEAM_WBGEOPORTAL/dataset.iam?id=422fa235-762b-11e9-861d-ecb1d753f6e8" target="_blank" rel="noopener" data-i18n="index.dsNeighborhoodBoundaries">Límites administrativos — barrios</a></li>
           </ul>
         </div>
       </div>
@@ -236,7 +236,7 @@ function slugify(name: string): string {
       <div class="tier" style="--tier-color: #52B788"><span class="tier-range">70-84</span> <span data-i18n="tier.good">Bueno</span></div>
       <div class="tier" style="--tier-color: #E9C46A"><span class="tier-range">55-69</span> <span data-i18n="tier.acceptable">Aceptable</span></div>
       <div class="tier" style="--tier-color: #F4A261"><span class="tier-range">40-54</span> <span data-i18n="tier.improvable">Mejorable</span></div>
-      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> <span data-i18n="tier.critical">Critico</span></div>
+      <div class="tier" style="--tier-color: #E76F51"><span class="tier-range">0-39</span> <span data-i18n="tier.critical">Crítico</span></div>
     </div>
   </section>
 
@@ -251,21 +251,21 @@ function slugify(name: string): string {
         <div class="mcp-demo">
           <div class="mcp-chat">
             <div class="mcp-msg mcp-msg--user">
-              <p data-i18n="index.mcpQ1">Como esta la calidad del aire en Chamberi ahora mismo?</p>
+              <p data-i18n="index.mcpQ1">¿Cómo está la calidad del aire en Chamberí ahora mismo?</p>
             </div>
             <div class="mcp-msg mcp-msg--ai">
-              <p data-i18n="index.mcpA1">Chamberi tiene un nivel de NO2 de 28 ug/m3 (por debajo del limite UE de 40). La estacion mas cercana es Cuatro Caminos. Indice Verde del distrito: 67/100 (Aceptable).</p>
+              <p data-i18n="index.mcpA1">Chamberí tiene un nivel de NO2 de 28 ug/m3 (por debajo del límite UE de 40). La estación más cercana es Cuatro Caminos. Índice Verde del distrito: 67/100 (Aceptable).</p>
             </div>
             <div class="mcp-msg mcp-msg--user">
-              <p data-i18n="index.mcpQ2">Hay incidencias en la linea 27?</p>
+              <p data-i18n="index.mcpQ2">¿Hay incidencias en la línea 27?</p>
             </div>
             <div class="mcp-msg mcp-msg--ai">
-              <p data-i18n="index.mcpA2">Si, hay 2 alertas activas en la linea 27: una concentracion en paseo del Prado y un evento en el Estadio Santiago Bernabeu que afectan al itinerario.</p>
+              <p data-i18n="index.mcpA2">Sí, hay 2 alertas activas en la línea 27: una concentración en paseo del Prado y un evento en el Estadio Santiago Bernabéu que afectan al itinerario.</p>
             </div>
           </div>
         </div>
         <div class="mcp-info">
-          <h3 data-i18n="index.mcpHowTitle">Como funciona</h3>
+          <h3 data-i18n="index.mcpHowTitle">Cómo funciona</h3>
           <p data-i18n="index.mcpHowDesc">MadridVerde MCP es un servidor que permite a cualquier asistente de inteligencia artificial consultar datos medioambientales de Madrid en lenguaje natural. 10 herramientas, datos en tiempo real, sin API key.</p>
           <div class="mcp-tools-list">
             <span class="mcp-tool-tag">get_air_quality</span>
