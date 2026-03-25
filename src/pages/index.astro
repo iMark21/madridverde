@@ -300,10 +300,37 @@ function slugify(name: string): string {
   }
 </script>
 
-<!-- Sync ranking with real-time scores emitted by MapaMadrid -->
+<!-- Sync ranking + stat cards with real-time scores emitted by MapaMadrid -->
 <script>
+  function tc(str: string): string {
+    const minor = new Set(['de', 'del', 'el', 'la', 'las', 'los', 'y', 'e']);
+    return str.toLowerCase().split(' ')
+      .map((w: string, i: number) => (i === 0 || !minor.has(w)) ? w.charAt(0).toUpperCase() + w.slice(1) : w)
+      .join(' ');
+  }
+
   window.addEventListener('mv-index-updated', (e: any) => {
     const updated: any[] = e.detail;
+
+    // --- Stat cards ---
+    const avgNew = Math.round(updated.reduce((s: number, d: any) => s + d.score, 0) / updated.length);
+    const bestNew = [...updated].sort((a: any, b: any) => b.score - a.score)[0];
+    const worstNew = [...updated].sort((a: any, b: any) => a.score - b.score)[0];
+
+    const avgEl = document.querySelector('.stats .stat-card:first-child .stat-value') as HTMLElement;
+    if (avgEl) avgEl.textContent = String(avgNew);
+
+    const bestValEl = document.querySelector('.stat-card--best .stat-value') as HTMLElement;
+    const bestLblEl = document.querySelector('.stat-card--best .stat-label') as HTMLElement;
+    if (bestValEl) { bestValEl.textContent = String(bestNew.score); bestValEl.style.color = bestNew.tierColor; }
+    if (bestLblEl) bestLblEl.textContent = tc(bestNew.name);
+
+    const worstValEl = document.querySelector('.stat-card--worst .stat-value') as HTMLElement;
+    const worstLblEl = document.querySelector('.stat-card--worst .stat-label') as HTMLElement;
+    if (worstValEl) { worstValEl.textContent = String(worstNew.score); worstValEl.style.color = worstNew.tierColor; }
+    if (worstLblEl) worstLblEl.textContent = tc(worstNew.name);
+
+    // --- Ranking list ---
     const rankingList = document.querySelector('.ranking-list');
     if (!rankingList) return;
 
