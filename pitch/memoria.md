@@ -31,6 +31,8 @@ header-includes:
 \textbf{Autor} & Juan Miguel Marqués Morilla \\[2pt]
 \textbf{Categoría} & A — Webs, apps y visualizaciones interactivas \\[2pt]
 \textbf{URL} & madrid-verde.web.app \\[2pt]
+\textbf{Vídeo demo} & youtu.be/8jfbjEL3KIE \\[2pt]
+\textbf{Código fuente web} & github.com/iMark21/madridverde \\[2pt]
 \textbf{Código fuente MCP} & github.com/iMark21/madridverde-mcp \\[2pt]
 \textbf{npm} & npmjs.com/package/madridverde-mcp \\[2pt]
 \textbf{Licencia} & MIT (código abierto) \\[2pt]
