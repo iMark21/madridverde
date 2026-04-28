@@ -1,11 +1,11 @@
 # Organization Link
 
-- Canonical workspace: `~/Developer/ai-workspace`
 - Registry id: `madridverde`
 - Mode: `distributed`
 - Vertical: `web`
-- Load order: `ORG.md` -> `agentlayer.yaml` -> `CONTEXT.md` -> `agents/` -> `decisions/` as needed
+- Org: `imark`
+- Load order: `agentlayer.yaml` -> `CONTEXT.md` -> `agents/` -> `decisions/` as needed
 
-The org control plane (routing, role definitions, services, conventions, vault)
-lives in `ai-workspace`. This file points there. Project-specific context lives
-under `.ai/` in this repo.
+This project AI layer is publishable. Resolve `org: imark` through machine-level
+configuration, not through tracked repo paths. Project-specific context lives
+under this `.ai/` root.

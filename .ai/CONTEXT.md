@@ -7,7 +7,7 @@
 ## General Info
 - **What:** Web app que transforma 14+ datasets abiertos de datos.madrid.es en un Indice Verde (0-100) por distrito de Madrid
 - **Repo (GitHub):** github.com/iMark21/madridverde (PRIVATE until 2026-05-04)
-- **Repo (local path):** /Users/michelmarques/Developer/madridverde
+- **Local checkout:** configured in machine-level `projects.local.yaml`
 - **URL:** https://madrid-verde.web.app
 - **Platforms:** Web
 - **Languages:** Spanish (es)
@@ -57,7 +57,7 @@
 
 ## MCP Server (madridverde-mcp)
 - **Repo:** github.com/iMark21/madridverde-mcp (PRIVADO hasta presentacion del concurso, luego publico MIT)
-- **Local path:** /Users/michelmarques/Developer/madridverde-mcp
+- **Local path:** <local-madridverde-mcp-checkout>
 - **npm:** madridverde-mcp (PUBLICADO — v0.4.0)
 - **Stack:** TypeScript + @modelcontextprotocol/sdk + Zod
 - **Tools expuestos (10):**
@@ -121,7 +121,7 @@ See [BACKLOG.md](BACKLOG.md)
 - Tagline: "Porque respirar no debería ser cuestión de código postal"
 - Propuesta R&D: `services/rnd/proposals/MADRID_OPEN_DATA.md`
 - Spec tecnica: `services/rnd/proposals/MADRIDVERDE_SPEC.md`
-- Git email local: `marques.jm@icloud.com`
+- Git identity is enforced by local repository hooks.
 - `src/data/emt-stops-geo.json` (482K, 4910 paradas) fue omitido en el commit de integración EMT — añadido en fix/add-emt-stops-geo (2026-03-20)
 - 14 datasets validados (URLs, CORS, formatos, gotchas) — ver SPEC
 - CSVs usan `;` como delimitador — PapaParse
