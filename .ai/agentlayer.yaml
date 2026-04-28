@@ -1,0 +1,8 @@
+schema_version: 1
+project_id: madridverde
+org_workspace: ../ai-workspace
+mode: distributed
+vertical: web
+exceptions:
+  - rule: "public-embargo"
+    reason: "Contest project stays private until the public contest date; do not expose private org context externally before review."
