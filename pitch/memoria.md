@@ -284,9 +284,9 @@ Las siguientes capturas muestran dos consultas reales desde Claude Desktop con m
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-mcp-indice.png}
+\includegraphics[width=0.485\textwidth]{cap-mcp-indice.png}
 \hfill
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-mcp-bicimad.png}
+\includegraphics[width=0.485\textwidth]{cap-mcp-bicimad.png}
 \end{figure}
 
 Ranking completo del Índice Verde por distrito (izquierda) y disponibilidad en tiempo real de BiciMAD cerca de la Puerta del Sol (derecha). Datos directamente de las APIs del Ayuntamiento, sin clave de API, en lenguaje natural.
@@ -310,9 +310,9 @@ El mapa muestra los 21 distritos coloreados por Índice Verde. El scorecard deta
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-home.png}
+\includegraphics[width=0.485\textwidth]{cap-home.png}
 \hfill
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-retiro-subindices.png}
+\includegraphics[width=0.485\textwidth]{cap-retiro-subindices.png}
 \end{figure}
 
 **3. Comparador de distritos** / **4. Tendencias históricas**
@@ -321,9 +321,9 @@ El radar chart enfrenta hasta 4 distritos en 5 dimensiones. Las tendencias muest
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-comparador.png}
+\includegraphics[width=0.485\textwidth]{cap-comparador.png}
 \hfill
-\includegraphics[width=0.485\textwidth]{/Users/michelmarques/Developer/PitchReel/output/cap-tendencias.png}
+\includegraphics[width=0.485\textwidth]{cap-tendencias.png}
 \end{figure}
 
 

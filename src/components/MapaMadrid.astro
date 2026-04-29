@@ -222,7 +222,6 @@
       }
     });
 
-    console.log('[MadridVerde] Air quality data loaded, map updated');
     window.dispatchEvent(new CustomEvent('mv-index-updated', { detail: greenIndex }));
   });
 
@@ -279,7 +278,6 @@
     }
 
     bikeLayer.addTo(map);
-    console.log(`[MadridVerde] BiciMAD: ${stations.length} stations loaded`);
   });
 
   // --- Bike lanes layer (lazy load from static file) ---
@@ -309,7 +307,6 @@
         },
       }).addTo(map);
 
-      console.log(`[MadridVerde] Bike lanes loaded`);
     });
 
   // --- Legend tab toggle ---
