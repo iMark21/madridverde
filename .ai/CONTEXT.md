@@ -6,7 +6,7 @@
 
 ## General Info
 - **What:** Web app que transforma 14+ datasets abiertos de datos.madrid.es en un Indice Verde (0-100) por distrito de Madrid
-- **Repo (GitHub):** github.com/iMark21/madridverde (PRIVATE until 2026-05-04)
+- **Repo (GitHub):** github.com/iMark21/madridverde
 - **Local checkout:** configured in machine-level `projects.local.yaml`
 - **URL:** https://madrid-verde.web.app
 - **Platforms:** Web
