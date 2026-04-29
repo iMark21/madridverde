@@ -21,7 +21,7 @@ Puntuación compuesta de 5 sub-índices, cada uno normalizado a escala 0-100:
 | Sub-índice | Peso | Fuente | Tipo |
 |-----------|------|--------|------|
 | Aire | 30% | 24 estaciones, 4 contaminantes (NO2, PM2.5, PM10, O3) | Tiempo real (~20 min) |
-| Verde | 25% | 793.000 árboles censados + m2 zonas verdes por habitante | Censo 2024 |
+| Verde | 25% | 793.000 árboles censados + m² zonas verdes por habitante | Censo 2024 |
 | Ruido | 20% | 37 estaciones acústicas SIVCA (series desde 1998) | Datos hasta feb. 2026 |
 | Movilidad | 15% | ~4.000 sensores de tráfico + 635 estaciones BiciMAD + 834 km carriles bici | Tiempo real (~5 min / ~14 seg) |
 | Reciclaje | 10% | 44.251 contenedores por tipo y distrito | Censo 2024 |
@@ -51,7 +51,7 @@ Puntuación compuesta de 5 sub-índices, cada uno normalizado a escala 0-100:
 |-----------|-----------|
 | Framework | Astro 6 (SSG, 25 páginas estáticas) |
 | Mapas | Leaflet 1.9.4 + topojson-client |
-| Graficos | Chart.js 4 + chartjs-plugin-annotation |
+| Gráficos | Chart.js 4 + chartjs-plugin-annotation |
 | Hosting | Firebase Hosting |
 | Analytics | Firebase Analytics |
 | Datos build-time | Node.js scripts (SheetJS, PapaParse) |
