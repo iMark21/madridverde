@@ -16,7 +16,7 @@
  *   70-84  Bueno     (#52B788)
  *   55-69  Aceptable (#E9C46A)
  *   40-54  Mejorable (#F4A261)
- *   0-39   Critico   (#E76F51)
+ *   0-39   Crítico   (#E76F51)
  */
 
 import treesData from '../data/trees.json';
@@ -62,7 +62,7 @@ function getTier(score: number): { tier: string; color: string } {
   if (score >= 70) return { tier: 'Bueno', color: '#52B788' };
   if (score >= 55) return { tier: 'Aceptable', color: '#E9C46A' };
   if (score >= 40) return { tier: 'Mejorable', color: '#F4A261' };
-  return { tier: 'Critico', color: '#E76F51' };
+  return { tier: 'Crítico', color: '#E76F51' };
 }
 
 // --- Sub-index calculators ---
