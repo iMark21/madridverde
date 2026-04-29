@@ -82,4 +82,4 @@ firebase deploy --only hosting --project madrid-verde
 
 ## Licencia
 
-(c) iMark Apps
+MIT — © 2026 Michel Marques
