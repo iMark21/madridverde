@@ -6,7 +6,7 @@
 
 ## General Info
 - **What:** Web app que transforma 14+ datasets abiertos de datos.madrid.es en un Indice Verde (0-100) por distrito de Madrid
-- **Repo (GitHub):** github.com/iMark21/madridverde
+- **Repo (GitHub):** github.com/iMark21/madridverde (**PÚBLICO** desde 2026-05-03)
 - **Local checkout:** configured in machine-level `projects.local.yaml`
 - **URL:** https://madrid-verde.web.app
 - **Platforms:** Web
@@ -56,7 +56,7 @@
 13. **MCP Server "Pregunta a tu IA"**: servidor MCP open-source que expone los datos medioambientales para agentes AI (Claude, ChatGPT, Cursor). Seccion prominente en la web + repo publico en GitHub + publicado en npm
 
 ## MCP Server (madridverde-mcp)
-- **Repo:** github.com/iMark21/madridverde-mcp (PRIVADO hasta presentacion del concurso, luego publico MIT)
+- **Repo:** github.com/iMark21/madridverde-mcp (**PÚBLICO** desde 2026-05-03, MIT)
 - **Local path:** <local-madridverde-mcp-checkout>
 - **npm:** madridverde-mcp (PUBLICADO — v0.4.0)
 - **Stack:** TypeScript + @modelcontextprotocol/sdk + Zod
